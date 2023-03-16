@@ -83,23 +83,6 @@ void CParaKoopaTroopa::OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e)
 	{
 		float qx, qy, qvx;
 		questionBrick->GetPosition(qx, qy);
-
-		if (questionBrick->getType() == 1)
-		{
-			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_SMALLCOIN, qx, qy - 16);
-		}
-		else
-		{
-			// check direction
-			if (this->x <= qx + 8) {
-				qvx = -1;
-			}
-			else
-			{
-				qvx = 1;
-			}
-			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_MUSHROOM, qx, qy, qvx);
-		}
 		questionBrick->SetState(QUESTIONBRICK_STATE_TOUCHED_1);
 	}
 

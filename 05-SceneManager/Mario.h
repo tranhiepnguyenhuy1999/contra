@@ -117,13 +117,6 @@
 
 #define GROUND_Y 160.0f
 
-
-
-
-#define	MARIO_LEVEL_SMALL	1
-#define	MARIO_LEVEL_BIG		2
-#define	MARIO_LEVEL_RACOON	3
-
 #define MARIO_BIG_BBOX_WIDTH  14
 #define MARIO_BIG_BBOX_HEIGHT 28
 #define MARIO_BIG_SITTING_BBOX_WIDTH  14
@@ -144,36 +137,20 @@ class CMario : public CGameObject
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
 
-	int level;
 	int untouchable;
 
 
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
-	int isFlyStak;
 	ULONGLONG count_start;
-	ULONGLONG readyFly_start;
-	ULONGLONG fly_start;
+
 	int coin;
 	int point;
 	int life;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
-	void OnCollisionWithBreakBrick(LPCOLLISIONEVENT e);
-	void OnCollisionWithParaGoomba(LPCOLLISIONEVENT e);
-	void OnCollisionWithKoopaTroopa(LPCOLLISIONEVENT e);
-	void OnCollisionWithFlower(LPCOLLISIONEVENT e);
-	void OnCollisionWithFire(LPCOLLISIONEVENT e);
-	void OnCollisionWithCoin(LPCOLLISIONEVENT e);
-	void OnCollisionWithMushroom(LPCOLLISIONEVENT e);
-	void OnCollisionWithLeaf(LPCOLLISIONEVENT e);
-	void OnCollisionWithQuestionBrick(LPCOLLISIONEVENT e);
-	void OnCollisionWithDownBrick(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
-	void OnCollisionWithParaKoopaTroopa(LPCOLLISIONEVENT e);
 	int GetAniIdBig();
-	int GetAniIdSmall();
-	int GetAniIdRacoon();
 public:
 	CMario(float x, float y) : CGameObject(x, y)
 	{
@@ -181,13 +158,10 @@ public:
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
-		level = MARIO_LEVEL_BIG;
 		untouchable = 0;
 		untouchable_start = -1;
 		count_start = -1;
-		readyFly_start = -1;
 		isOnPlatform = false;
-		isFlyStak = -1;
 		coin = 0;
 		point = 0;
 		life = 1;
@@ -196,7 +170,6 @@ public:
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	void Render();
 	void SetState(int state);
-	void getLevel(int& level) { level = this->level; }
 	int IsCollidable()
 	{
 		return (state != MARIO_STATE_DIE);
@@ -205,18 +178,14 @@ public:
 		coinP = coin;
 		pointP = point;
 		lifeP = life;
-		isFlyStakP = isFlyStak;
 	}
 	int IsBlocking() { return (state != MARIO_STATE_DIE && untouchable == 0); }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
 
-	void SetLevel(int l);
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); };
-	bool isFlying() { return isFlyStak == 5; };
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	void checkFlyStak();
 	void createTailObject();
 
 };

@@ -133,46 +133,15 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_MARIO2:
-		if (player != NULL)
-		{
-			DebugOut(L"[ERROR] MARIO2 object was created before!\n");
-			return;
-		}
-		obj = new CMario2(x, y);
-		player = (CMario2*)obj;
-
-		DebugOut(L"[INFO] Player object has been created!\n");
-		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
-	case OBJECT_TYPE_PARAGOOMBA: obj = new CParaGoomba(x, y); break;
-	case OBJECT_TYPE_KOOPATROOPA: obj = new CKoopaTroopa(x, y); break;
-	case OBJECT_TYPE_PARAKOOPATROOPA: obj = new CParaKoopaTroopa(x, y); break;
 	case OBJECT_TYPE_MAP: obj = new CMap(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_BREAKBRICK: obj = new CBreakBrick(x, y); break;
-	case OBJECT_TYPE_QUESTIONBRICK:
-	{
-		float type = (float)atof(tokens[3].c_str());
-	
-		obj = new CQuestionBrick(x, y, type); break;
-	}
 	case OBJECT_TYPE_DOWNBRICK:
 	{
 		float length = (float)atof(tokens[3].c_str());
 	obj = new CDownBrick(x, y, length); break;
 	}
-	case OBJECT_TYPE_PILE:
-	{
-		float height = (float)atof(tokens[3].c_str());
-		obj = new CPile(x, y, height); break;
-	}
-	case OBJECT_TYPE_CLOUDBRICK: obj = new CCloudBrick(x, y); break;
-	case OBJECT_TYPE_SMALLCOIN: obj = new CSmallCoin(x, y); break;
-	case OBJECT_TYPE_FLOWER: obj = new CFlower(x, y); break;
-	case OBJECT_TYPE_GREENFLOWER1: obj = new CGreenFlower1(x, y); break;
-	case OBJECT_TYPE_GREENFLOWER2: obj = new CGreenFlower2(x, y); break;
-	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
 	case OBJECT_TYPE_PLATFORM:
 	{
 
@@ -225,15 +194,7 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 	{
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
-	case OBJECT_TYPE_QUESTIONBRICK: obj = new CQuestionBrick(x, y); break;
-	case OBJECT_TYPE_HIDDENBRICK: obj = new CHiddenBrick(x, y); break;
-	case OBJECT_TYPE_CLOUDBRICK: obj = new CCloudBrick(x, y); break;
-	case OBJECT_TYPE_MUSHROOM: obj = new CMushroom(x, y, nx); break;
-	case OBJECT_TYPE_LEAF: obj = new CLeaf(x, y); break;
 	case OBJECT_TYPE_TAIL: obj = new CTail(x, y, nx); break;
-	case OBJECT_TYPE_ROCK: obj = new CRock(x, y, nx); break;
-	case OBJECT_TYPE_FALLOBJECT: obj = new CFallObject(x, y, objSrc); break;
-	case OBJECT_TYPE_SMALLCOIN: obj = new CSmallCoin(x, y); break;
 	case OBJECT_TYPE_FIRE:
 	{
 		player->GetPosition(px, py);
@@ -247,8 +208,6 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 		else ny = -1;
 		obj = new CFire(x, y, nx, ny); break;
 	}
-	case OBJECT_TYPE_COIN: obj = new CCoin(x, y); break;
-		//
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", id);
 		return;
