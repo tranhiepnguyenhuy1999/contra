@@ -105,20 +105,10 @@ int CMario::GetAniIdBig()
 	int aniId = -1;
 	if (!isOnPlatform)
 	{
-		if (abs(ax) == MARIO_ACCEL_RUN_X)
-		{
 			if (nx >= 0)
-				aniId = ID_ANI_MARIO_JUMP_RUN_RIGHT;
+				aniId = ID_ANI_MARIO_JUMP_RIGHT;
 			else
-				aniId = ID_ANI_MARIO_JUMP_RUN_LEFT;
-		}
-		else
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_MARIO_JUMP_WALK_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_JUMP_WALK_LEFT;
-		}
+				aniId = ID_ANI_MARIO_JUMP_LEFT;
 	}
 	else
 		if (isSitting)
@@ -136,18 +126,15 @@ int CMario::GetAniIdBig()
 			}
 			else if (vx > 0)
 			{
-				if (ax < 0)
-					aniId = ID_ANI_MARIO_BRACE_RIGHT;
-				else if (ax == MARIO_ACCEL_RUN_X)
+				if (ax == MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_RUNNING_RIGHT;
 				else if (ax == MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_WALKING_RIGHT;
 			}
 			else // vx < 0
 			{
-				if (ax > 0)
-					aniId = ID_ANI_MARIO_BRACE_LEFT;
-				else if (ax == -MARIO_ACCEL_RUN_X)
+
+				if (ax == -MARIO_ACCEL_RUN_X)
 					aniId = ID_ANI_MARIO_RUNNING_LEFT;
 				else if (ax == -MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_WALKING_LEFT;
@@ -174,7 +161,6 @@ void CMario::Render()
 }
 void CMario::SetState(int state)
 {
-	if ((this->state == MARIO_STATE_RACOON_TRANSFORM) && (GetTickCount64() - count_start < 500)) return;
 	if ((this->state == MARIO_STATE_ATTACK) && (GetTickCount64() - count_start < 500)) return;
 	// DIE is the end state, cannot be changed! 
 	if (this->state == MARIO_STATE_DIE) return; 
@@ -257,14 +243,6 @@ void CMario::SetState(int state)
 		vx = 0;
 		ax = 0;
 		break;
-	case MARIO_STATE_FLY:
-		vy = -MARIO_FLY_SPEED;
-		break;
-	case MARIO_STATE_RELEASE_FLY:
-		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
-		break;
-	case MARIO_STATE_RACOON_TRANSFORM:
-		count_start = GetTickCount64();
 	}
 
 	CGameObject::SetState(state);
