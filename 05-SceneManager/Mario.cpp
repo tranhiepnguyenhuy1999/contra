@@ -110,32 +110,48 @@ int CMario::GetAniIdBig()
 			else
 				aniId = ID_ANI_MARIO_JUMP_LEFT;
 	}
-	else
-		if (isSitting)
-		{
-			if (nx > 0)
-				aniId = ID_ANI_MARIO_SIT_RIGHT;
-			else
-				aniId = ID_ANI_MARIO_SIT_LEFT;
-		}
-		else
-			if (vx == 0)
+	else if (vx == 0)
 			{
-				if (nx > 0) aniId = ID_ANI_MARIO_IDLE_RIGHT;
+				if (isSitting)
+				{
+					if (nx > 0)
+						aniId = ID_ANI_MARIO_SIT_RIGHT;
+					else
+						aniId = ID_ANI_MARIO_SIT_LEFT;
+				}
+				else if (isLookingUp) {
+					if (nx > 0) 
+						aniId = ID_ANI_MARIO_STAND_UP_RIGHT;
+					else 
+						aniId = ID_ANI_MARIO_STAND_UP_LEFT;
+				}
+				else if (nx > 0) aniId = ID_ANI_MARIO_IDLE_RIGHT;
 				else aniId = ID_ANI_MARIO_IDLE_LEFT;
 			}
 			else if (vx > 0)
 			{
 				if (ax == MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RUNNING_RIGHT;
+				{
+					if (isSitting)
+					{
+						aniId = ID_ANI_MARIO_RUNNING_DOWN_RIGHT;
+					}
+					else if (isLookingUp) {
+						aniId = ID_ANI_MARIO_RUNNING_UP_RIGHT;
+					}
+				}
 				else if (ax == MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_WALKING_RIGHT;
 			}
 			else // vx < 0
 			{
-
-				if (ax == -MARIO_ACCEL_RUN_X)
-					aniId = ID_ANI_MARIO_RUNNING_LEFT;
+				if (isSitting)
+				{
+					aniId = ID_ANI_MARIO_RUNNING_DOWN_LEFT;
+				}
+				else if (isLookingUp) {
+					aniId = ID_ANI_MARIO_RUNNING_UP_LEFT;
+				}
 				else if (ax == -MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_WALKING_LEFT;
 			}
@@ -161,39 +177,51 @@ void CMario::Render()
 }
 void CMario::SetState(int state)
 {
-	if ((this->state == MARIO_STATE_ATTACK) && (GetTickCount64() - count_start < 500)) return;
+	if ((this->state == MARIO_STATE_ATTACK) && (GetTickCount64() - count_start < 200)) return;
 	// DIE is the end state, cannot be changed! 
 	if (this->state == MARIO_STATE_DIE) return; 
 
 	switch (state)
 	{
 	case MARIO_STATE_RUNNING_RIGHT:
-		if (isSitting) break;
+		//if (isSitting) break;
 		maxVx = MARIO_RUNNING_SPEED;
 		ax = MARIO_ACCEL_RUN_X;
 		nx = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
-		if (isSitting) break;
+		//if (isSitting) break;
 		maxVx = -MARIO_RUNNING_SPEED;
 		ax = -MARIO_ACCEL_RUN_X;
 		nx = -1;
 		break;
+	case MARIO_STATE_RUNNING_UP_LEFT:
+	case MARIO_STATE_RUNNING_DOWN_LEFT:
+		maxVx = -MARIO_RUNNING_SPEED;
+		ax = -MARIO_ACCEL_RUN_X;
+		nx = -1;
+		break;
+
+	case MARIO_STATE_RUNNING_UP_RIGHT:
+	case MARIO_STATE_RUNNING_DOWN_RIGHT:
+		maxVx = MARIO_RUNNING_SPEED;
+		ax = MARIO_ACCEL_RUN_X;
+		nx = 1;
+		break;
 	case MARIO_STATE_WALKING_RIGHT:
-		if (isSitting) break;
+		//if (isSitting) break;
 		maxVx = MARIO_WALKING_SPEED;
 		ax = MARIO_ACCEL_WALK_X;
 		nx = 1;
 		break;
 	case MARIO_STATE_WALKING_LEFT:
-		if (isSitting) break;
+		//if (isSitting) break;
 		maxVx = -MARIO_WALKING_SPEED;
 		ax = -MARIO_ACCEL_WALK_X;
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		if (isSitting) break;
-
+		//if (isSitting) break;
 		if (isOnPlatform)
 		{
 			if (abs(this->vx) == MARIO_RUNNING_SPEED)
@@ -237,7 +265,21 @@ void CMario::SetState(int state)
 		ax = 0.0f;
 		vx = 0.0f;
 		break;
-
+	case MARIO_STATE_LOOKUP: 
+		if (isOnPlatform)
+		{
+			state = MARIO_STATE_IDLE;
+			isLookingUp = true;
+			vx = 0; vy = 0.0f;
+		}
+		break;
+	case MARIO_STATE_LOOKUP_RELEASE:
+		if (isLookingUp)
+		{
+			isLookingUp = false;
+			state = MARIO_STATE_IDLE;
+		}
+		break;
 	case MARIO_STATE_DIE:
 		vy = -MARIO_JUMP_DEFLECT_SPEED;
 		vx = 0;

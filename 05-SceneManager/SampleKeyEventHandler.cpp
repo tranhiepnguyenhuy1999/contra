@@ -20,23 +20,15 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 		CGame::GetInstance()->InitiateSwitchScene(5);
 		break;
 	case DIK_DOWN:
-
-		mario->GetPosition(x, y);
-		if (x >=2256 && x <= 2288) {
-			mario->SetPosition(2114, 544);
-		}
 		mario->SetState(MARIO_STATE_SIT);
 		break;
 	case DIK_UP:
-		mario->GetPosition(x, y);
-		if (x >= 2320 && x <= 2352) {
-			mario->SetPosition(2328, 336);
-		}
+		mario->SetState(MARIO_STATE_LOOKUP);
 		break;
-	case DIK_A:
+	case DIK_Z:
 		mario->SetState(MARIO_STATE_ATTACK);
 		break;
-	case DIK_S:
+	case DIK_X:
 			mario->SetState(MARIO_STATE_JUMP);
 		break;
 	case DIK_0:
@@ -57,11 +49,14 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	mario->getLevel(level);
 	switch (KeyCode)
 	{
-	case DIK_S:
+	case DIK_X:
 			mario->SetState(MARIO_STATE_RELEASE_JUMP);
 		break;
 	case DIK_DOWN:
 		mario->SetState(MARIO_STATE_SIT_RELEASE);
+		break;
+	case DIK_UP:
+		mario->SetState(MARIO_STATE_LOOKUP_RELEASE);
 		break;
 	}
 }
@@ -72,27 +67,30 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 	CMario* mario = (CMario*)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer();
 	if (game->IsKeyDown(DIK_RIGHT))
 	{
-		if (game->IsKeyDown(DIK_A))
+		if (game->IsKeyDown(DIK_DOWN))
 		{
-			mario->SetState(MARIO_STATE_RUNNING_RIGHT);
+			mario->SetState(MARIO_STATE_RUNNING_DOWN_RIGHT);
+		}
+		else if (game->IsKeyDown(DIK_UP))
+		{
+			mario->SetState(MARIO_STATE_RUNNING_UP_RIGHT);
 		}
 		else
 			mario->SetState(MARIO_STATE_WALKING_RIGHT);
 	}
 	else if (game->IsKeyDown(DIK_LEFT))
 	{
-		if (game->IsKeyDown(DIK_A))
-			mario->SetState(MARIO_STATE_RUNNING_LEFT);
+		if (game->IsKeyDown(DIK_DOWN))
+		{
+			mario->SetState(MARIO_STATE_RUNNING_DOWN_LEFT);
+		}
+		else if (game->IsKeyDown(DIK_UP))
+		{
+			mario->SetState(MARIO_STATE_RUNNING_UP_LEFT);
+		}
 		else
 			mario->SetState(MARIO_STATE_WALKING_LEFT);
 	}
-	//else if (game->IsKeyDown(DIK_UP))
-	//{
-	//	mario->SetState(MARIO_STATE_WALKING_UP);
-	//}
-	//else if (game->IsKeyDown(DIK_DOWN)) {
-	//	mario->SetState(MARIO_STATE_WALKING_DOWN);
-	//}
 	else mario->SetState(MARIO_STATE_IDLE);
 
 }
