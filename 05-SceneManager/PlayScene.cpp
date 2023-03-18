@@ -26,6 +26,8 @@
 #include "Mario2.h"
 #include "HiddenBrick.h"
 
+#include "Soldier.h"
+
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -134,6 +136,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
+	case OBJECT_TYPE_SOLDIER: obj = new CSoldier(x, y); break;
 	case OBJECT_TYPE_MAP: obj = new CMap(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_BREAKBRICK: obj = new CBreakBrick(x, y); break;

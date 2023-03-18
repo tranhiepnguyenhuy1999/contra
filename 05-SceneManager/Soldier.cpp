@@ -82,7 +82,10 @@ void CSoldier::Render()
 	int aniId = ID_ANI_SOLDIER_WALKING_LEFT;
 	if (state == SOLDIER_STATE_DIE)
 	{
-		aniId = ID_ANI_SOLDIER_DIE;
+		if (nx > 0)
+			aniId = ID_ANI_SOLDIER_DIE_LEFT;
+		else
+			aniId = ID_ANI_SOLDIER_DIE_RIGHT;
 	}
 
 	if (vx > 0) aniId = ID_ANI_SOLDIER_WALKING_RIGHT;

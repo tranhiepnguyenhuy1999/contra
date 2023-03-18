@@ -5,6 +5,8 @@
 #include "Game.h"
 
 #include "Goomba.h"
+#include "Soldier.h"
+
 #include "Coin.h"
 #include "Mushroom.h"
 #include "Portal.h"
@@ -27,6 +29,8 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	isOnPlatform = false;
+
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
 	// reset untouchable timer if untouchable time has passed
@@ -35,8 +39,13 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
-
-	isOnPlatform = false;
+	if(state == MARIO_STATE_PRE_DIE ) DebugOut(L">>> Mario DIE >>> %f \n", vx);
+	if (state==MARIO_STATE_PRE_DIE && GetTickCount64() - count_start > 500)
+	{
+		DebugOut(L">>> Mario DIE >>> %f \n", vx);
+		count_start = -1;
+		SetState(MARIO_STATE_DIE);
+	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -49,6 +58,8 @@ void CMario::OnNoCollision(DWORD dt)
 
 void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+
+	if (state == MARIO_STATE_DIE || state == MARIO_STATE_PRE_DIE) return;
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
@@ -59,9 +70,12 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = 0;
 	}
+	
 
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
+	else if (dynamic_cast<CSoldier*>(e->obj))
+		OnCollisionWithSoldier(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
 }
@@ -91,6 +105,19 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		}
 	}
 }
+void CMario::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
+{
+	CSoldier* i = dynamic_cast<CSoldier*>(e->obj);
+
+		if (untouchable == 0)
+		{
+			if (i->GetState() != SOLDIER_STATE_DIE)
+			{
+				DebugOut(L">>> Main touched soldier >>> \n");
+				SetState(MARIO_STATE_PRE_DIE);
+			}
+		}
+}
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
 	CPortal* p = (CPortal*)e->obj;
@@ -103,7 +130,16 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 int CMario::GetAniIdBig()
 {
 	int aniId = -1;
-	if (!isOnPlatform)
+
+	if (isPreDied)
+	{
+		if (nx > 0)
+			aniId = ID_ANI_MARIO_PRE_DIE_LEFT;
+		else
+			aniId = ID_ANI_MARIO_PRE_DIE;
+
+	}
+	else if (!isOnPlatform)
 	{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_JUMP_RIGHT;
@@ -155,9 +191,6 @@ int CMario::GetAniIdBig()
 				else if (ax == -MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_WALKING_LEFT;
 			}
-
-	if (aniId == -1) aniId = ID_ANI_MARIO_IDLE_RIGHT;
-
 	return aniId;
 }
 void CMario::Render()
@@ -165,7 +198,10 @@ void CMario::Render()
 	CAnimations* animations = CAnimations::GetInstance();
 	int aniId = -1;
 	if (state == MARIO_STATE_DIE)
-		aniId = ID_ANI_MARIO_DIE;
+		if (nx > 0)
+			aniId = ID_ANI_MARIO_DIE_LEFT;
+		else
+			aniId = ID_ANI_MARIO_DIE;
 	else
 		aniId = GetAniIdBig();
 
@@ -178,9 +214,11 @@ void CMario::Render()
 void CMario::SetState(int state)
 {
 	if ((this->state == MARIO_STATE_ATTACK) && (GetTickCount64() - count_start < 200)) return;
-	// DIE is the end state, cannot be changed! 
-	if (this->state == MARIO_STATE_DIE) return; 
+	
+	if (this->state == MARIO_STATE_PRE_DIE && state!= MARIO_STATE_DIE) return;
 
+	// DIE is the end state, cannot be changed! 
+	if (this->state == MARIO_STATE_DIE) return;
 	switch (state)
 	{
 	case MARIO_STATE_RUNNING_RIGHT:
@@ -262,8 +300,6 @@ void CMario::SetState(int state)
 	case MARIO_STATE_ATTACK:
 		count_start = GetTickCount64();
 		createTailObject();
-		ax = 0.0f;
-		vx = 0.0f;
 		break;
 	case MARIO_STATE_LOOKUP: 
 		if (isOnPlatform)
@@ -281,12 +317,19 @@ void CMario::SetState(int state)
 		}
 		break;
 	case MARIO_STATE_DIE:
-		vy = -MARIO_JUMP_DEFLECT_SPEED;
 		vx = 0;
 		ax = 0;
 		break;
+	case MARIO_STATE_PRE_DIE:
+		isPreDied = true;
+		count_start = GetTickCount64();
+		vy = -2*MARIO_JUMP_DEFLECT_SPEED;
+		if (nx) nx = 1;
+		ax = -nx* MARIO_ACCEL_WALK_X;
+		if(maxVx==0) maxVx = MARIO_PRE_DIE_SPEED;
+		maxVx = -maxVx;
+		break;
 	}
-
 	CGameObject::SetState(state);
 }
 
@@ -294,7 +337,7 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 {
 	//if (level!=MARIO_LEVEL_SMALL)
 	//{
-		if (isSitting)
+		if (isSitting || isPreDied)
 		{
 			left = x - MARIO_BIG_SITTING_BBOX_WIDTH / 2;
 			top = y - MARIO_BIG_SITTING_BBOX_HEIGHT / 2;

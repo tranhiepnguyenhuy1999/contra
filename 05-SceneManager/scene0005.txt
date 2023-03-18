@@ -9,6 +9,8 @@ goomba.txt
 koopatroopa.txt
 piranhaplant.txt
 green-piranhaplant.txt
+
+soldier.txt
 [TILEDMAP]
 # apply tiled map editor
 
@@ -20,6 +22,7 @@ green-piranhaplant.txt
 # MARIO
 0	50	352
 
+20	100	352
 #brick
 1	1504	336
 1	1520	336
@@ -73,6 +76,3 @@ green-piranhaplant.txt
 3	1152	416	16	15	22	1089	1090	1091
 3	1664	416	16	15	36	1089	1090	1091
 3	2256	416	16	15	36	1089	1090	1091
-
-# board 
-52	78	446

@@ -8,6 +8,7 @@
 
 #define MARIO_WALKING_SPEED		0.1f
 #define MARIO_RUNNING_SPEED		0.2f
+#define MARIO_PRE_DIE_SPEED		0.05f
 
 #define MARIO_ACCEL_WALK_X	0.0005f
 #define MARIO_ACCEL_RUN_X	0.008f
@@ -42,6 +43,7 @@
 #define MARIO_STATE_LOOKUP		800
 #define	MARIO_STATE_LOOKUP_RELEASE	801
 
+#define MARIO_STATE_PRE_DIE	900
 #pragma region ANIMATION_ID
 //BIG
 #define ID_ANI_MARIO_IDLE_RIGHT 1001
@@ -61,8 +63,11 @@
 #define ID_ANI_MARIO_SIT_RIGHT 1009
 #define ID_ANI_MARIO_SIT_LEFT 1010
 
-#define ID_ANI_MARIO_DIE 1011
-#define ID_ANI_MARIO_DIE_LEFT 1012
+#define ID_ANI_MARIO_DIE 1019
+#define ID_ANI_MARIO_DIE_LEFT 1020
+
+#define ID_ANI_MARIO_PRE_DIE 1012
+#define ID_ANI_MARIO_PRE_DIE_LEFT 1011
 
 #define ID_ANI_MARIO_STAND_UP_RIGHT 1013
 #define ID_ANI_MARIO_STAND_UP_LEFT 1014
@@ -74,12 +79,12 @@
 #define MARIO_BIG_BBOX_WIDTH  23
 #define MARIO_BIG_BBOX_HEIGHT 34
 #define MARIO_BIG_SITTING_BBOX_WIDTH  32
-#define MARIO_BIG_SITTING_BBOX_HEIGHT 16
+#define MARIO_BIG_SITTING_BBOX_HEIGHT 12
 
 #define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 
 #define MARIO_SMALL_BBOX_WIDTH  12
-#define MARIO_SMALL_BBOX_HEIGHT 16
+#define MARIO_SMALL_BBOX_HEIGHT 12
 
 
 #define MARIO_UNTOUCHABLE_TIME 2500
@@ -88,7 +93,9 @@ class CMario : public CGameObject
 {
 	BOOLEAN isSitting;
 	BOOLEAN isLookingUp;
-	BOOLEAN isRunningUp;
+	BOOLEAN isPreDied;
+
+
 	float maxVx;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
@@ -105,6 +112,7 @@ class CMario : public CGameObject
 	int life;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	int GetAniIdBig();
 public:
@@ -112,6 +120,7 @@ public:
 	{
 		isSitting = false;
 		isLookingUp = false;
+		isPreDied = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = MARIO_GRAVITY;
@@ -129,7 +138,8 @@ public:
 	void SetState(int state);
 	int IsCollidable()
 	{
-		return (state != MARIO_STATE_DIE);
+		//return (state != MARIO_STATE_DIE);
+		return 1;
 	}
 	void GetProps(int& coinP, int& pointP, int& lifeP, int& isFlyStakP) {
 		coinP = coin;
