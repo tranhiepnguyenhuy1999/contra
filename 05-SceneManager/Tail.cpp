@@ -1,7 +1,6 @@
 #include "Tail.h"
 #include "Goomba.h"
-#include "ParaGoomba.h"
-#include "KoopaTroopa.h"
+#include "Soldier.h"
 #include "BreakBrick.h"
 #include "debug.h"
 
@@ -35,33 +34,23 @@ void CTail::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
-	else if (dynamic_cast<CParaGoomba*>(e->obj))
-		OnCollisionWithParaGoomba(e);
-	else if (dynamic_cast<CKoopaTroopa*>(e->obj))
-		OnCollisionWithKoopaTroopa(e);
-	else if (dynamic_cast<CBreakBrick*>(e->obj))
-		OnCollisionWithBreakBrick(e);
+	else if (dynamic_cast<CSoldier*>(e->obj))
+		OnCollisionWithSoldier(e);
 }
 void CTail::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 	goomba->SetState(GOOMBA_STATE_DIE);
 }
+void CTail::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
+{
+	CSoldier* i = dynamic_cast<CSoldier*>(e->obj);
+	i->SetState(GOOMBA_STATE_DIE);
+}
 void CTail::OnCollisionWithBreakBrick (LPCOLLISIONEVENT e)
 {
 	CBreakBrick* brick = dynamic_cast<CBreakBrick*>(e->obj);
 	brick->SetState(QUESTIONBRICK_STATE_STATIC);
-}
-void CTail::OnCollisionWithParaGoomba(LPCOLLISIONEVENT e)
-{
-	CParaGoomba* goomba = dynamic_cast<CParaGoomba*>(e->obj);
-	goomba->SetState(GOOMBA_STATE_DIE);
-}
-void CTail::OnCollisionWithKoopaTroopa(LPCOLLISIONEVENT e)
-{
-	CKoopaTroopa* item = dynamic_cast<CKoopaTroopa*>(e->obj);
-
-			item->SetState(KOOPATROOPA_STATE_DIE);
 }
 void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {

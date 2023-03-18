@@ -12,20 +12,10 @@ CSoldier::CSoldier(float x, float y) :CGameObject(x, y)
 
 void CSoldier::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == SOLDIER_STATE_DIE)
-	{
-		left = x - SOLDIER_BBOX_WIDTH / 2;
-		top = y - SOLDIER_BBOX_HEIGHT_DIE / 2;
-		right = left + SOLDIER_BBOX_WIDTH;
-		bottom = top + SOLDIER_BBOX_HEIGHT_DIE;
-	}
-	else
-	{
 		left = x - SOLDIER_BBOX_WIDTH / 2;
 		top = y - SOLDIER_BBOX_HEIGHT / 2;
 		right = left + SOLDIER_BBOX_WIDTH;
 		bottom = top + SOLDIER_BBOX_HEIGHT;
-	}
 }
 
 void CSoldier::OnNoCollision(DWORD dt)
@@ -101,7 +91,6 @@ void CSoldier::SetState(int state)
 	{
 	case SOLDIER_STATE_DIE:
 		die_start = GetTickCount64();
-		y += (SOLDIER_BBOX_HEIGHT - SOLDIER_BBOX_HEIGHT_DIE) / 2;
 		vx = 0;
 		vy = 0;
 		ay = 0;

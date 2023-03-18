@@ -4,11 +4,11 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define TAIL_ATTACK_SPEED 0.07f
+#define TAIL_ATTACK_SPEED 0.08f
 
 #define TAIL_WIDTH 4
-#define	TAIL_BBOX_WIDTH 2
-#define TAIL_BBOX_HEIGHT 8
+#define	TAIL_BBOX_WIDTH 4
+#define TAIL_BBOX_HEIGHT 4
 
 #define TAIL_STATE_RELASE 100
 #define TAIL_STATE_DIE 200
@@ -27,9 +27,8 @@ public:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithBreakBrick(LPCOLLISIONEVENT e);
-	void OnCollisionWithParaGoomba(LPCOLLISIONEVENT e);
-	void OnCollisionWithKoopaTroopa(LPCOLLISIONEVENT e);
 
 	virtual void SetState(int state);
 };

@@ -18,7 +18,7 @@ height	240
 20	textures\misc.png
 30	textures\main.gif
 40	textures\ContraSheet3.gif
-50	textures\main-enemies.png
+50	textures\ContraSheet8.gif
 60	textures\81122.png
 70	textures\map1_bank.png
 80 	textures\172615.png
