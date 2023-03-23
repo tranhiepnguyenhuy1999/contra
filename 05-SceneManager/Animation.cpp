@@ -18,7 +18,7 @@ void CAnimation::Render(float x, float y)
 {
 	ULONGLONG now = GetTickCount64();
 	if (currentFrame == -1)
-	{
+	{	
 		currentFrame = 0;
 		lastFrameTime = now;
 	}

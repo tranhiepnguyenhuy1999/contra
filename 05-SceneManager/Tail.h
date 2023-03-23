@@ -4,7 +4,7 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define TAIL_ATTACK_SPEED 0.08f
+#define TAIL_ATTACK_SPEED 0.2f
 
 #define TAIL_WIDTH 4
 #define	TAIL_BBOX_WIDTH 4

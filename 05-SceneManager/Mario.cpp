@@ -191,6 +191,7 @@ int CMario::GetAniIdBig()
 				else if (ax == -MARIO_ACCEL_WALK_X)
 					aniId = ID_ANI_MARIO_WALKING_LEFT;
 			}
+	if (aniId == -1) aniId = ID_ANI_MARIO_IDLE_RIGHT;
 	return aniId;
 }
 void CMario::Render()
@@ -213,7 +214,7 @@ void CMario::Render()
 }
 void CMario::SetState(int state)
 {
-	if ((this->state == MARIO_STATE_ATTACK) && (GetTickCount64() - count_start < 200)) return;
+	if ((this->state == MARIO_STATE_ATTACK) && (GetTickCount64() - count_start < 100)) return;
 	
 	if (this->state == MARIO_STATE_PRE_DIE && state!= MARIO_STATE_DIE) return;
 
