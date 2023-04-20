@@ -27,6 +27,9 @@
 #include "HiddenBrick.h"
 
 #include "Soldier.h"
+#include "GunMachine1.h"
+#include "GunBox.h"
+#include "GunShip.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -136,7 +139,18 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
+	case OBJECT_TYPE_GUNBOX:
+	{
+		float typeGun = (float)atof(tokens[3].c_str());
+		obj = new CGunBox(x, y, typeGun); break;
+	}
+	case OBJECT_TYPE_GUNSHIP:
+	{
+		float typeGun = (float)atof(tokens[3].c_str());
+		obj = new CGunShip(x, y, typeGun); break;
+	}
 	case OBJECT_TYPE_SOLDIER: obj = new CSoldier(x, y); break;
+	case OBJECT_TYPE_GUNMACHINE1: obj = new CGunMachine1(x, y); break;
 	case OBJECT_TYPE_MAP: obj = new CMap(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_BREAKBRICK: obj = new CBreakBrick(x, y); break;

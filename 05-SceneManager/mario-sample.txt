@@ -19,7 +19,7 @@ height	240
 30	textures\main.gif
 40	textures\ContraSheet3.gif
 50	textures\ContraSheet8.gif
-60	textures\81122.png
+60	textures\ContraSheet4.gif
 70	textures\map1_bank.png
 80 	textures\172615.png
 90 	textures\main_flip.png
