@@ -162,6 +162,12 @@
     <ClCompile Include="GunShip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GunType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Gun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -321,6 +327,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GunShip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GunType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gun.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

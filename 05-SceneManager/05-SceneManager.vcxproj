@@ -161,10 +161,12 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="GreenFlower1.cpp" />
     <ClCompile Include="GreenFlower2.cpp" />
+    <ClCompile Include="Gun.cpp" />
     <ClCompile Include="GunBox.cpp" />
     <ClCompile Include="GunMachine1.cpp" />
     <ClCompile Include="GunShip.cpp" />
     <ClCompile Include="GunSoldier.cpp" />
+    <ClCompile Include="GunType.cpp" />
     <ClCompile Include="HiddenBrick.cpp" />
     <ClCompile Include="KoopaTroopa.cpp" />
     <ClCompile Include="Leaf.cpp" />
@@ -213,10 +215,12 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="GreenFlower1.h" />
     <ClInclude Include="GreenFlower2.h" />
+    <ClInclude Include="Gun.h" />
     <ClInclude Include="GunBox.h" />
     <ClInclude Include="GunMachine1.h" />
     <ClInclude Include="GunShip.h" />
     <ClInclude Include="GunSoldier.h" />
+    <ClInclude Include="GunType.h" />
     <ClInclude Include="HiddenBrick.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="KoopaTroopa.h" />

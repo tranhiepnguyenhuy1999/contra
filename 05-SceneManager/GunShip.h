@@ -1,9 +1,9 @@
 #pragma once
 #include "GameObject.h"
 
-#define PARAGOOMBA_GRAVITY 0.002f
-#define PARAGOOMBA_SPEED 0.15f
-#define PARAGOOMBA_GRAVITY_MAX	0.3f 
+#define PARAGOOMBA_GRAVITY 0.001f
+#define PARAGOOMBA_SPEED 0.1f
+#define PARAGOOMBA_GRAVITY_MAX	0.25f 
 
 #define PARAGOOMBA_MAX_Y 50
 

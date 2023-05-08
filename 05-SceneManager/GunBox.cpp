@@ -36,6 +36,7 @@ void CGunBox::OnNoCollision(DWORD dt)
 
 void CGunBox::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+
 }
 
 void CGunBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

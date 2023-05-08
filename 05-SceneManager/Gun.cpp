@@ -1,10 +1,10 @@
-#include "Gun.h"
+#include "Tail.h"
 #include "Goomba.h"
 #include "Soldier.h"
 #include "BreakBrick.h"
 #include "debug.h"
 
-CGun::CGun(float x, float y, float nx) :CGameObject(x, y)
+CTail::CTail(float x, float y, float nx) :CGameObject(x, y)
 {
 	if (nx < 0)
 		vx = -TAIL_ATTACK_SPEED;
@@ -12,17 +12,17 @@ CGun::CGun(float x, float y, float nx) :CGameObject(x, y)
 		vx = TAIL_ATTACK_SPEED;
 	SetState(TAIL_STATE_RELASE);
 }
-void CGun::Render()
+void CTail::Render()
 {
 	RenderBoundingBox();
 }
-void CGun::OnNoCollision(DWORD dt)
+void CTail::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
 	y += vy * dt;
 };
 
-void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
+void CTail::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (e->ny != 0)
 	{
@@ -37,24 +37,24 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
 }
-void CGun::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
+void CTail::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 	goomba->SetState(GOOMBA_STATE_DIE);
 }
-void CGun::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
+void CTail::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 {
 	CSoldier* i = dynamic_cast<CSoldier*>(e->obj);
 	i->SetState(GOOMBA_STATE_DIE);
 }
-void CGun::OnCollisionWithBreakBrick (LPCOLLISIONEVENT e)
+void CTail::OnCollisionWithBreakBrick(LPCOLLISIONEVENT e)
 {
 	CBreakBrick* brick = dynamic_cast<CBreakBrick*>(e->obj);
 	brick->SetState(QUESTIONBRICK_STATE_STATIC);
 }
-void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if ((state != TAIL_STATE_DIE) && (GetTickCount64() - count_start >5000))
+	if ((state != TAIL_STATE_DIE) && (GetTickCount64() - count_start > 5000))
 	{
 		count_start = -1;
 		isDeleted = true;
@@ -63,14 +63,14 @@ void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
-void CGun::GetBoundingBox(float& l, float& t, float& r, float& b)
+void CTail::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x - TAIL_BBOX_WIDTH / 2;
 	t = y - TAIL_BBOX_HEIGHT / 2;
 	r = l + TAIL_BBOX_WIDTH;
 	b = t + TAIL_BBOX_HEIGHT;
 }
-void CGun::SetState(int state)
+void CTail::SetState(int state)
 {
 	CGameObject::SetState(state);
 	switch (state)
