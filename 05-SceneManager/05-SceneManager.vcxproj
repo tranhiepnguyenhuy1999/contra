@@ -181,6 +181,7 @@
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="QuestionBrick.cpp" />
     <ClCompile Include="Rock.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />
@@ -235,6 +236,7 @@
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="QuestionBrick.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Rock.h" />
