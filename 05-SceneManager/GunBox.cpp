@@ -45,6 +45,13 @@ void CGunBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float px, py;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
 
+	if (state == GUNBOX_STATE_DIE)
+	{
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUNTYPE, x,y,1,1);
+		isDeleted = true;
+		return;
+	}
 	if ((state == GUNBOX_STATE_UNACTIVE) && (GetTickCount64() - loop_start > GUNBOX_LOOP_TIMEOUT))
 	{
 		return	SetState(GUNBOX_STATE_PRE_OPEN);
@@ -95,6 +102,8 @@ void CGunBox::SetState(int state)
 		break;
 	case GUNBOX_STATE_OPEN:
 		isOpen = true;
+		break;
+	case GUNBOX_STATE_DIE:
 		break;
 	}
 }

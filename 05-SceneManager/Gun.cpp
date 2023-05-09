@@ -1,28 +1,30 @@
-#include "Tail.h"
+#include "Gun.h"
+
 #include "Goomba.h"
 #include "Soldier.h"
-#include "BreakBrick.h"
+#include "GunBox.h"
+
 #include "debug.h"
 
-CTail::CTail(float x, float y, float nx) :CGameObject(x, y)
+CGun::CGun(float x, float y, float nx) :CGameObject(x, y)
 {
 	if (nx < 0)
-		vx = -TAIL_ATTACK_SPEED;
+		vx = -GUN_ATTACK_SPEED;
 	else
-		vx = TAIL_ATTACK_SPEED;
-	SetState(TAIL_STATE_RELASE);
+		vx = GUN_ATTACK_SPEED;
+	SetState(GUN_STATE_RELASE);
 }
-void CTail::Render()
+void CGun::Render()
 {
 	RenderBoundingBox();
 }
-void CTail::OnNoCollision(DWORD dt)
+void CGun::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
 	y += vy * dt;
 };
 
-void CTail::OnCollisionWith(LPCOLLISIONEVENT e)
+void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (e->ny != 0)
 	{
@@ -36,25 +38,27 @@ void CTail::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
+	else if (dynamic_cast<CGunBox*>(e->obj))
+		OnCollisionWithGunBox(e);
 }
-void CTail::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
+void CGun::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
 	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
 	goomba->SetState(GOOMBA_STATE_DIE);
 }
-void CTail::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
+void CGun::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 {
 	CSoldier* i = dynamic_cast<CSoldier*>(e->obj);
 	i->SetState(GOOMBA_STATE_DIE);
 }
-void CTail::OnCollisionWithBreakBrick(LPCOLLISIONEVENT e)
+void CGun::OnCollisionWithGunBox(LPCOLLISIONEVENT e)
 {
-	CBreakBrick* brick = dynamic_cast<CBreakBrick*>(e->obj);
-	brick->SetState(QUESTIONBRICK_STATE_STATIC);
+	CGunBox* i = dynamic_cast<CGunBox*>(e->obj);
+	i->SetState(GUNBOX_STATE_DIE);
 }
-void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
+void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if ((state != TAIL_STATE_DIE) && (GetTickCount64() - count_start > 5000))
+	if ((state != GUN_STATE_DIE) && (GetTickCount64() - count_start > 5000))
 	{
 		count_start = -1;
 		isDeleted = true;
@@ -63,19 +67,19 @@ void CTail::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
-void CTail::GetBoundingBox(float& l, float& t, float& r, float& b)
+void CGun::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x - TAIL_BBOX_WIDTH / 2;
-	t = y - TAIL_BBOX_HEIGHT / 2;
-	r = l + TAIL_BBOX_WIDTH;
-	b = t + TAIL_BBOX_HEIGHT;
+	l = x - GUN_BBOX_WIDTH / 2;
+	t = y - GUN_BBOX_HEIGHT / 2;
+	r = l + GUN_BBOX_WIDTH;
+	b = t + GUN_BBOX_HEIGHT;
 }
-void CTail::SetState(int state)
+void CGun::SetState(int state)
 {
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case TAIL_STATE_RELASE:
+	case GUN_STATE_RELASE:
 		count_start = GetTickCount64();
 		break;
 	}

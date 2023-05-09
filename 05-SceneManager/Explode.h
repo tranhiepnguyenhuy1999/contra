@@ -4,18 +4,16 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define GUN_ATTACK_SPEED 0.2f
-
-#define GUN_WIDTH 4
-#define	GUN_BBOX_WIDTH 4
-#define GUN_BBOX_HEIGHT 4
-
 #define GUN_STATE_RELASE 100
 #define GUN_STATE_DIE 200
-class CGun : public CGameObject {
+
+#define ID_ANI_INFRASTRUCTURE_EXPLODE	3002
+
+class CExplode : public CGameObject {
 	ULONGLONG count_start;
+	int exType;
 public:
-	CGun(float x, float y, float nx);
+	CExplode(float x, float y, int type);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -26,9 +24,6 @@ public:
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
-	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
-	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
-	void OnCollisionWithGunBox(LPCOLLISIONEVENT e);
 
 	virtual void SetState(int state);
 };

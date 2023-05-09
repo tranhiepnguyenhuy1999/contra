@@ -20,7 +20,6 @@
 #include "ParaKoopaTroopa.h"
 #include "FallObject.h"
 #include "Leaf.h"
-#include "Tail.h"
 #include "BreakBrick.h"
 #include "Rock.h"
 #include "Mario2.h"
@@ -30,6 +29,9 @@
 #include "GunMachine1.h"
 #include "GunBox.h"
 #include "GunShip.h"
+#include "GunType.h"
+#include "Gun.h"
+#include "Explode.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -211,7 +213,9 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 	{
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
-	case OBJECT_TYPE_TAIL: obj = new CTail(x, y, nx); break;
+	case OBJECT_TYPE_GUNTYPE: obj = new CGunType(x, y,1,1); break;
+	case OBJECT_TYPE_GUN: obj = new CGun(x, y, nx); break;
+	case OBJECT_TYPE_EXPLODE: obj = new CExplode(x, y, nx); break;
 	case OBJECT_TYPE_FIRE:
 	{
 		player->GetPosition(px, py);

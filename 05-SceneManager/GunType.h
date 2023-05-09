@@ -5,9 +5,9 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define GUNTYPE_GRAVITY	0.07f
-#define GUNTYPE_SPEED	0.35f
-#define MARIO_GRAVITY_MAX	0.001f
+#define GUNTYPE_GRAVITY	0.001f
+#define GUNTYPE_SPEED	0.1f
+#define GUNTYPE_GRAVITY_MAX	0.25f
 
 #define ID_ANI_GUNTYPE_M	3201
 #define ID_ANI_GUNTYPE_B	3202
@@ -24,7 +24,7 @@
 #define GUNTYPE_STATE_DIE 200
 class CGunType : public CGameObject {
 	ULONGLONG count_start;
-	float ax, ay;
+	float ay;
 
 public:
 	int type;

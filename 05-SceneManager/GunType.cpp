@@ -7,8 +7,7 @@ CGunType::CGunType(float x, float y, float nx, float gunType) :CGameObject(x, y)
 		vx = -GUNTYPE_SPEED;
 	else
 		vx = GUNTYPE_SPEED;
-	ax = 0;
-	ay = -GUNTYPE_GRAVITY;
+	ay = GUNTYPE_GRAVITY;
 	type = (int)gunType;
 	SetState(GUNTYPE_STATE_ACTIVE);
 }
@@ -26,6 +25,11 @@ void CGunType::OnNoCollision(DWORD dt)
 
 void CGunType::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	if (e->ny != 0 && e->obj->IsBlocking())
+	{
+		vy = 0; ay = 0;
+		vx = 0;
+	}
 }
 int CGunType::getAniID()
 {
@@ -52,16 +56,15 @@ int CGunType::getAniID()
 void CGunType::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	vy += ay * dt;
-	vx += ax * dt;
-	//if ((state != GUNTYPE_STATE_DIE) && (GetTickCount64() - count_start > 500))
-	//{
-	//	count_start = -1;
-	//	isDeleted = true;
-	//	return;
-	//}
-	if ((state == GUNTYPE_STATE_ACTIVE) && abs(vy) > MARIO_GRAVITY_MAX)
+
+	if (state == GUNTYPE_STATE_DIE)
 	{
-		vy = MARIO_GRAVITY_MAX;
+		count_start = -1;
+		isDeleted = true;
+		return;
+	}
+	if ((state == GUNTYPE_STATE_ACTIVE) && vy > GUNTYPE_GRAVITY_MAX)
+	{
 		ay = -ay;
 	}
 	if (state == GUNTYPE_STATE_DIE)

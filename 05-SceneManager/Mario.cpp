@@ -63,7 +63,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
-		if (e->ny < 0) isOnPlatform = true;
+		if (e->ny > 0) isOnPlatform = true;
 	}
 	else 
 	if (e->nx != 0 && e->obj->IsBlocking())
@@ -264,14 +264,14 @@ void CMario::SetState(int state)
 		if (isOnPlatform)
 		{
 			if (abs(this->vx) == MARIO_RUNNING_SPEED)
-				vy = -MARIO_JUMP_RUN_SPEED_Y;
+				vy = MARIO_JUMP_RUN_SPEED_Y;
 			else
-				vy = -MARIO_JUMP_SPEED_Y;
+				vy = MARIO_JUMP_SPEED_Y;
 		}
 		break;
 
 	case MARIO_STATE_RELEASE_JUMP:
-		if (vy < 0) vy += MARIO_JUMP_SPEED_Y / 2;
+		if (vy < 0) vy -= MARIO_JUMP_SPEED_Y / 2;
 		break;
 
 	case MARIO_STATE_SIT:
@@ -280,7 +280,7 @@ void CMario::SetState(int state)
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
 			vx = 0; vy = 0.0f;
-			y +=MARIO_SIT_HEIGHT_ADJUST;
+			y -=MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
 
@@ -289,7 +289,7 @@ void CMario::SetState(int state)
 		{
 			isSitting = false;
 			state = MARIO_STATE_IDLE;
-			y -= MARIO_SIT_HEIGHT_ADJUST;
+			y += MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
 
@@ -324,7 +324,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_PRE_DIE:
 		isPreDied = true;
 		count_start = GetTickCount64();
-		vy = -2*MARIO_JUMP_DEFLECT_SPEED;
+		vy = 2*MARIO_JUMP_DEFLECT_SPEED;
 		if (nx) nx = 1;
 		ax = -nx* MARIO_ACCEL_WALK_X;
 		if(maxVx==0) maxVx = MARIO_PRE_DIE_SPEED;
@@ -365,11 +365,11 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 void CMario::createTailObject() {
 
 	if (nx < 0) {
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_TAIL, x - TAIL_BBOX_WIDTH / 2, y+ MARIO_BIG_BBOX_HEIGHT/2 - TAIL_BBOX_HEIGHT, -1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - TAIL_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT/4, -1);
 	}
 	else
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_TAIL, x + TAIL_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 2 - TAIL_BBOX_HEIGHT,1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + TAIL_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4,1);
 
 	}
 }

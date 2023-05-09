@@ -153,6 +153,7 @@
     <ClCompile Include="CountdownTimer.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="DownBrick.cpp" />
+    <ClCompile Include="Explode.cpp" />
     <ClCompile Include="FallObject.cpp" />
     <ClCompile Include="Fire.cpp" />
     <ClCompile Include="Flower.cpp" />
@@ -189,7 +190,6 @@
     <ClCompile Include="Soldier.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprites.cpp" />
-    <ClCompile Include="Tail.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="TileSet.cpp" />
     <ClCompile Include="UserBoard.cpp" />
@@ -208,6 +208,7 @@
     <ClInclude Include="CountdownTimer.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="DownBrick.h" />
+    <ClInclude Include="Explode.h" />
     <ClInclude Include="FallObject.h" />
     <ClInclude Include="Fire.h" />
     <ClInclude Include="Flower.h" />
@@ -246,7 +247,6 @@
     <ClInclude Include="Soldier.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Sprites.h" />
-    <ClInclude Include="Tail.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="TileSet.h" />

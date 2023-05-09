@@ -124,7 +124,7 @@ public:
 		isPreDied = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
-		ay = MARIO_GRAVITY;
+		ay = -MARIO_GRAVITY;
 		untouchable = 0;
 		untouchable_start = -1;
 		count_start = -1;
