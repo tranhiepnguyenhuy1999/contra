@@ -17,8 +17,9 @@
 #define ID_ANI_GUN_EXPLODE 3003
 class CGun : public CGameObject {
 	ULONGLONG count_start;
+	int gunType;
 public:
-	CGun(float x, float y, float nx);
+	CGun(float x, float y, float nx, float ny, int type);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

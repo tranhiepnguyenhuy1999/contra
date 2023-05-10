@@ -108,7 +108,6 @@ class CMario : public CGameObject
 
 	int untouchable;
 
-
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	ULONGLONG count_start;
@@ -117,6 +116,7 @@ class CMario : public CGameObject
 	int coin;
 	int point;
 	int life;
+	int gunType;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
@@ -140,6 +140,7 @@ public:
 		coin = 0;
 		point = 0;
 		life = 1;
+		gunType = 0;
 
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -159,9 +160,10 @@ public:
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
+	void OnCollisionWithGunType(LPCOLLISIONEVENT e);
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); };
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	void createTailObject();
+	void createGun();
 
 };

@@ -67,11 +67,7 @@ void CGunType::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		ay = -ay;
 	}
-	if (state == GUNTYPE_STATE_DIE)
-	{
-		isDeleted = true;
-		return;
-	}
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -88,6 +84,8 @@ void CGunType::SetState(int state)
 	switch (state)
 	{
 	case GUNTYPE_STATE_ACTIVE:
+		break;
+	case GUNTYPE_STATE_DIE:
 		break;
 	}
 }

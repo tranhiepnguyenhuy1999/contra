@@ -6,13 +6,15 @@
 
 #include "debug.h"
 
-CGun::CGun(float x, float y, float nx) :CGameObject(x, y)
+CGun::CGun(float x, float y, float nx, float ny, int type) :CGameObject(x, y)
 {
 	if (nx < 0)
 		vx = -GUN_ATTACK_SPEED;
 	else
 		vx = GUN_ATTACK_SPEED;
+	gunType = type;
 	SetState(GUN_STATE_RELASE);
+	
 }
 void CGun::Render()
 {
@@ -24,8 +26,26 @@ void CGun::Render()
 int CGun::getAniId() {
 	if (state == GUN_STATE_DIE)
 		return ID_ANI_GUN_EXPLODE;
-	else return ID_ANI_GUN_DEFAULT;
-	return -1;
+	switch (gunType)
+	{
+		case 0: return ID_ANI_GUN_DEFAULT;
+		case 1:
+			return 1;
+		case 2:
+			return 1;
+		case 3:
+			return 1;
+		case 4:
+			return 1;
+		case 5:
+			return 1;
+		case 6:
+			return 1;
+		case 7:
+			return 1;
+	default:
+		break;
+	}
 }
 
 void CGun::OnNoCollision(DWORD dt)

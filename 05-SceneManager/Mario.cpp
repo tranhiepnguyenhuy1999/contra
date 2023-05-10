@@ -6,6 +6,7 @@
 
 #include "Goomba.h"
 #include "Soldier.h"
+#include "GunType.h"
 
 #include "Coin.h"
 #include "Mushroom.h"
@@ -70,12 +71,13 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = 0;
 	}
-	
 
 	if (dynamic_cast<CGoomba*>(e->obj))
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
+	else if (dynamic_cast<CGunType*>(e->obj))
+		OnCollisionWithGunType(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
 }
@@ -105,18 +107,25 @@ void CMario::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 		}
 	}
 }
+void CMario::OnCollisionWithGunType(LPCOLLISIONEVENT e)
+{
+	DebugOut(L"Touched !!! \n");
+	CGunType* i = dynamic_cast<CGunType*>(e->obj);
+	gunType = i->type;
+	i->SetState(GUNTYPE_STATE_DIE);
+}
 void CMario::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 {
 	CSoldier* i = dynamic_cast<CSoldier*>(e->obj);
 
-		if (untouchable == 0)
+	if (untouchable == 0)
+	{
+		if (i->GetState() != SOLDIER_STATE_DIE)
 		{
-			if (i->GetState() != SOLDIER_STATE_DIE)
-			{
-				DebugOut(L">>> Main touched soldier >>> \n");
-				SetState(MARIO_STATE_PRE_DIE);
-			}
+			DebugOut(L">>> Main touched soldier >>> \n");
+			SetState(MARIO_STATE_PRE_DIE);
 		}
+	}
 }
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {
@@ -314,7 +323,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_SHOOTING:
 		shooting_start = GetTickCount64();
 		isShooting = true;
-		createTailObject();
+		createGun();
 		break;
 	case MARIO_STATE_LOOKUP: 
 		if (isOnPlatform)
@@ -376,7 +385,21 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	//}
 }
 
-void CMario::createTailObject() {
+void CMario::createGun() {
+
+	switch (gunType)
+	{
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+	case 6:
+	case 7:
+	default:
+
+		break;
+	}
 
 	if (nx < 0) {
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT/4, -1);

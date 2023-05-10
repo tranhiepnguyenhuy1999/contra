@@ -36,7 +36,7 @@ protected:
 	
 public: 
 	CPlayScene(int id, LPCWSTR filePath);
-	virtual void createNewObject(int id, float x, float y, float nx, float ny, LPGAMEOBJECT objSrc = NULL);
+	virtual void createNewObject(int id, float x, float y, float nx, float ny, int type);
 	virtual void getPlayerPosition(float& x, float& y) {
 		player->GetPosition(x, y);
 	};

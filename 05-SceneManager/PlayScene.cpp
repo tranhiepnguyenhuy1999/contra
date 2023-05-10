@@ -205,7 +205,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	objects.push_back(obj);
 }
-void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=0, LPGAMEOBJECT objSrc)
+void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=0, int type =0)
 {
 	CGameObject* obj = NULL;
 	float px, py;
@@ -214,7 +214,7 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_GUNTYPE: obj = new CGunType(x, y,1,1); break;
-	case OBJECT_TYPE_GUN: obj = new CGun(x, y, nx); break;
+	case OBJECT_TYPE_GUN: obj = new CGun(x, y, nx, ny, type); break;
 	case OBJECT_TYPE_EXPLODE: obj = new CExplode(x, y, nx); break;
 	case OBJECT_TYPE_FIRE:
 	{
