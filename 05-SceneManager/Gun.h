@@ -4,14 +4,17 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define GUN_ATTACK_SPEED 0.2f
+#define GUN_ATTACK_SPEED 0.35f
 
-#define GUN_WIDTH 4
-#define	GUN_BBOX_WIDTH 4
-#define GUN_BBOX_HEIGHT 4
+#define GUN_WIDTH 2
+#define	GUN_BBOX_WIDTH 2
+#define GUN_BBOX_HEIGHT 2
 
 #define GUN_STATE_RELASE 100
 #define GUN_STATE_DIE 200
+
+#define ID_ANI_GUN_DEFAULT 3301
+#define ID_ANI_GUN_EXPLODE 3003
 class CGun : public CGameObject {
 	ULONGLONG count_start;
 public:
@@ -25,6 +28,8 @@ public:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
+
+	int getAniId();
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);

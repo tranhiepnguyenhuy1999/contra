@@ -29,7 +29,7 @@ void CExplode::OnCollisionWith(LPCOLLISIONEVENT e)
 }
 void CExplode::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if ((state == GUN_STATE_RELASE) && (GetTickCount64() - count_start > 2000))
+	if ((state == GUN_STATE_RELASE) && (GetTickCount64() - count_start > 750))
 	{
 		count_start = -1;
 		isDeleted = true;

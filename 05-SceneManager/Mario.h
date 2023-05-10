@@ -38,7 +38,7 @@
 #define MARIO_STATE_SIT				600
 #define MARIO_STATE_SIT_RELEASE		601
 
-#define MARIO_STATE_ATTACK			700
+#define MARIO_STATE_SHOOTING		700
 
 #define MARIO_STATE_LOOKUP		800
 #define	MARIO_STATE_LOOKUP_RELEASE	801
@@ -73,6 +73,9 @@
 #define ID_ANI_MARIO_STAND_UP_RIGHT 1013
 #define ID_ANI_MARIO_STAND_UP_LEFT 1014
 
+#define ID_ANI_MARIO_SHOOTING_RIGHT 1021
+#define ID_ANI_MARIO_SHOOTING_LEFT 1022
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -95,6 +98,8 @@ class CMario : public CGameObject
 	BOOLEAN isSitting;
 	BOOLEAN isLookingUp;
 	BOOLEAN isPreDied;
+	BOOLEAN isShooting;
+
 
 
 	float maxVx;
@@ -107,6 +112,7 @@ class CMario : public CGameObject
 	ULONGLONG untouchable_start;
 	BOOLEAN isOnPlatform;
 	ULONGLONG count_start;
+	ULONGLONG shooting_start;
 
 	int coin;
 	int point;
@@ -115,19 +121,21 @@ class CMario : public CGameObject
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
-	int GetAniIdBig();
+	int GetAniId();
 public:
 	CMario(float x, float y) : CGameObject(x, y)
 	{
 		isSitting = false;
 		isLookingUp = false;
 		isPreDied = false;
+		isShooting = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = -MARIO_GRAVITY;
 		untouchable = 0;
 		untouchable_start = -1;
 		count_start = -1;
+		shooting_start = -1;
 		isOnPlatform = false;
 		coin = 0;
 		point = 0;

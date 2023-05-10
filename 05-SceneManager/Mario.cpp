@@ -127,7 +127,7 @@ void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 //
 // Get animdation ID for big Mario
 //
-int CMario::GetAniIdBig()
+int CMario::GetAniId()
 {
 	int aniId = -1;
 
@@ -138,6 +138,13 @@ int CMario::GetAniIdBig()
 		else
 			aniId = ID_ANI_MARIO_PRE_DIE;
 
+	}
+	else if (isShooting)
+	{
+		if (nx >= 0)
+			aniId = ID_ANI_MARIO_SHOOTING_RIGHT;
+		else
+			aniId = ID_ANI_MARIO_SHOOTING_LEFT;
 	}
 	else if (!isOnPlatform)
 	{
@@ -204,7 +211,7 @@ void CMario::Render()
 		else
 			aniId = ID_ANI_MARIO_DIE;
 	else
-		aniId = GetAniIdBig();
+		aniId = GetAniId();
 
 	animations->Get(aniId)->Render(x, y);
 
@@ -214,7 +221,13 @@ void CMario::Render()
 }
 void CMario::SetState(int state)
 {
-	if ((this->state == MARIO_STATE_ATTACK) && (GetTickCount64() - count_start < 100)) return;
+	if (GetTickCount64() - shooting_start < 250) {
+	}
+	else
+	{
+		shooting_start = -1;
+		isShooting = false;
+	}
 	
 	if (this->state == MARIO_STATE_PRE_DIE && state!= MARIO_STATE_DIE) return;
 
@@ -298,8 +311,9 @@ void CMario::SetState(int state)
 		vx = 0.0f;
 		break;
 
-	case MARIO_STATE_ATTACK:
-		count_start = GetTickCount64();
+	case MARIO_STATE_SHOOTING:
+		shooting_start = GetTickCount64();
+		isShooting = true;
 		createTailObject();
 		break;
 	case MARIO_STATE_LOOKUP: 
@@ -365,11 +379,11 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 void CMario::createTailObject() {
 
 	if (nx < 0) {
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - TAIL_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT/4, -1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT/4, -1);
 	}
 	else
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + TAIL_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4,1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4,1);
 
 	}
 }

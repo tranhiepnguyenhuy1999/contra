@@ -52,7 +52,7 @@ void CGunBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isDeleted = true;
 		return;
 	}
-	if ((state == GUNBOX_STATE_UNACTIVE) && (GetTickCount64() - loop_start > GUNBOX_LOOP_TIMEOUT))
+	if ((state == GUNBOX_STATE_UNACTIVE) && (GetTickCount64() - loop_start > GUNBOX_CLOSE_TIMEOUT))
 	{
 		return	SetState(GUNBOX_STATE_PRE_OPEN);
 	}

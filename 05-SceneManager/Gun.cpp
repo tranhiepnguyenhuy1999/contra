@@ -16,8 +16,18 @@ CGun::CGun(float x, float y, float nx) :CGameObject(x, y)
 }
 void CGun::Render()
 {
-	RenderBoundingBox();
+	int aniId = -1;
+	aniId=getAniId();
+	if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	//RenderBoundingBox();
 }
+int CGun::getAniId() {
+	if (state == GUN_STATE_DIE)
+		return ID_ANI_GUN_EXPLODE;
+	else return ID_ANI_GUN_DEFAULT;
+	return -1;
+}
+
 void CGun::OnNoCollision(DWORD dt)
 {
 	x += vx * dt;
@@ -55,10 +65,17 @@ void CGun::OnCollisionWithGunBox(LPCOLLISIONEVENT e)
 {
 	CGunBox* i = dynamic_cast<CGunBox*>(e->obj);
 	i->SetState(GUNBOX_STATE_DIE);
+	SetState(GUN_STATE_DIE);
 }
 void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if ((state != GUN_STATE_DIE) && (GetTickCount64() - count_start > 5000))
+	if ((state != GUN_STATE_DIE) && (GetTickCount64() - count_start > 3000))
+	{
+		count_start = -1;
+		isDeleted = true;
+		return;
+	}
+	if ((state == GUN_STATE_DIE) && (GetTickCount64() - count_start > 100))
 	{
 		count_start = -1;
 		isDeleted = true;
