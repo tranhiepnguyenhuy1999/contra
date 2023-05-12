@@ -4,7 +4,6 @@
 #include "Game.h"
 
 #include "Mario.h"
-#include "Mario2.h"
 #include "PlayScene.h"
 
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
@@ -13,7 +12,6 @@ void CSampleKeyHandler::OnKeyDown(int KeyCode)
 	CMario* mario = (CMario *)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer(); 
 	int level;
 	mario->getLevel(level);
-	float x, y;
 	switch (KeyCode)
 	{
 	case DIK_L:

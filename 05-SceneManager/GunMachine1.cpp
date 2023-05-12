@@ -1,7 +1,6 @@
 
 #include "GunMachine1.h"
 #include "AssetIDs.h"
-#include "Pile.h"
 #include "debug.h"
 
 CGunMachine1::CGunMachine1(float x, float y) :CGameObject(x, y)

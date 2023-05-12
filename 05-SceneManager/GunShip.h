@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define GUNSHIP_GRAVITY 0.001f
-#define GUNSHIP_SPEED 0.1f
+#define GUNSHIP_SPEED 0.05f
 #define GUNSHIP_GRAVITY_MAX	0.25f 
 
 #define GUNSHIP_MAX_Y 50

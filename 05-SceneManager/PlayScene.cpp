@@ -7,18 +7,8 @@
 #include "Textures.h"
 #include "Sprites.h"
 #include "Portal.h"
-#include "Coin.h"
 #include "Platform.h"
-#include "Pile.h"
-#include "Flower.h"
-#include "Fire.h"
-#include "SmallCoin.h"
-#include "KoopaTroopa.h"
-#include "FallObject.h"
-#include "Leaf.h"
 #include "BreakBrick.h"
-#include "Rock.h"
-#include "Mario2.h"
 #include "HiddenBrick.h"
 
 #include "Soldier.h"
@@ -183,12 +173,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CPortal(x, y, r, b, scene_id);
 	}
 	break;
-
-	case OBJECT_TYPE_USERBOARD:
-	{
-		obj = new CUserBoard(x, y); break;
-	}
-	break;
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", object_type);
 		return;
@@ -203,7 +187,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=0, int type =0)
 {
 	CGameObject* obj = NULL;
-	float px, py;
 	switch (id)
 	{
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
@@ -248,11 +231,11 @@ void CPlayScene::_ParseSection_TILEDMAP()
 	else
 		DebugOut(L"[INFO] Could not open the file\n");
 
-	for (int i = 0; i < content.size(); i++)
+	for (float i = 0; i < content.size(); i++)
 	{
-		for (int j = 0; j < content[i].size(); j++)
+		for (float j = 0; j < content[i].size(); j++)
 		{
-			obj = new CTileSet(j*16,i*16, stoi(content[i][j])+1);
+			obj = new CTileSet(j*16,i*16, stoi(content[i][j])+1.0);
 			obj->SetPosition(j * 16, i * 16);
 			tiledMapObjects.push_back(obj);
 		}

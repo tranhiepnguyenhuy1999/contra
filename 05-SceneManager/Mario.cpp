@@ -8,20 +8,11 @@
 #include "Soldier.h"
 #include "GunType.h"
 
-#include "Coin.h"
-#include "Mushroom.h"
 #include "Portal.h"
-#include "QuestionBrick.h"
 #include "DownBrick.h"
-#include "KoopaTroopa.h"
-#include "Flower.h"
-#include "Fire.h"
-#include "Leaf.h"
-#include "Tail.h"
 
 #include "AssetIDs.h"
 #include "Collision.h"
-#include "UserBoard.h"
 
 void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -146,19 +137,19 @@ int CMario::GetAniId()
 			aniId = ID_ANI_MARIO_PRE_DIE;
 
 	}
-	else if (isShooting)
-	{
-		if (nx >= 0)
-			aniId = ID_ANI_MARIO_SHOOTING_RIGHT;
-		else
-			aniId = ID_ANI_MARIO_SHOOTING_LEFT;
-	}
 	else if (!isOnPlatform)
 	{
 			if (nx >= 0)
 				aniId = ID_ANI_MARIO_JUMP_RIGHT;
 			else
 				aniId = ID_ANI_MARIO_JUMP_LEFT;
+	}
+	else if (isShooting)
+	{
+		if (nx >= 0)
+			aniId = ID_ANI_MARIO_SHOOTING_RIGHT;
+		else
+			aniId = ID_ANI_MARIO_SHOOTING_LEFT;
 	}
 	else if (vx == 0)
 			{

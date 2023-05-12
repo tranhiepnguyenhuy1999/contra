@@ -3,7 +3,7 @@
 void CBreakBrick::Render()
 {
 	CAnimations* animations = CAnimations::GetInstance();
-	int aniID = ID_ANI_UNTOUCHED_QUESTION_BRICK;
+	int aniID = ID_ANI_UNTOUCHED_BREAK_BRICK;
 	animations->Get(aniID)->Render(x, y);
 
 	//RenderBoundingBox();
@@ -27,7 +27,7 @@ void CBreakBrick::OnCollisionWith(LPCOLLISIONEVENT e)
 }
 void CBreakBrick::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (state == QUESTIONBRICK_STATE_STATIC)
+	if (state == BREAK_BRICK_STATE_STATIC)
 	{
 		createRockObject();
 		isDeleted = true;
@@ -42,12 +42,12 @@ void CBreakBrick::SetState(int state)
 
 	switch (state)
 	{
-	case  QUESTIONBRICK_STATE_TOUCHED_1:
+	case  BREAK_BRICK_STATE_TOUCHED_1:
 		count_start = GetTickCount64();
 		y = yLimit;
 		break;
-	case  QUESTIONBRICK_STATE_UNTOUCHED:
-	case  QUESTIONBRICK_STATE_STATIC:
+	case  BREAK_BRICK_STATE_UNTOUCHED:
+	case  BREAK_BRICK_STATE_STATIC:
 		y = yLimit + 2;
 		break;
 	}

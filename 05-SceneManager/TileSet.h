@@ -7,7 +7,7 @@
 #define ID_ANI_TILE_1 1
 
 class CTileSet : public CGameObject {
-	int tileSetID;
+	float tileSetID;
 public:
 	CTileSet(float x, float y, float id) : CGameObject(x, y) {
 		tileSetID = id;

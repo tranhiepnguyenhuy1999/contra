@@ -1,5 +1,4 @@
 #include "GunShip.h"
-#include "QuestionBrick.h"
 #include "AssetIDs.h"
 
 CGunShip::CGunShip(float x, float y, float typeGun) :CGameObject(x, y)

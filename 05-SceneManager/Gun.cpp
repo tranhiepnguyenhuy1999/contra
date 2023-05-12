@@ -95,7 +95,7 @@ void CGun::OnCollisionWithGunBox(LPCOLLISIONEVENT e)
 void CGun::OnCollisionWithGunShip(LPCOLLISIONEVENT e)
 {
 	CGunShip* i = dynamic_cast<CGunShip*>(e->obj);
-	i->SetState(GUNBOX_STATE_DIE);
+	i->SetState(GUNSHIP_STATE_DIE);
 	SetState(GUN_STATE_DIE);
 }
 void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

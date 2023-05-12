@@ -8,7 +8,7 @@ void CDownBrick::Render()
 void CDownBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x - BRICK_BBOX_WIDTH * length / 2;
-	if (length % 2 == 0)
+	if (int(length) % 2 == 0)
 	{
 	l = x - BRICK_BBOX_WIDTH*length / 2 - 8;
 	}

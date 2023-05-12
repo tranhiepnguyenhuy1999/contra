@@ -1,6 +1,5 @@
 #include "GunBox.h"
 #include "AssetIDs.h"
-#include "Pile.h"
 #include "debug.h"
 
 CGunBox::CGunBox(float x, float y, float typeGun) :CGameObject(x, y)

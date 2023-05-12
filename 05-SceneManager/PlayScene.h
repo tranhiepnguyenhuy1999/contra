@@ -6,12 +6,7 @@
 #include "Brick.h"
 #include "Mario.h"
 #include "Goomba.h"
-#include "Map.h"
-#include "CloudBrick.h"
 #include "TileSet.h"
-#include "QuestionBrick.h"
-#include "Mushroom.h"
-#include "UserBoard.h"
 #include "DownBrick.h"
 #include <sstream>
 //#include "Koopas.h"

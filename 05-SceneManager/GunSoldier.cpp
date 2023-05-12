@@ -1,6 +1,5 @@
 #include "GunSoldier.h"
 #include "AssetIDs.h"
-#include "Pile.h"
 #include "debug.h"
 
 CGunSoldier::CGunSoldier(float x, float y) :CGameObject(x, y)

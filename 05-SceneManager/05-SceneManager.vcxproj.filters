@@ -78,16 +78,10 @@
     <ClCompile Include="BreakBrick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UserBoard.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DownBrick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CountdownTimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Mario2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HiddenBrick.cpp">
@@ -194,9 +188,6 @@
     <ClInclude Include="BreakBrick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UserBoard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DownBrick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -204,9 +195,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mario2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HiddenBrick.h">
