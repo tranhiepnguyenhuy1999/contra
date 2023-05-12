@@ -84,7 +84,9 @@ void CGun::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 void CGun::OnCollisionWithGunBox(LPCOLLISIONEVENT e)
 {
 	CGunBox* i = dynamic_cast<CGunBox*>(e->obj);
-	i->SetState(GUNBOX_STATE_DIE);
+	if (i->GetState() == GUNBOX_STATE_OPEN) {
+		i->SetState(GUNBOX_STATE_DIE);
+		}
 	SetState(GUN_STATE_DIE);
 }
 void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

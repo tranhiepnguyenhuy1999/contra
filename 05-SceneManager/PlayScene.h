@@ -33,10 +33,12 @@ protected:
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_TILEDMAP();
 	void LoadAssets(LPCWSTR assetFile);
+
+	virtual void createNewObject(int id, float x, float y, float nx, float ny, int type);
 	
 public: 
 	CPlayScene(int id, LPCWSTR filePath);
-	virtual void createNewObject(int id, float x, float y, float nx, float ny, int type);
+
 	virtual void getPlayerPosition(float& x, float& y) {
 		player->GetPosition(x, y);
 	};

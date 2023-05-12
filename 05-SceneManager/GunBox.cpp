@@ -13,20 +13,10 @@ CGunBox::CGunBox(float x, float y, float typeGun) :CGameObject(x, y)
 
 void CGunBox::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GUNBOX_STATE_UNACTIVE)
-	{
-		left = 0;
-		top = 0;
-		right = 0;
-		bottom = 0;
-	}
-	else {
-
 		left = x - GUNBOX_BBOX_WIDTH / 2;
 		top = y - (GUNBOX_BBOX_HEIGHT / 2);
 		right = left + GUNBOX_BBOX_WIDTH;
 		bottom = top + GUNBOX_BBOX_HEIGHT;
-	}
 }
 
 void CGunBox::OnNoCollision(DWORD dt)
