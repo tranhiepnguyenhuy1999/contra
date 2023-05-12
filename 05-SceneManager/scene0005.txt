@@ -24,10 +24,12 @@ soldier.txt
 
 # MARIO
 0	50	50
-
+#soldier
 #20	200	352
-10	200	30	1
-#11	0	352	1
+#gunbox
+#10	200	30	1
+#gunship
+11	0	50	1
 #brick
 1	1504	336
 1	1520	336

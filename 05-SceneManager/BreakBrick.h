@@ -4,22 +4,22 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define QUESTIONBRICK_MOVING_SPEED 0.05f
+#define BREAK_BRICK_MOVING_SPEED 0.05f
 
-#define ID_ANI_UNTOUCHED_QUESTION_BRICK 10024
-#define ID_ANI_TOUCHED_QUESTION_BRICK 10006	
+#define ID_ANI_UNTOUCHED_BREAK_BRICK 10024
+#define ID_ANI_TOUCHED_BREAK_BRICK 10006	
 
 #define BRICK_WIDTH 16
 #define BRICK_BBOX_WIDTH 16
 #define BRICK_BBOX_HEIGHT 16
 
-#define QUESTION_BRICK_TYPE_NORMAL 1
-#define QUESTION_BRICK_TYPE_SPECIAL 2
+#define BREAK_BRICK_TYPE_NORMAL 1
+#define BREAK_BRICK_TYPE_SPECIAL 2
 
-#define QUESTIONBRICK_STATE_UNTOUCHED 100
-#define QUESTIONBRICK_STATE_TOUCHED_1 200
-#define QUESTIONBRICK_STATE_TOUCHED_2 300
-#define QUESTIONBRICK_STATE_STATIC 400
+#define BREAK_BRICK_STATE_UNTOUCHED 100
+#define BREAK_BRICK_STATE_TOUCHED_1 200
+#define BREAK_BRICK_STATE_TOUCHED_2 300
+#define BREAK_BRICK_STATE_STATIC 400
 class CBreakBrick : public CGameObject {
 	float type;
 	float yLimit;
@@ -27,7 +27,7 @@ class CBreakBrick : public CGameObject {
 
 public:
 	CBreakBrick(float x, float y, float type = 1) : CGameObject(x, y) {
-		SetState(QUESTIONBRICK_STATE_UNTOUCHED);
+		SetState(BREAK_BRICK_STATE_UNTOUCHED);
 		this->type = type;
 		yLimit = y - 2;
 		count_start = -1;

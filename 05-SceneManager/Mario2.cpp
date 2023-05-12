@@ -5,18 +5,8 @@
 #include "Game.h"
 
 #include "Goomba.h"
-#include "Coin.h"
-#include "Mushroom.h"
 #include "Portal.h"
-#include "QuestionBrick.h"
 #include "DownBrick.h"
-#include "KoopaTroopa.h"
-#include "ParaKoopaTroopa.h"
-#include "Flower.h"
-#include "Fire.h"
-#include "ParaGoomba.h"
-#include "Leaf.h"
-#include "Tail.h"
 
 #include "AssetIDs.h"
 #include "Collision.h"

@@ -9,7 +9,7 @@
 class CTileSet : public CGameObject {
 	int tileSetID;
 public:
-	CTileSet(float x, float y, int id) : CGameObject(x, y) {
+	CTileSet(float x, float y, float id) : CGameObject(x, y) {
 		tileSetID = id;
 	}
 	void Render();

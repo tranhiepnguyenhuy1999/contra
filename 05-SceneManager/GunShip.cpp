@@ -48,6 +48,8 @@ void CGunShip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	//DebugOut(L"count %d", GetTickCount64() - count_start);
 	if (state == GUNSHIP_STATE_DIE)
 	{
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUNTYPE, x, y, 1, 1);
 		this->isDeleted = true;
 		return;
 	}

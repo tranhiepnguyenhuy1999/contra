@@ -14,10 +14,8 @@
 #include "QuestionBrick.h"
 #include "DownBrick.h"
 #include "KoopaTroopa.h"
-#include "ParaKoopaTroopa.h"
 #include "Flower.h"
 #include "Fire.h"
-#include "ParaGoomba.h"
 #include "Leaf.h"
 #include "Tail.h"
 

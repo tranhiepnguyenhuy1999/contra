@@ -35,6 +35,7 @@ public:
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunBox(LPCOLLISIONEVENT e);
+	void OnCollisionWithGunShip(LPCOLLISIONEVENT e);
 
 	virtual void SetState(int state);
 };

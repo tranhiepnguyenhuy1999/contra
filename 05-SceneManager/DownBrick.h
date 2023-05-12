@@ -21,7 +21,7 @@ class CDownBrick : public CGameObject {
 	int IsBlocking() { return 0; };
 
 	public:
-	CDownBrick(float x, float y, int length) : CGameObject(x, y) {
+	CDownBrick(float x, float y, float length) : CGameObject(x, y) {
 		this->length = length;
 	}
 };

@@ -3,6 +3,7 @@
 #include "Goomba.h"
 #include "Soldier.h"
 #include "GunBox.h"
+#include "GunShip.h"
 
 #include "debug.h"
 
@@ -70,6 +71,8 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithSoldier(e);
 	else if (dynamic_cast<CGunBox*>(e->obj))
 		OnCollisionWithGunBox(e);
+	else if (dynamic_cast<CGunShip*>(e->obj))
+		OnCollisionWithGunShip(e);
 }
 void CGun::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
 {
@@ -87,6 +90,12 @@ void CGun::OnCollisionWithGunBox(LPCOLLISIONEVENT e)
 	if (i->GetState() == GUNBOX_STATE_OPEN) {
 		i->SetState(GUNBOX_STATE_DIE);
 		}
+	SetState(GUN_STATE_DIE);
+}
+void CGun::OnCollisionWithGunShip(LPCOLLISIONEVENT e)
+{
+	CGunShip* i = dynamic_cast<CGunShip*>(e->obj);
+	i->SetState(GUNBOX_STATE_DIE);
 	SetState(GUN_STATE_DIE);
 }
 void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)

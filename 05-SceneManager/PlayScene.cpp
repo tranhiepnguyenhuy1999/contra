@@ -11,13 +11,9 @@
 #include "Platform.h"
 #include "Pile.h"
 #include "Flower.h"
-#include "GreenFlower1.h"
-#include "GreenFlower2.h"
 #include "Fire.h"
 #include "SmallCoin.h"
 #include "KoopaTroopa.h"
-#include "ParaGoomba.h"
-#include "ParaKoopaTroopa.h"
 #include "FallObject.h"
 #include "Leaf.h"
 #include "BreakBrick.h"
@@ -153,7 +149,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_SOLDIER: obj = new CSoldier(x, y); break;
 	case OBJECT_TYPE_GUNMACHINE1: obj = new CGunMachine1(x, y); break;
-	case OBJECT_TYPE_MAP: obj = new CMap(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_BREAKBRICK: obj = new CBreakBrick(x, y); break;
 	case OBJECT_TYPE_DOWNBRICK:
@@ -216,19 +211,6 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 	case OBJECT_TYPE_GUNTYPE: obj = new CGunType(x, y,1,1); break;
 	case OBJECT_TYPE_GUN: obj = new CGun(x, y, nx, ny, type); break;
 	case OBJECT_TYPE_EXPLODE: obj = new CExplode(x, y, nx); break;
-	case OBJECT_TYPE_FIRE:
-	{
-		player->GetPosition(px, py);
-		if (px >= x) {
-			nx = 1;
-		}
-		else nx = -1;
-		if (py >= y) {
-			ny = 1;
-		}
-		else ny = -1;
-		obj = new CFire(x, y, nx, ny); break;
-	}
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", id);
 		return;
