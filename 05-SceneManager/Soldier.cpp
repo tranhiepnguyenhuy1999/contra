@@ -1,11 +1,10 @@
 #include "Soldier.h"
-#include "Tail.h"
 #include "debug.h"
-
+#include "AssetIDs.h"
 CSoldier::CSoldier(float x, float y) :CGameObject(x, y)
 {
 	this->ax = 0;
-	this->ay = SOLDIER_GRAVITY;
+	this->ay = -SOLDIER_GRAVITY;
 	die_start = -1;
 	SetState(SOLDIER_STATE_WALKING);
 }
@@ -45,6 +44,7 @@ void CSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
+
 	if (!isActive)
 	{
 		if (x < cx + 1.5 * CGame::GetInstance()->GetBackBufferWidth()) {
@@ -56,8 +56,14 @@ void CSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	if (vy > SOLDIER_DIE_DEFLECT) {
+		ay = 0;
+		vy = 0;
+	}
+
 	if ((state == SOLDIER_STATE_DIE) && (GetTickCount64() - die_start > SOLDIER_DIE_TIMEOUT))
 	{
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 2);
 		isDeleted = true;
 		return;
 	}
@@ -92,11 +98,10 @@ void CSoldier::SetState(int state)
 	case SOLDIER_STATE_DIE:
 		die_start = GetTickCount64();
 		vx = 0;
-		vy = 0;
-		ay = 0;
+		ay = SOLDIER_GRAVITY;
 		break;
 	case SOLDIER_STATE_WALKING:
-		vx = -SOLDIER_WALKING_SPEED;
+		vx = +SOLDIER_WALKING_SPEED;
 		break;
 	}
 }

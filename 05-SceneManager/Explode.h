@@ -7,13 +7,20 @@
 #define GUN_STATE_RELASE 100
 #define GUN_STATE_DIE 200
 
+#define ID_ANI_HUMAN_EXPLODE	3001
 #define ID_ANI_INFRASTRUCTURE_EXPLODE	3002
+
+#define INFRASTRUCTURE_EXPLODE_TIMEOUT 750
+#define HUMAN_EXPLODE_TIMEOUT 400
 
 class CExplode : public CGameObject {
 	ULONGLONG count_start;
-	int exType;
+	float exType;
+	int timeout;
+	int getAniId();
+	int getTimeout();
 public:
-	CExplode(float x, float y, int type);
+	CExplode(float x, float y, float type);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
