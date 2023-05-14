@@ -250,13 +250,13 @@ void CMario::SetState(int state)
 	switch (state)
 	{
 	case MARIO_STATE_RUNNING_RIGHT:
-		//if (isSitting) break;
+		if (isSitting) y += MARIO_SIT_HEIGHT_ADJUST;;
 		maxVx = MARIO_RUNNING_SPEED;
 		ax = MARIO_ACCEL_RUN_X;
 		nx = 1;
 		break;
 	case MARIO_STATE_RUNNING_LEFT:
-		//if (isSitting) break;
+		if (isSitting) y += MARIO_SIT_HEIGHT_ADJUST;;
 		maxVx = -MARIO_RUNNING_SPEED;
 		ax = -MARIO_ACCEL_RUN_X;
 		nx = -1;
@@ -333,6 +333,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_LOOKUP: 
 		if (isOnPlatform)
 		{
+			y += MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
 			state = MARIO_STATE_IDLE;
 			isLookingUp = true;
 			vx = 0; vy = 0.0f;
@@ -341,6 +342,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_LOOKUP_RELEASE:
 		if (isLookingUp)
 		{
+			if(vx==0) y -= MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
 			isLookingUp = false;
 			state = MARIO_STATE_IDLE;
 		}
@@ -364,9 +366,23 @@ void CMario::SetState(int state)
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	//if (level!=MARIO_LEVEL_SMALL)
-	//{
-		if (isSitting || isPreDied)
+		if (isLookingUp) {
+			if (vx != 0)
+			{
+				left = x - MARIO_BIG_BBOX_WIDTH / 2;
+				top = y - MARIO_BIG_BBOX_HEIGHT / 2;
+				right = left + MARIO_BIG_BBOX_WIDTH;
+				bottom = top + MARIO_BIG_BBOX_HEIGHT;
+
+			}
+			else {
+				left = x - MARIO_BIG_BBOX_WIDTH / 2;
+				top = y - MARIO_BIG_UP_BBOX_HEIGHT / 2;
+				right = left + MARIO_BIG_BBOX_WIDTH;
+				bottom = top + MARIO_BIG_UP_BBOX_HEIGHT;
+			}
+		}
+		else if (isSitting || isPreDied && vx==0)
 		{
 			left = x - MARIO_BIG_SITTING_BBOX_WIDTH / 2;
 			top = y - MARIO_BIG_SITTING_BBOX_HEIGHT / 2;
@@ -380,14 +396,6 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			right = left + MARIO_BIG_BBOX_WIDTH;
 			bottom = top + MARIO_BIG_BBOX_HEIGHT;
 		}
-	//}
-	//else
-	//{
-	//	left = x - MARIO_SMALL_BBOX_WIDTH/2;
-	//	top = y - MARIO_SMALL_BBOX_HEIGHT/2;
-	//	right = left + MARIO_SMALL_BBOX_WIDTH;
-	//	bottom = top + MARIO_SMALL_BBOX_HEIGHT;
-	//}
 }
 
 void CMario::createGun() {
