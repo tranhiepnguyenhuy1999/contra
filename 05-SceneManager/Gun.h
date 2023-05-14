@@ -34,6 +34,7 @@ public:
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
+	void OnCollisionWithGunSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunBox(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunShip(LPCOLLISIONEVENT e);
 

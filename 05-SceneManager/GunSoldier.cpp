@@ -6,28 +6,19 @@ CGunSoldier::CGunSoldier(float x, float y) :CGameObject(x, y)
 {
 	this->ax = 0;
 	this->ay = 0;
-	SetState(GUNMACHINE1_STATE_UNACTIVE);
-	yLimit = y - GUNMACHINE1_BBOX_HEIGHT;
+	SetState(GUNSOLDIER_STATE_UNACTIVE);
+	yLimit = y - GUNSOLDIER_BBOX_HEIGHT;
 	xActive = x - 100;
 	loop_start = -1;
+	die_start = -1;
 }
 
 void CGunSoldier::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GUNMACHINE1_STATE_UNACTIVE)
-	{
-		left = 0;
-		top = 0;
-		right = 0;
-		bottom = 0;
-	}
-	else {
-
-		left = x - GUNMACHINE1_BBOX_WIDTH / 2;
-		top = y - (GUNMACHINE1_BBOX_HEIGHT / 2);
-		right = left + GUNMACHINE1_BBOX_WIDTH;
-		bottom = top + GUNMACHINE1_BBOX_HEIGHT;
-	}
+		left = x - GUNSOLDIER_BBOX_WIDTH / 2;
+		top = y - (GUNSOLDIER_BBOX_HEIGHT / 2);
+		right = left + GUNSOLDIER_BBOX_WIDTH;
+		bottom = top + GUNSOLDIER_BBOX_HEIGHT;
 }
 
 void CGunSoldier::OnNoCollision(DWORD dt)
@@ -41,22 +32,34 @@ void CGunSoldier::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
+	vy += ay * dt;
+	vx += ax * dt;
+
 	//DebugOut(L">>> Count time >>> %d \n", GetTickCount64() - loop_start);
 	float px, py;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
 
-	if (state == GUNMACHINE1_STATE_UNACTIVE && px > xActive)
-		return	SetState(GUNMACHINE1_STATE_BOTTOM);
+	if ( px < xActive && state != GUNSOLDIER_STATE_DIE)
+		SetState(GUNSOLDIER_STATE_UNACTIVE);
 
-	if ((state == GUNMACHINE1_STATE_BOTTOM) && (GetTickCount64() - loop_start > GUNMACHINE1_LOOP_TIMEOUT))
-	{
-		return	SetState(GUNMACHINE1_STATE_MID);
+	// handle obj die
+
+	if (vy > GUNSOLDIER_DIE_DEFLECT) {
+		ay = 0;
+		vy = 0;
 	}
-	if ((state == GUNMACHINE1_STATE_MID) && (GetTickCount64() - loop_start > GUNMACHINE1_LOOP_TIMEOUT))
+
+	if ((state == GUNSOLDIER_STATE_DIE) && (GetTickCount64() - die_start > 500))
 	{
-		return	SetState(GUNMACHINE1_STATE_TOP);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 2);
+		isDeleted = true;
+		return;
 	}
-	if ((state == GUNMACHINE1_STATE_TOP) && (GetTickCount64() - loop_start > GUNMACHINE1_POW_LOOP_TIMEOUT))
+
+	// shooting 
+
+	if ((state == GUNSOLDIER_STATE_TOP) && (GetTickCount64() - loop_start > GUNSOLDIER_POW_LOOP_TIMEOUT))
 	{
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_FIRE, x, y);
 		loop_start = GetTickCount64();
@@ -66,43 +69,47 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 int CGunSoldier::getAniId(int flag) {
-
-	//if (this->state == GUNMACHINE1_STATE_BOTTOM) return ID_ANI_GUNMACHINE1_BOTTOM;
-	//else if (this->state == GUNMACHINE1_STATE_MID) return ID_ANI_GUNMACHINE1_MID;
-	//else if (this->state == GUNMACHINE1_STATE_TOP) {
-	//	switch (flag)
-	//	{
-	//	case 1:
-	//		return ID_ANI_GUNMACHINE1_LEFTTOP;
-	//	case 2:
-	//		return ID_ANI_GUNMACHINE1_LEFT;
-	//	case 3:
-	//		return ID_ANI_GUNMACHINE1_TOP;
-	//	case 4:
-	//		return ID_ANI_GUNMACHINE1_TOP;
-	//	}
-	//}
-	//else
+	if (state == GUNSOLDIER_STATE_UNACTIVE) {
+		if (flag <= 3) return ID_ANI_GUNSOLDIER_LEFTBOTTOM;
+		else return ID_ANI_GUNSOLDIER_RIGHTBOTTOM;
+	}
+	switch (flag)
+	{
+	case 1:
+		return ID_ANI_GUNSOLDIER_LEFTTOP;
+	case 2:
+		return ID_ANI_GUNSOLDIER_LEFT;
+	case 3:
+		return ID_ANI_GUNSOLDIER_LEFTBOTTOM;
+	case 4:
+		return ID_ANI_GUNSOLDIER_RIGHTTOP;
+	case 5:
+		return ID_ANI_GUNSOLDIER_RIGHT;
+	case 6:
+		return ID_ANI_GUNSOLDIER_RIGHTBOTTOM;
+	}
 		return -1;
 
 };
 
-int CGunSoldier::getFlowerPosition() {
+int CGunSoldier::getPlayerPosition() {
 	float px, py;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
 	if (px < x) {
-		if (py < y) return 1; //top-left
-		else return 2; //left
+		if (py > y + GUNSOLDIER_HEIGHT) return 1; //left-top
+		else if (px <= y + GUNSOLDIER_HEIGHT && px >= y - GUNSOLDIER_HEIGHT) return 3;// left
+		else return 2; //left-bottom
 	}
 	else
 	{
-		if (py < y) return 3; //top
-		else return 4;
+		if (py > y + GUNSOLDIER_HEIGHT) return 4; //right-top
+		else if (px <= y + GUNSOLDIER_HEIGHT && px >= y - GUNSOLDIER_HEIGHT) return 5;// right
+		else return 6; //right-bottom
 	}
 }
 void CGunSoldier::Render()
 {
-	int flag = getFlowerPosition();
+	int flag = getPlayerPosition();
 	int aniId = getAniId(flag);
 
 	if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
@@ -113,19 +120,23 @@ void CGunSoldier::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case GUNMACHINE1_STATE_UNACTIVE:
+	case GUNSOLDIER_STATE_UNACTIVE:
 		break;
-	case GUNMACHINE1_STATE_BOTTOM:
-		//y -= GUNMACHINE1_BOTTOM_HEIGHT/2;
+	case GUNSOLDIER_STATE_BOTTOM:
+		//y -= GUNSOLDIER_BOTTOM_HEIGHT/2;
 		loop_start = GetTickCount64();
 		break;
-	case GUNMACHINE1_STATE_MID:
-		//y -= GUNMACHINE1_MID_HEIGHT - GUNMACHINE1_BOTTOM_HEIGHT/2;
+	case GUNSOLDIER_STATE_MID:
+		//y -= GUNSOLDIER_MID_HEIGHT - GUNSOLDIER_BOTTOM_HEIGHT/2;
 		loop_start = GetTickCount64();
 		break;
-	case GUNMACHINE1_STATE_TOP:
-		//y -= GUNMACHINE1_TOP_HEIGHT - GUNMACHINE1_MID_HEIGHT/2;
+	case GUNSOLDIER_STATE_TOP:
+		//y -= GUNSOLDIER_TOP_HEIGHT - GUNSOLDIER_MID_HEIGHT/2;
 		loop_start = GetTickCount64();
+		break;
+	case GUNSOLDIER_STATE_DIE:
+		die_start = GetTickCount64();
+		ay = GUNSOLDIER_GRAVITY;
 		break;
 	}
 }

@@ -1,8 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
-#define SOLDIER_GRAVITY 0.001f
-#define SOLDIER_WALKING_SPEED 0.03f
+#define SOLDIER_GRAVITY 0.002f
+#define SOLDIER_WALKING_SPEED 0.05f
 #define SOLDIER_DIE_DEFLECT 0.25f
 
 #define SOLDIER_BBOX_WIDTH 16

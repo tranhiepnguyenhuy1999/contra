@@ -101,7 +101,7 @@ void CSoldier::SetState(int state)
 		ay = SOLDIER_GRAVITY;
 		break;
 	case SOLDIER_STATE_WALKING:
-		vx = +SOLDIER_WALKING_SPEED;
+		vx = -SOLDIER_WALKING_SPEED;
 		break;
 	}
 }

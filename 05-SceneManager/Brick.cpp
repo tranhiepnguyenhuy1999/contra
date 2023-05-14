@@ -2,7 +2,6 @@
 
 void CBrick::Render()
 {
-
 	RenderBoundingBox();
 }
 

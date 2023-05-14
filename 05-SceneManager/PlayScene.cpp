@@ -12,6 +12,7 @@
 #include "HiddenBrick.h"
 
 #include "Soldier.h"
+#include "GunSoldier.h"
 #include "GunMachine1.h"
 #include "GunBox.h"
 #include "GunShip.h"
@@ -138,6 +139,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CGunShip(x, y, typeGun); break;
 	}
 	case OBJECT_TYPE_SOLDIER: obj = new CSoldier(x, y); break;
+	case OBJECT_TYPE_GUN_SOLDIER: obj = new CGunSoldier(x, y); break;
 	case OBJECT_TYPE_GUNMACHINE1: obj = new CGunMachine1(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_BREAKBRICK: obj = new CBreakBrick(x, y); break;
