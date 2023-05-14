@@ -6,6 +6,7 @@
 
 #include "Goomba.h"
 #include "Soldier.h"
+#include "GunSoldier.h"
 #include "GunType.h"
 
 #include "Portal.h"
@@ -65,6 +66,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
+	else if (dynamic_cast<CGunSoldier*>(e->obj))
+		OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunType*>(e->obj))
 		OnCollisionWithGunType(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
@@ -112,6 +115,19 @@ void CMario::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 		if (i->GetState() != SOLDIER_STATE_DIE)
 		{
 			DebugOut(L">>> Main touched soldier >>> \n");
+			SetState(MARIO_STATE_PRE_DIE);
+		}
+	}
+}
+void CMario::OnCollisionWithGunSoldier(LPCOLLISIONEVENT e)
+{
+	CGunSoldier* i = dynamic_cast<CGunSoldier*>(e->obj);
+
+	if (untouchable == 0)
+	{
+		if (i->GetState() != GUNSOLDIER_STATE_DIE)
+		{
+			DebugOut(L">>> Main touched gun soldier >>> \n");
 			SetState(MARIO_STATE_PRE_DIE);
 		}
 	}
