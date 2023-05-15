@@ -45,6 +45,8 @@
 
 #define MARIO_STATE_PRE_DIE	900
 
+#define MARIO_STATE_MOVING_RELEASE 1000
+
 #pragma region ANIMATION_ID
 //BIG
 #define ID_ANI_MARIO_IDLE_RIGHT 1001
@@ -100,6 +102,7 @@ class CMario : public CGameObject
 	BOOLEAN isLookingUp;
 	BOOLEAN isPreDied;
 	BOOLEAN isShooting;
+	BOOLEAN isRunning;
 
 
 
@@ -131,6 +134,8 @@ public:
 		isLookingUp = false;
 		isPreDied = false;
 		isShooting = false;
+		isRunning = false;
+
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = -MARIO_GRAVITY;

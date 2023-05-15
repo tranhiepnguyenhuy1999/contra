@@ -8,7 +8,7 @@
 
 void CSampleKeyHandler::OnKeyDown(int KeyCode)
 {
-	//DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
+	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	CMario* mario = (CMario *)((LPPLAYSCENE)CGame::GetInstance()->GetCurrentScene())->GetPlayer(); 
 	int level;
 	mario->getLevel(level);
@@ -55,6 +55,10 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 		break;
 	case DIK_UP:
 		mario->SetState(MARIO_STATE_LOOKUP_RELEASE);
+		break;
+	case DIK_RIGHT:
+	case DIK_LEFT:
+		mario->SetState(MARIO_STATE_MOVING_RELEASE);
 		break;
 	}
 }

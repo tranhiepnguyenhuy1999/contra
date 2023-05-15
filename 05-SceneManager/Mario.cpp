@@ -249,30 +249,46 @@ void CMario::SetState(int state)
 	if (this->state == MARIO_STATE_DIE) return;
 	switch (state)
 	{
-	case MARIO_STATE_RUNNING_RIGHT:
-		if (isSitting) y += MARIO_SIT_HEIGHT_ADJUST;;
-		maxVx = MARIO_RUNNING_SPEED;
-		ax = MARIO_ACCEL_RUN_X;
-		nx = 1;
-		break;
-	case MARIO_STATE_RUNNING_LEFT:
-		if (isSitting) y += MARIO_SIT_HEIGHT_ADJUST;;
-		maxVx = -MARIO_RUNNING_SPEED;
-		ax = -MARIO_ACCEL_RUN_X;
-		nx = -1;
-		break;
-	case MARIO_STATE_RUNNING_UP_LEFT:
-	case MARIO_STATE_RUNNING_DOWN_LEFT:
-		maxVx = -MARIO_RUNNING_SPEED;
-		ax = -MARIO_ACCEL_RUN_X;
-		nx = -1;
-		break;
+	//case MARIO_STATE_RUNNING_RIGHT:
 
+	//	maxVx = MARIO_RUNNING_SPEED;
+	//	ax = MARIO_ACCEL_RUN_X;
+	//	nx = 1;
+	//	break;
+	//case MARIO_STATE_RUNNING_LEFT:
+	//	if (isSitting) y += MARIO_SIT_HEIGHT_ADJUST;
+	//	maxVx = -MARIO_RUNNING_SPEED;
+	//	ax = -MARIO_ACCEL_RUN_X;
+	//	nx = -1;
+	//	break;
+	case MARIO_STATE_RUNNING_UP_LEFT:
+		if (isLookingUp && !isRunning) y -= MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
+		maxVx = -MARIO_RUNNING_SPEED;
+		ax = -MARIO_ACCEL_RUN_X;
+		nx = -1;
+		isRunning = true;
+		break;
+	case MARIO_STATE_RUNNING_DOWN_LEFT:
+		if (isSitting && !isRunning) y += MARIO_SIT_HEIGHT_ADJUST;
+		maxVx = -MARIO_RUNNING_SPEED;
+		ax = -MARIO_ACCEL_RUN_X;
+		nx = -1;
+		isRunning = true;
+		break;
 	case MARIO_STATE_RUNNING_UP_RIGHT:
-	case MARIO_STATE_RUNNING_DOWN_RIGHT:
+		if(isLookingUp && !isRunning) y -= MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
 		maxVx = MARIO_RUNNING_SPEED;
 		ax = MARIO_ACCEL_RUN_X;
 		nx = 1;
+		isRunning = true;
+		break;
+	case MARIO_STATE_RUNNING_DOWN_RIGHT:
+		// update y first time when cheng
+		if (isSitting && !isRunning) y += MARIO_SIT_HEIGHT_ADJUST;
+		maxVx = MARIO_RUNNING_SPEED;
+		ax = MARIO_ACCEL_RUN_X;
+		nx = 1;
+		isRunning = true;
 		break;
 	case MARIO_STATE_WALKING_RIGHT:
 		//if (isSitting) break;
@@ -307,7 +323,7 @@ void CMario::SetState(int state)
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
 			vx = 0; vy = 0.0f;
-			y -=MARIO_SIT_HEIGHT_ADJUST;
+			if(!isRunning) y -=MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
 
@@ -316,13 +332,23 @@ void CMario::SetState(int state)
 		{
 			isSitting = false;
 			state = MARIO_STATE_IDLE;
-			y += MARIO_SIT_HEIGHT_ADJUST;
+			if(!isRunning) y += MARIO_SIT_HEIGHT_ADJUST;
 		}
 		break;
-
+	case MARIO_STATE_MOVING_RELEASE:
+		if (isLookingUp)
+		{
+			y += MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
+		}
+		if (isSitting)
+		{
+			y -= MARIO_SIT_HEIGHT_ADJUST;
+		}
+		break;
 	case MARIO_STATE_IDLE:
 		ax = 0.0f;
 		vx = 0.0f;
+		isRunning = false;
 		break;
 
 	case MARIO_STATE_SHOOTING:
@@ -333,7 +359,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_LOOKUP: 
 		if (isOnPlatform)
 		{
-			y += MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
+			if(vx==0) y += MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
 			state = MARIO_STATE_IDLE;
 			isLookingUp = true;
 			vx = 0; vy = 0.0f;
@@ -342,7 +368,8 @@ void CMario::SetState(int state)
 	case MARIO_STATE_LOOKUP_RELEASE:
 		if (isLookingUp)
 		{
-			if(vx==0) y -= MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
+			// update y when not moving
+			if(vx==0 && !isRunning) y -= MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
 			isLookingUp = false;
 			state = MARIO_STATE_IDLE;
 		}
@@ -382,7 +409,7 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 				bottom = top + MARIO_BIG_UP_BBOX_HEIGHT;
 			}
 		}
-		else if (isSitting || isPreDied && vx==0)
+		else if ((isSitting || isPreDied) && vx==0)
 		{
 			left = x - MARIO_BIG_SITTING_BBOX_WIDTH / 2;
 			top = y - MARIO_BIG_SITTING_BBOX_HEIGHT / 2;
