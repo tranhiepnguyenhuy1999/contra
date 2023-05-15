@@ -10,6 +10,7 @@
 #include "GunType.h"
 #include "EnemyGun.h"
 
+#include "Water.h"
 #include "DownBrick.h"
 #include "Portal.h"
 
@@ -22,6 +23,7 @@ void CMario::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vx += ax * dt;
 
 	isOnPlatform = false;
+	isSwimming = false;
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
@@ -52,6 +54,7 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 
 	if (state == MARIO_STATE_DIE || state == MARIO_STATE_PRE_DIE) return;
+
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
@@ -62,9 +65,9 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = 0;
 	}
-
-	if (dynamic_cast<CGoomba*>(e->obj))
-		OnCollisionWithGoomba(e);
+	if (dynamic_cast<CWater*>(e->obj)) {
+		SetState(MARIO_STATE_SWIMMING);
+	}
 	else if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
 	//else if (dynamic_cast<CGunSoldier*>(e->obj))
@@ -170,10 +173,29 @@ int CMario::GetAniId()
 	}
 	else if (isShooting)
 	{
-		if (nx >= 0)
-			aniId = ID_ANI_MARIO_SHOOTING_RIGHT;
+		if (isSwimming) {
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_SWIMMING_SHOOTING_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_SWIMMING_SHOOTING_LEFT;
+		}
 		else
-			aniId = ID_ANI_MARIO_SHOOTING_LEFT;
+		{
+			if (nx >= 0)
+				aniId = ID_ANI_MARIO_SHOOTING_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_SHOOTING_LEFT;
+		}
+	}
+	else if (isSwimming)
+	{
+		if (isSitting)
+			aniId = ID_ANI_MARIO_DIVE;
+		else if (nx > 0)
+			aniId = ID_ANI_MARIO_SWIMMING_LEFT;
+		else
+			aniId = ID_ANI_MARIO_SWIMMING_RIGHT;
+
 	}
 	else if (vx == 0)
 			{
@@ -311,7 +333,7 @@ void CMario::SetState(int state)
 		nx = -1;
 		break;
 	case MARIO_STATE_JUMP:
-		//if (isSitting) break;
+		if (isSwimming) break;
 		if (isOnPlatform)
 		{
 			if (abs(this->vx) == MARIO_RUNNING_SPEED)
@@ -320,14 +342,23 @@ void CMario::SetState(int state)
 				vy = MARIO_JUMP_SPEED_Y;
 		}
 		break;
-
+	case MARIO_STATE_SWIMMING:
+		isSwimming = true;
+		break;
 	case MARIO_STATE_RELEASE_JUMP:
 		if (vy < 0) vy -= MARIO_JUMP_SPEED_Y / 2;
 		break;
 
 	case MARIO_STATE_SIT:
+		if (isSwimming) {
+			//DebugOut(L">>> Main touched gun soldier >>> \n");
+
+			isSitting = true;
+			break;
+		}
 		if (isOnPlatform)
 		{
+
 			state = MARIO_STATE_IDLE;
 			isSitting = true;
 			vx = 0; vy = 0.0f;
@@ -401,7 +432,13 @@ void CMario::SetState(int state)
 
 void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-		if (isLookingUp) {
+		if (isSwimming) {
+			left = x - MARIO_BIG_SWIMMING_BBOX_WIDTH / 2;
+			top = y - MARIO_BIG_SWIMMING_BBOX_HEIGHT / 2;
+			right = left + MARIO_BIG_SWIMMING_BBOX_WIDTH;
+			bottom = top + MARIO_BIG_SWIMMING_BBOX_HEIGHT;
+		}
+		else if (isLookingUp) {
 			if (vx != 0)
 			{
 				left = x - MARIO_BIG_BBOX_WIDTH / 2;

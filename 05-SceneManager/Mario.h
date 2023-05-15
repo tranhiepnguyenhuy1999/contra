@@ -6,7 +6,7 @@
 
 #include "debug.h"
 
-#define MARIO_WALKING_SPEED		0.1f
+#define MARIO_WALKING_SPEED		0.15f
 #define MARIO_RUNNING_SPEED		0.2f
 #define MARIO_PRE_DIE_SPEED		0.05f
 
@@ -47,6 +47,8 @@
 
 #define MARIO_STATE_MOVING_RELEASE 1000
 
+#define MARIO_STATE_SWIMMING 1100
+
 #pragma region ANIMATION_ID
 //BIG
 #define ID_ANI_MARIO_IDLE_RIGHT 1001
@@ -78,6 +80,12 @@
 #define ID_ANI_MARIO_SHOOTING_RIGHT 1021
 #define ID_ANI_MARIO_SHOOTING_LEFT 1022
 
+#define ID_ANI_MARIO_DIVE 1023
+#define ID_ANI_MARIO_SWIMMING_SHOOTING_LEFT 1026
+#define ID_ANI_MARIO_SWIMMING_SHOOTING_RIGHT 1027
+#define ID_ANI_MARIO_SWIMMING_LEFT 1025
+#define ID_ANI_MARIO_SWIMMING_RIGHT 1024
+
 #pragma endregion
 
 #define GROUND_Y 160.0f
@@ -87,6 +95,9 @@
 #define MARIO_BIG_UP_BBOX_HEIGHT 46
 #define MARIO_BIG_SITTING_BBOX_WIDTH  32
 #define MARIO_BIG_SITTING_BBOX_HEIGHT 12
+
+#define MARIO_BIG_SWIMMING_BBOX_WIDTH  16
+#define MARIO_BIG_SWIMMING_BBOX_HEIGHT 16
 
 #define MARIO_SIT_HEIGHT_ADJUST ((MARIO_BIG_BBOX_HEIGHT-MARIO_BIG_SITTING_BBOX_HEIGHT)/2)
 
@@ -103,6 +114,7 @@ class CMario : public CGameObject
 	BOOLEAN isPreDied;
 	BOOLEAN isShooting;
 	BOOLEAN isRunning;
+	BOOLEAN isSwimming;
 
 
 
@@ -138,7 +150,7 @@ public:
 		isPreDied = false;
 		isShooting = false;
 		isRunning = false;
-
+		isSwimming = false;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = -MARIO_GRAVITY;
