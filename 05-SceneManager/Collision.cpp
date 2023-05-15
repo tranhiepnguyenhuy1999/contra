@@ -204,7 +204,7 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 			}
 		}
 		if (dynamic_cast<CDownBrick*>(c->obj) && c->nx != 0) continue;
-		if (dynamic_cast<CDownBrick*>(c->obj) && c->ny > 0) continue;
+		if (dynamic_cast<CDownBrick*>(c->obj) && c->ny < 0) continue;
 
 		if (c->t < min_tx && c->nx != 0 && filterX == 1) {
 			min_tx = c->t; min_ix = i;

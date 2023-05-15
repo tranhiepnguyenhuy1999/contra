@@ -11,6 +11,8 @@ CGunSoldier::CGunSoldier(float x, float y) :CGameObject(x, y)
 	xActive = x - 200;
 	loop_start = -1;
 	die_start = -1;
+	gun_loop_start = -1;
+	gunLeft = 3;
 }
 
 void CGunSoldier::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -59,10 +61,19 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	// shooting
-	if ((state == GUNSOLDIER_STATE_ACTIVE) && (GetTickCount64() - loop_start > GUNSOLDIER_POW_LOOP_TIMEOUT))
+	if ((state == GUNSOLDIER_STATE_ACTIVE) && (GetTickCount64() - loop_start > GUNSOLDIER_POW_TIMEOUT))
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_FIRE, x, y);
-		loop_start = GetTickCount64();
+		if (gunLeft <= 0)
+		{
+			loop_start = GetTickCount64();
+			gun_loop_start = -1;
+			gunLeft = 3;
+		}
+		else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_POW_LOOP_TIMEOUT){
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y);
+			gun_loop_start = GetTickCount64();
+			gunLeft -= 1;
+		}
 		return;
 	}
 	CGameObject::Update(dt, coObjects);

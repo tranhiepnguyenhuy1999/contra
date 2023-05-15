@@ -59,7 +59,7 @@ void CGunMachine1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	if ((state == GUNMACHINE1_STATE_TOP) && (GetTickCount64() - loop_start > GUNMACHINE1_POW_LOOP_TIMEOUT))
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_FIRE, x, y);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y);
 		loop_start = GetTickCount64();
 		return;
 	}

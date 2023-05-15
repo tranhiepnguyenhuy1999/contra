@@ -36,7 +36,7 @@ soldier.txt
 1	1664	368
 
 # downbrick
-#4	256	368	3
+4	100	50	4
 
 #hidden brick
 

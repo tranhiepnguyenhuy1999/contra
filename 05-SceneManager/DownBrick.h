@@ -18,7 +18,6 @@ class CDownBrick : public CGameObject {
 	void GetBoundingBox(float& l, float& t, float& r, float& b);
 	void Render();
 	void Update(DWORD dt) {};
-	int IsBlocking() { return 0; };
 
 	public:
 	CDownBrick(float x, float y, float length) : CGameObject(x, y) {

@@ -8,8 +8,8 @@
 #define GUNSOLDIER_GRAVITY 0.002f
 #define GUNSOLDIER_DIE_DEFLECT 0.25f
 
-#define GUNSOLDIER_LOOP_TIMEOUT 300
-#define GUNSOLDIER_POW_LOOP_TIMEOUT 3000
+#define GUNSOLDIER_POW_LOOP_TIMEOUT 150
+#define GUNSOLDIER_POW_TIMEOUT 3000
 
 #define GUNSOLDIER_STATE_UNACTIVE 100
 #define GUNSOLDIER_STATE_BOTTOM 200
@@ -41,8 +41,10 @@ protected:
 	float ax;
 	float ay;
 	float ani_pow_id;
+	float gunLeft;
 
 	ULONGLONG loop_start;
+	ULONGLONG gun_loop_start;
 	ULONGLONG die_start;
 
 
