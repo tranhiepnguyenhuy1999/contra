@@ -70,8 +70,8 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
-	else if (dynamic_cast<CGunSoldier*>(e->obj))
-		OnCollisionWithGunSoldier(e);
+	//else if (dynamic_cast<CGunSoldier*>(e->obj))
+	//	OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunBox*>(e->obj))
 		OnCollisionWithGunBox(e);
 	else if (dynamic_cast<CGunShip*>(e->obj))

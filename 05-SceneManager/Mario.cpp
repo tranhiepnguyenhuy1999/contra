@@ -66,8 +66,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGoomba(e);
 	else if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
-	else if (dynamic_cast<CGunSoldier*>(e->obj))
-		OnCollisionWithGunSoldier(e);
+	//else if (dynamic_cast<CGunSoldier*>(e->obj))
+	//	OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunType*>(e->obj))
 		OnCollisionWithGunType(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
@@ -340,7 +340,7 @@ void CMario::SetState(int state)
 		{
 			y += MARIO_BIG_UP_BBOX_HEIGHT / 2 - MARIO_BIG_BBOX_HEIGHT / 2;
 		}
-		if (isSitting)
+		if (isSitting && !isRunning)
 		{
 			y -= MARIO_SIT_HEIGHT_ADJUST;
 		}

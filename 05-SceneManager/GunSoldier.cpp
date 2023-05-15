@@ -8,7 +8,7 @@ CGunSoldier::CGunSoldier(float x, float y) :CGameObject(x, y)
 	this->ay = 0;
 	SetState(GUNSOLDIER_STATE_UNACTIVE);
 	yLimit = y - GUNSOLDIER_BBOX_HEIGHT;
-	xActive = x - 100;
+	xActive = x - 200;
 	loop_start = -1;
 	die_start = -1;
 }
@@ -42,9 +42,10 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if ( px < xActive && state != GUNSOLDIER_STATE_DIE)
 		SetState(GUNSOLDIER_STATE_UNACTIVE);
+	else
+		SetState(GUNSOLDIER_STATE_ACTIVE);
 
 	// handle obj die
-
 	if (vy > GUNSOLDIER_DIE_DEFLECT) {
 		ay = 0;
 		vy = 0;
@@ -57,9 +58,8 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	}
 
-	// shooting 
-
-	if ((state == GUNSOLDIER_STATE_TOP) && (GetTickCount64() - loop_start > GUNSOLDIER_POW_LOOP_TIMEOUT))
+	// shooting
+	if ((state == GUNSOLDIER_STATE_ACTIVE) && (GetTickCount64() - loop_start > GUNSOLDIER_POW_LOOP_TIMEOUT))
 	{
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_FIRE, x, y);
 		loop_start = GetTickCount64();
@@ -73,6 +73,7 @@ int CGunSoldier::getAniId(int flag) {
 		if (flag <= 3) return ID_ANI_GUNSOLDIER_LEFTBOTTOM;
 		else return ID_ANI_GUNSOLDIER_RIGHTBOTTOM;
 	}
+	//DebugOut(L">>> Mario DIE >>> %d \n", flag);
 	switch (flag)
 	{
 	case 1:
@@ -88,8 +89,7 @@ int CGunSoldier::getAniId(int flag) {
 	case 6:
 		return ID_ANI_GUNSOLDIER_RIGHTBOTTOM;
 	}
-		return -1;
-
+	return -1;
 };
 
 int CGunSoldier::getPlayerPosition() {
@@ -97,13 +97,13 @@ int CGunSoldier::getPlayerPosition() {
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
 	if (px < x) {
 		if (py > y + GUNSOLDIER_HEIGHT) return 1; //left-top
-		else if (px <= y + GUNSOLDIER_HEIGHT && px >= y - GUNSOLDIER_HEIGHT) return 3;// left
-		else return 2; //left-bottom
+		else if (py <= y + GUNSOLDIER_HEIGHT && py >= y - GUNSOLDIER_HEIGHT) return 2;// left
+		else return 3; //left-bottom
 	}
 	else
 	{
 		if (py > y + GUNSOLDIER_HEIGHT) return 4; //right-top
-		else if (px <= y + GUNSOLDIER_HEIGHT && px >= y - GUNSOLDIER_HEIGHT) return 5;// right
+		else if (py <= y + GUNSOLDIER_HEIGHT && py >= y - GUNSOLDIER_HEIGHT) return 5;// right
 		else return 6; //right-bottom
 	}
 }
@@ -121,6 +121,10 @@ void CGunSoldier::SetState(int state)
 	switch (state)
 	{
 	case GUNSOLDIER_STATE_UNACTIVE:
+		loop_start = -1;
+		break;
+	case GUNSOLDIER_STATE_ACTIVE:
+		//loop_start = GetTickCount64();
 		break;
 	case GUNSOLDIER_STATE_BOTTOM:
 		//y -= GUNSOLDIER_BOTTOM_HEIGHT/2;
