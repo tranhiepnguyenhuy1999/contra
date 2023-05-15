@@ -126,6 +126,9 @@ class CMario : public CGameObject
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
+	void OnCollisionWithGunType(LPCOLLISIONEVENT e);
+	void OnCollisionWithEnemyGun(LPCOLLISIONEVENT e);
+
 	int GetAniId();
 public:
 	CMario(float x, float y) : CGameObject(x, y)
@@ -167,7 +170,6 @@ public:
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);
-	void OnCollisionWithGunType(LPCOLLISIONEVENT e);
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); };
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);

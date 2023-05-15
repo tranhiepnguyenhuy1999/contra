@@ -8,9 +8,10 @@
 #include "Soldier.h"
 #include "GunSoldier.h"
 #include "GunType.h"
+#include "EnemyGun.h"
 
-#include "Portal.h"
 #include "DownBrick.h"
+#include "Portal.h"
 
 #include "AssetIDs.h"
 #include "Collision.h"
@@ -70,6 +71,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	//	OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunType*>(e->obj))
 		OnCollisionWithGunType(e);
+	else if (dynamic_cast<CEnemyGun*>(e->obj))
+		OnCollisionWithEnemyGun(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
 }
@@ -131,6 +134,11 @@ void CMario::OnCollisionWithGunSoldier(LPCOLLISIONEVENT e)
 			SetState(MARIO_STATE_PRE_DIE);
 		}
 	}
+}
+void CMario::OnCollisionWithEnemyGun(LPCOLLISIONEVENT e)
+{
+	CEnemyGun* i = dynamic_cast<CEnemyGun*>(e->obj);
+	SetState(MARIO_STATE_PRE_DIE);
 }
 void CMario::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 {

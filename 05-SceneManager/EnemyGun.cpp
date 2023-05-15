@@ -1,5 +1,4 @@
 #include "EnemyGun.h"
-#include "Mario.h"
 
 #include "debug.h"
 
@@ -54,23 +53,14 @@ void CEnemyGun::OnNoCollision(DWORD dt)
 
 void CEnemyGun::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	DebugOut(L">>> Mario DIE >>> \n");
-
 	if (e->ny != 0)
 	{
 		vy = 0;
 	}
-	if (dynamic_cast<CMario*>(e->obj))
-		OnCollisionWithPlayer(e);
-}
-void CEnemyGun::OnCollisionWithPlayer(LPCOLLISIONEVENT e)
-{
-	DebugOut(L">>> Mario DIE >>> \n");
-	CMario* player = dynamic_cast<CMario*>(e->obj);
-	player->SetState(MARIO_STATE_PRE_DIE);
 }
 void CEnemyGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+
 	if ((state != ENEMY_GUN_STATE_DIE) && (GetTickCount64() - count_start > 3000))
 	{
 		count_start = -1;
@@ -83,6 +73,7 @@ void CEnemyGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isDeleted = true;
 		return;
 	}
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
