@@ -4,15 +4,14 @@
 
 CGunSoldier::CGunSoldier(float x, float y) :CGameObject(x, y)
 {
-	this->ax = 0;
 	this->ay = 0;
-	SetState(GUNSOLDIER_STATE_UNACTIVE);
-	yLimit = y - GUNSOLDIER_BBOX_HEIGHT;
 	xActive = x - 200;
 	loop_start = -1;
 	die_start = -1;
 	gun_loop_start = -1;
 	gunLeft = 3;
+	isShooting = false;
+	SetState(GUNSOLDIER_STATE_UNACTIVE);
 }
 
 void CGunSoldier::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -36,7 +35,6 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
 	vy += ay * dt;
-	vx += ax * dt;
 
 	//DebugOut(L">>> Count time >>> %d \n", GetTickCount64() - loop_start);
 	float px, py;
@@ -63,11 +61,13 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// shooting
 	if ((state == GUNSOLDIER_STATE_ACTIVE) && (GetTickCount64() - loop_start > GUNSOLDIER_POW_TIMEOUT))
 	{
+		isShooting = true;
 		if (gunLeft <= 0)
 		{
 			loop_start = GetTickCount64();
 			gun_loop_start = -1;
 			gunLeft = 3;
+			isShooting = false;
 		}
 		else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_POW_LOOP_TIMEOUT){
 			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y);
@@ -88,14 +88,26 @@ int CGunSoldier::getAniId(int flag) {
 	switch (flag)
 	{
 	case 1:
+		if(isShooting)
+			return ID_ANI_GUNSOLDIER_SHOOTING_LEFTTOP;
+		else
 		return ID_ANI_GUNSOLDIER_LEFTTOP;
 	case 2:
+		if (isShooting)
+			return ID_ANI_GUNSOLDIER_SHOOTING_LEFT;
+		else
 		return ID_ANI_GUNSOLDIER_LEFT;
 	case 3:
 		return ID_ANI_GUNSOLDIER_LEFTBOTTOM;
 	case 4:
+		if (isShooting)
+			return ID_ANI_GUNSOLDIER_SHOOTING_RIGHTTOP;
+		else
 		return ID_ANI_GUNSOLDIER_RIGHTTOP;
 	case 5:
+		if (isShooting)
+			return ID_ANI_GUNSOLDIER_SHOOTING_RIGHT;
+		else
 		return ID_ANI_GUNSOLDIER_RIGHT;
 	case 6:
 		return ID_ANI_GUNSOLDIER_RIGHTBOTTOM;

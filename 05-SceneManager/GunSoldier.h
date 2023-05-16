@@ -8,7 +8,7 @@
 #define GUNSOLDIER_GRAVITY 0.002f
 #define GUNSOLDIER_DIE_DEFLECT 0.25f
 
-#define GUNSOLDIER_POW_LOOP_TIMEOUT 150
+#define GUNSOLDIER_POW_LOOP_TIMEOUT 250
 #define GUNSOLDIER_POW_TIMEOUT 3000
 
 #define GUNSOLDIER_STATE_UNACTIVE 100
@@ -36,12 +36,11 @@ class CGunSoldier : public CGameObject
 {
 
 protected:
-	float yLimit;
 	float xActive;
-	float ax;
 	float ay;
-	float ani_pow_id;
 	float gunLeft;
+
+	BOOLEAN isShooting;
 
 	ULONGLONG loop_start;
 	ULONGLONG gun_loop_start;
