@@ -18,3 +18,6 @@ height	240
 40	textures\ContraSheet3.gif
 50	textures\ContraSheet8.gif
 60	textures\ContraSheet4.gif
+
+# tilemap
+200	textures\map1_bank.png

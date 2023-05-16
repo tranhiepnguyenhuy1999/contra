@@ -4,11 +4,11 @@
 #include "Animation.h"
 #include "Animations.h"
 
-class CTileSet : public CGameObject {
-	float tileSetID;
+class CTileMap : public CGameObject {
+	vector<vector<string>> tileMap;
 public:
-	CTileSet(float x, float y, float id) : CGameObject(x, y) {
-		tileSetID = id;
+	CTileMap(float x, float y, vector<vector<string>> content) : CGameObject(x, y) {
+		tileMap = content;
 	}
 	void Render();
 	void Update(DWORD dt) {}

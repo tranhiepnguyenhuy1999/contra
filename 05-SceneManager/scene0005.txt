@@ -5,8 +5,12 @@ enemies-stage1.txt
 gun.txt
 soldier.txt
 
-#[TILEDMAP]
-# apply tiled map editor
+[TILESET]
+# width|height|maxTiles|lengthTileX|lengthTileY|frame_time|textID
+16	16	300	13	21	10000	200
+
+[TILEDMAP]
+# load tile map
 
 [OBJECTS]
 # type	x	y	extra_settings per object type

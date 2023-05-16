@@ -8,5 +8,4 @@ void CTileSet::Render()
 }
 void CTileSet::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	//
 }

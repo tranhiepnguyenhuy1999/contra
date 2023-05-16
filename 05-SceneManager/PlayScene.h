@@ -19,7 +19,7 @@ protected:
 	LPGAMEOBJECT player;					
 
 	vector<LPGAMEOBJECT> objects;
-	vector<LPGAMEOBJECT> tiledMapObjects;
+	vector<LPGAMEOBJECT> tiledMapObject;
 
 	void _ParseSection_SPRITES(string line);
 	void _ParseSection_ANIMATIONS(string line);
@@ -27,6 +27,7 @@ protected:
 	void _ParseSection_ASSETS(string line);
 	void _ParseSection_OBJECTS(string line);
 	void _ParseSection_TILEDMAP();
+	void _ParseSection_TILESET(string line);
 	void LoadAssets(LPCWSTR assetFile);
 
 	virtual void createNewObject(int id, float x, float y, float nx, float ny, int type);

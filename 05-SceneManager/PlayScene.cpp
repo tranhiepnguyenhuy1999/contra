@@ -22,6 +22,7 @@
 #include "Explode.h"
 #include "Water.h"
 
+#include "TileMap.h"
 #include "SampleKeyEventHandler.h"
 
 using namespace std;
@@ -38,6 +39,7 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define SCENE_SECTION_ASSETS	1
 #define SCENE_SECTION_OBJECTS	2
 #define SCENE_SECTION_TILEDMAP	3
+#define SCENE_SECTION_TILESET	4
 
 #define ASSETS_SECTION_UNKNOWN -1
 #define ASSETS_SECTION_SPRITES 1
@@ -100,6 +102,54 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 	CAnimations::GetInstance()->Add(ani_id, ani);
 }
 
+void CPlayScene::_ParseSection_TILESET(string line)
+{
+	vector<string> tokens = split(line);
+	// skip flag line
+	if (tokens.size() < 7) return;
+	else DebugOut(L"Start loading tileset firsttime!\n");
+
+	int width = atoi(tokens[0].c_str());
+	int height = atoi(tokens[1].c_str());
+	int maxTiles = atoi(tokens[2].c_str());
+	int lengthTilesX = atoi(tokens[3].c_str());
+	int lengthTilesY = atoi(tokens[4].c_str());
+	int frameTime = atoi(tokens[5].c_str());
+	int texID = atoi(tokens[6].c_str());
+
+	LPTEXTURE tex = CTextures::GetInstance()->Get(texID);
+
+	if (tex == NULL)
+	{
+		DebugOut(L"[ERROR] Texture ID %d not found!\n", texID);
+		return;
+	}
+
+	for (int i = 0; i < lengthTilesX+1; i++)
+	{
+		for (int j = 0; j < lengthTilesY+1; j++)
+		{
+			if (i * (lengthTilesY + 1) + j > maxTiles) continue;
+			// load sprite
+			int ID = 1000 + i * (lengthTilesY + 1) + j;
+			int l = j * width;
+			int r = l + width - 1;
+			int t = i * height;
+			int b = t + height - 1;
+			CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
+
+			// load animation
+			LPANIMATION ani = new CAnimation();
+			int ani_id = i * (lengthTilesY + 1) + j;
+			int sprite_id = ID;
+			int frame_time = frameTime;
+			ani->Add(sprite_id, frame_time);
+
+			CAnimations::GetInstance()->Add(ani_id, ani);
+		}
+	}
+
+}
 /*
 	Parse a line in section [OBJECTS] 
 */
@@ -250,16 +300,8 @@ void CPlayScene::_ParseSection_TILEDMAP()
 	else
 		DebugOut(L"[INFO] Could not open the file\n");
 
-	for (float i = 0; i < content.size(); i++)
-	{
-		for (float j = 0; j < content[i].size(); j++)
-		{
-			obj = new CTileSet(j*16,i*16, stoi(content[i][j])+1.0);
-			obj->SetPosition(j * 16, i * 16);
-			tiledMapObjects.push_back(obj);
-		}
-		cout << "\n";
-	}
+	obj = new CTileMap(0, 0, content);
+	tiledMapObject.push_back(obj);
 }
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
 {
@@ -313,6 +355,7 @@ void CPlayScene::Load()
 
 		if (line[0] == '#') continue;	// skip comment lines	
 		if (line == "[ASSETS]") { section = SCENE_SECTION_ASSETS; continue; };
+		if (line == "[TILESET]") { section = SCENE_SECTION_TILESET; continue; };
 		if (line == "[TILEDMAP]") { section = SCENE_SECTION_TILEDMAP; continue; };
 		if (line == "[OBJECTS]") { section = SCENE_SECTION_OBJECTS; continue; };
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
@@ -323,6 +366,7 @@ void CPlayScene::Load()
 		switch (section)
 		{ 
 			case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
+			case SCENE_SECTION_TILESET: _ParseSection_TILESET(line); break;
 			case SCENE_SECTION_TILEDMAP: _ParseSection_TILEDMAP(); break;
 			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		}
@@ -376,20 +420,7 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	float cx, cy;
-	CGame* game = CGame::GetInstance();
-	game->GetCamPos(cx, cy);
-	float l, t;
-
-	// tilemap render
-	for (int i = 0; i < tiledMapObjects.size(); i++)
-	{
-		tiledMapObjects[i]->GetPosition(l, t);
-		if (l >= cx-16 && l<=cx + game->GetBackBufferWidth()+16 && t>=cy-16 && t <= cy + game->GetBackBufferHeight())
-		{
-		tiledMapObjects[i]->Render();
-		}
-	}
+	tiledMapObject[0]->Render();
 
 	// obj render
 	for (int i = 0; i < objects.size(); i++)
