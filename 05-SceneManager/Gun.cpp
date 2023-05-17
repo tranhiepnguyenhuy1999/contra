@@ -5,6 +5,7 @@
 #include "GunSoldier.h"
 #include "GunBox.h"
 #include "GunShip.h"
+#include "GunMachine1.h"
 
 #include "debug.h"
 
@@ -15,6 +16,7 @@ CGun::CGun(float x, float y, float nx, float ny, int type) :CGameObject(x, y)
 	else
 		vx = GUN_ATTACK_SPEED;
 	gunType = type;
+	dmg = getDamage();
 	SetState(GUN_STATE_RELASE);
 	
 }
@@ -49,6 +51,29 @@ int CGun::getAniId() {
 		break;
 	}
 }
+int CGun::getDamage() {
+
+	switch (gunType)
+	{
+	case 0: return 1;
+	case 1:
+		return 1;
+	case 2:
+		return 1;
+	case 3:
+		return 1;
+	case 4:
+		return 1;
+	case 5:
+		return 1;
+	case 6:
+		return 1;
+	case 7:
+		return 1;
+	default:
+		break;
+	}
+}
 
 void CGun::OnNoCollision(DWORD dt)
 {
@@ -74,6 +99,8 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 	//	OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunBox*>(e->obj))
 		OnCollisionWithGunBox(e);
+	else if (dynamic_cast<CGunMachine1*>(e->obj))
+		OnCollisionWithGunMachine1(e);
 	else if (dynamic_cast<CGunShip*>(e->obj))
 		OnCollisionWithGunShip(e);
 }
@@ -92,6 +119,12 @@ void CGun::OnCollisionWithGunSoldier(LPCOLLISIONEVENT e)
 {
 	CGunSoldier* i = dynamic_cast<CGunSoldier*>(e->obj);
 	i->SetState(GUNSOLDIER_STATE_DIE);
+	SetState(GUN_STATE_DIE);
+}
+void CGun::OnCollisionWithGunMachine1(LPCOLLISIONEVENT e)
+{
+	CGunMachine1* i = dynamic_cast<CGunMachine1*>(e->obj);
+	i->handleGetAttack(this->dmg);
 	SetState(GUN_STATE_DIE);
 }
 void CGun::OnCollisionWithGunBox(LPCOLLISIONEVENT e)

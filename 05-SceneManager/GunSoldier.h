@@ -10,8 +10,8 @@
 #define GUNSOLDIER_GRAVITY 0.002f
 #define GUNSOLDIER_DIE_DEFLECT 0.25f
 
-#define GUNSOLDIER_POW_LOOP_TIMEOUT 250
-#define GUNSOLDIER_POW_TIMEOUT 3000
+#define GUNSOLDIER_SHOOTING_LOOP_TIMEOUT 250
+#define GUNSOLDIER_SHOOTING_TIMEOUT 3000
 
 #define GUNSOLDIER_STATE_UNACTIVE 100
 #define GUNSOLDIER_STATE_BOTTOM 200
@@ -48,7 +48,12 @@ protected:
 	ULONGLONG gun_loop_start;
 	ULONGLONG die_start;
 
+	int getPlayerPosition();
+	int getAniId(int flag);
+	void handleShooting();
+	int translateToPercent(float data, boolean isXAxis);
 
+public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
@@ -57,12 +62,6 @@ protected:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-
-	int getPlayerPosition();
-	int getAniId(int flag);
-	void handleShooting();
-	int translateToPercent(float data, boolean isXAxis);
-public:
 
 	CGunSoldier(float x, float y);
 	virtual void SetState(int state);

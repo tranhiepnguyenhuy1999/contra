@@ -59,7 +59,7 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	// shooting
-	if ((state == GUNSOLDIER_STATE_ACTIVE) && (GetTickCount64() - loop_start > GUNSOLDIER_POW_TIMEOUT))
+	if ((state == GUNSOLDIER_STATE_ACTIVE) && (GetTickCount64() - loop_start > GUNSOLDIER_SHOOTING_TIMEOUT))
 	{
 		isShooting = true;
 		if (gunLeft <= 0)
@@ -69,7 +69,7 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			gunLeft = 3;
 			isShooting = false;
 		}
-		else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_POW_LOOP_TIMEOUT){
+		else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_SHOOTING_LOOP_TIMEOUT){
 			handleShooting();
 			gun_loop_start = GetTickCount64();
 			gunLeft -= 1;

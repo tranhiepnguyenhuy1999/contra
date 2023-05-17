@@ -18,6 +18,18 @@
 class CGun : public CGameObject {
 	ULONGLONG count_start;
 	int gunType;
+	int dmg;
+
+	int getAniId();
+	int getDamage();
+
+	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
+	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
+	void OnCollisionWithGunSoldier(LPCOLLISIONEVENT e);
+	void OnCollisionWithGunMachine1(LPCOLLISIONEVENT e);
+	void OnCollisionWithGunBox(LPCOLLISIONEVENT e);
+	void OnCollisionWithGunShip(LPCOLLISIONEVENT e);
+
 public:
 	CGun(float x, float y, float nx, float ny, int type);
 
@@ -29,14 +41,6 @@ public:
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
-
-	int getAniId();
-
-	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
-	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
-	void OnCollisionWithGunSoldier(LPCOLLISIONEVENT e);
-	void OnCollisionWithGunBox(LPCOLLISIONEVENT e);
-	void OnCollisionWithGunShip(LPCOLLISIONEVENT e);
 
 	virtual void SetState(int state);
 };
