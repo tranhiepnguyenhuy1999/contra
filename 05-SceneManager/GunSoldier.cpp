@@ -71,15 +71,6 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		}
 		else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_POW_LOOP_TIMEOUT){
 			handleShooting();
-			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED / 4, GUNSOLDIER_GUN_SPEED, 0);
-			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED/2, GUNSOLDIER_GUN_SPEED, 0);
-			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED*2 / 3, GUNSOLDIER_GUN_SPEED, 0);
-			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED, GUNSOLDIER_GUN_SPEED, 0);
-
-			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, GUNSOLDIER_GUN_SPEED, 0);
-			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED, GUNSOLDIER_GUN_SPEED/2, 0);
-			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED, GUNSOLDIER_GUN_SPEED / 5, 0);
-			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED, 0, 0);
 			gun_loop_start = GetTickCount64();
 			gunLeft -= 1;
 		}
@@ -186,8 +177,8 @@ void CGunSoldier::handleShooting()
 	
 	float percentX = translateToPercent(x, true);
 	float percentY = translateToPercent(y, false);
-	DebugOut(L">>> x: %f >>> \n", percentX);
-	DebugOut(L">>> y: %f >>> \n", percentY);
+	//DebugOut(L">>> x: %f >>> \n", percentX);
+	//DebugOut(L">>> y: %f >>> \n", percentY);
 	float percent = percentX/percentY;
 	float altShootingSpeed=0;
 
@@ -206,8 +197,8 @@ void CGunSoldier::handleShooting()
 
 	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, nx * altShootingSpeed* GUNSOLDIER_GUN_SPEED, ny * GUNSOLDIER_GUN_SPEED, 0);
 
-	DebugOut(L">>> percent: %f >>> \n", percent);
-	DebugOut(L">>> altShootingSpeed: %f >>> \n", altShootingSpeed);
+	//DebugOut(L">>> percent: %f >>> \n", percent);
+	//DebugOut(L">>> altShootingSpeed: %f >>> \n", altShootingSpeed);
 
 }
 int CGunSoldier::translateToPercent(float data, boolean isXAxis) {
@@ -219,12 +210,17 @@ int CGunSoldier::translateToPercent(float data, boolean isXAxis) {
 	else
 	 result = abs(py - data) / activeRange;
 
-	DebugOut(L">>> result: %f >>> \n", result);
+	//DebugOut(L">>> result: %f >>> \n", result);
 
-	if (result >= 1) return 5;
-	else if (result >= 0.8f) return 4;
-	else if (result >= 0.6f) return 3;
-	else if (result >= 0.4f) return 2;
+	if (result >= 1) return 10;
+	else if (result >= 0.9f) return 9;
+	else if (result >= 0.8f) return 8;
+	else if (result >= 0.7f) return 7;
+	else if (result >= 0.6f) return 6;
+	else if (result >= 0.5f) return 5;
+	else if (result >= 0.4f) return 4;
+	else if (result >= 0.3f) return 3;
+	else if (result >= 0.2f) return 2;
 	else return 1;
 }
 void CGunSoldier::SetState(int state)

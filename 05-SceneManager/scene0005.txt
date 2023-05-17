@@ -22,7 +22,7 @@ soldier.txt
 #soldier
 #20	200	30
 #gun-soldier
-24	200	150
+24	200	50
 
 #gun-machine1
 #23	200	30
