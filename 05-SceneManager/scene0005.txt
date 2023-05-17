@@ -22,7 +22,11 @@ soldier.txt
 #soldier
 #20	200	30
 #gun-soldier
-#24	200	30
+24	200	150
+
+#gun-machine1
+#23	200	30
+
 #gunbox
 #10	200	30	1
 #gunship
@@ -40,8 +44,8 @@ soldier.txt
 1	1664	368
 
 # downbrick
-#4	100	50	4
-
+4	100	50	4
+4	150	100	4
 #hidden brick
 
 #1	2224	576
@@ -54,4 +58,4 @@ soldier.txt
 3	2256	416	16	15	36	1089	1090	1091
 
 #water
-7	100	50	16	15	10
+#7	100	50	16	15	10

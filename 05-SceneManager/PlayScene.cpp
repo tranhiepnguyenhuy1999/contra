@@ -420,7 +420,8 @@ void CPlayScene::Update(DWORD dt)
 
 void CPlayScene::Render()
 {
-	tiledMapObject[0]->Render();
+	// render tilemap first
+	//tiledMapObject[0]->Render();
 
 	// obj render
 	for (int i = 0; i < objects.size(); i++)

@@ -5,10 +5,8 @@
 
 CEnemyGun::CEnemyGun(float x, float y, float nx, float ny, int type) :CGameObject(x, y)
 {
-	if (nx < 0)
-		vx = -ENEMY_GUN_ATTACK_SPEED;
-	else
-		vx = ENEMY_GUN_ATTACK_SPEED;
+	vx = nx;
+	vy = ny;
 	gunType = type;
 	SetState(ENEMY_GUN_STATE_RELASE);
 
@@ -18,7 +16,7 @@ void CEnemyGun::Render()
 	int aniId = -1;
 	aniId = getAniId();
 	if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 int CEnemyGun::getAniId() {
 	if (state == ENEMY_GUN_STATE_DIE)
@@ -53,15 +51,13 @@ void CEnemyGun::OnNoCollision(DWORD dt)
 
 void CEnemyGun::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (e->ny != 0)
-	{
-		vy = 0;
-	}
 }
 void CEnemyGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 
-	if ((state != ENEMY_GUN_STATE_DIE) && (GetTickCount64() - count_start > 3000))
+	x += vx * dt;
+	y += vy * dt;
+	if ((state != ENEMY_GUN_STATE_DIE) && (GetTickCount64() - count_start > 5000))
 	{
 		count_start = -1;
 		isDeleted = true;
@@ -75,7 +71,7 @@ void CEnemyGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
+	//CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 void CEnemyGun::GetBoundingBox(float& l, float& t, float& r, float& b)
 {

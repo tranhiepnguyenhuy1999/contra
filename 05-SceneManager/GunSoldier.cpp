@@ -5,7 +5,7 @@
 CGunSoldier::CGunSoldier(float x, float y) :CGameObject(x, y)
 {
 	this->ay = 0;
-	xActive = x - 200;
+	activeRange = 200;
 	loop_start = -1;
 	die_start = -1;
 	gun_loop_start = -1;
@@ -40,7 +40,7 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float px, py;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
 
-	if ( px < xActive && state != GUNSOLDIER_STATE_DIE)
+	if ( px < x-activeRange && state != GUNSOLDIER_STATE_DIE)
 		SetState(GUNSOLDIER_STATE_UNACTIVE);
 	else
 		SetState(GUNSOLDIER_STATE_ACTIVE);
@@ -70,7 +70,16 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			isShooting = false;
 		}
 		else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_POW_LOOP_TIMEOUT){
-			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y);
+			handleShooting();
+			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED / 4, GUNSOLDIER_GUN_SPEED, 0);
+			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED/2, GUNSOLDIER_GUN_SPEED, 0);
+			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED*2 / 3, GUNSOLDIER_GUN_SPEED, 0);
+			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED, GUNSOLDIER_GUN_SPEED, 0);
+
+			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, GUNSOLDIER_GUN_SPEED, 0);
+			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED, GUNSOLDIER_GUN_SPEED/2, 0);
+			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED, GUNSOLDIER_GUN_SPEED / 5, 0);
+			//CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, GUNSOLDIER_GUN_SPEED, 0, 0);
 			gun_loop_start = GetTickCount64();
 			gunLeft -= 1;
 		}
@@ -120,13 +129,13 @@ int CGunSoldier::getPlayerPosition() {
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
 	if (px < x) {
 		if (py > y + GUNSOLDIER_HEIGHT) return 1; //left-top
-		else if (py <= y + GUNSOLDIER_HEIGHT && py >= y - GUNSOLDIER_HEIGHT) return 2;// left
+		else if (py <= y + GUNSOLDIER_HEIGHT/2 && py >= y - GUNSOLDIER_HEIGHT/2) return 2;// left
 		else return 3; //left-bottom
 	}
 	else
 	{
 		if (py > y + GUNSOLDIER_HEIGHT) return 4; //right-top
-		else if (py <= y + GUNSOLDIER_HEIGHT && py >= y - GUNSOLDIER_HEIGHT) return 5;// right
+		else if (py <= y + GUNSOLDIER_HEIGHT/2 && py >= y - GUNSOLDIER_HEIGHT/2) return 5;// right
 		else return 6; //right-bottom
 	}
 }
@@ -137,6 +146,86 @@ void CGunSoldier::Render()
 
 	if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
+}
+void CGunSoldier::handleShooting()
+{
+	int flag = getPlayerPosition();
+	float nx=0, ny=0;
+
+	switch (flag)
+	{
+	case 1:
+		nx = -1; ny = 1;
+		break;
+	case 2:
+		nx = -1; ny = 0;
+		break;
+	case 3:
+		nx = -1; ny = -1;
+		break;
+	case 4:
+		nx = 1; ny = 1;
+		break;
+	case 5:
+		nx = 1; ny = 0;
+		break;
+	case 6:
+		nx = 1; ny = -1;
+		break;
+	}
+
+	if (nx == 0 || ny == 0)
+	{
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, nx*GUNSOLDIER_GUN_SPEED, ny*GUNSOLDIER_GUN_SPEED, 0);
+		return;
+	}
+
+	float px, py;
+	
+	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
+	
+	float percentX = translateToPercent(x, true);
+	float percentY = translateToPercent(y, false);
+	DebugOut(L">>> x: %f >>> \n", percentX);
+	DebugOut(L">>> y: %f >>> \n", percentY);
+	float percent = percentX/percentY;
+	float altShootingSpeed=0;
+
+	if (percent >= 2)
+	{
+		altShootingSpeed = 2;
+	}
+	else if (percent >= 1)
+	{
+		altShootingSpeed = 1;
+	}
+	else if (percent >= 0.5f)
+	{
+		altShootingSpeed = 0.5f;
+	}
+
+	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, nx * altShootingSpeed* GUNSOLDIER_GUN_SPEED, ny * GUNSOLDIER_GUN_SPEED, 0);
+
+	DebugOut(L">>> percent: %f >>> \n", percent);
+	DebugOut(L">>> altShootingSpeed: %f >>> \n", altShootingSpeed);
+
+}
+int CGunSoldier::translateToPercent(float data, boolean isXAxis) {
+	float px, py;
+	float result = 0;
+	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
+	if(isXAxis)
+	 result = abs(px - data) / activeRange;
+	else
+	 result = abs(py - data) / activeRange;
+
+	DebugOut(L">>> result: %f >>> \n", result);
+
+	if (result >= 1) return 5;
+	else if (result >= 0.8f) return 4;
+	else if (result >= 0.6f) return 3;
+	else if (result >= 0.4f) return 2;
+	else return 1;
 }
 void CGunSoldier::SetState(int state)
 {

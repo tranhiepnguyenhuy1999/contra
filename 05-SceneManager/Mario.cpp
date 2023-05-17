@@ -74,8 +74,8 @@ void CMario::OnCollisionWith(LPCOLLISIONEVENT e)
 	//	OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunType*>(e->obj))
 		OnCollisionWithGunType(e);
-	else if (dynamic_cast<CEnemyGun*>(e->obj))
-		OnCollisionWithEnemyGun(e);
+	//else if (dynamic_cast<CEnemyGun*>(e->obj))
+	//	OnCollisionWithEnemyGun(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
 }

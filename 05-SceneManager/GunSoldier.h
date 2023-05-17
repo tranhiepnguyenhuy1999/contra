@@ -5,6 +5,8 @@
 #define GUNSOLDIER_BBOX_WIDTH 16
 #define GUNSOLDIER_BBOX_HEIGHT 32
 
+#define GUNSOLDIER_GUN_SPEED 0.05f
+
 #define GUNSOLDIER_GRAVITY 0.002f
 #define GUNSOLDIER_DIE_DEFLECT 0.25f
 
@@ -36,7 +38,7 @@ class CGunSoldier : public CGameObject
 {
 
 protected:
-	float xActive;
+	float activeRange;
 	float ay;
 	float gunLeft;
 
@@ -58,8 +60,10 @@ protected:
 
 	int getPlayerPosition();
 	int getAniId(int flag);
-
+	void handleShooting();
+	int translateToPercent(float data, boolean isXAxis);
 public:
+
 	CGunSoldier(float x, float y);
 	virtual void SetState(int state);
 };
