@@ -31,8 +31,15 @@ void CGunBox::OnCollisionWith(LPCOLLISIONEVENT e)
 void CGunBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	//DebugOut(L">>> Count time >>> %d \n", GetTickCount64() - loop_start);
-	float px, py;
-	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
+	float cx, cy;
+	CGame::GetInstance()->GetCamPos(cx, cy);
+
+	if (state == GUNBOX_STATE_CLOSE) return;
+
+	if (cx>x)
+	{
+		SetState(GUNBOX_STATE_CLOSE);
+	}
 
 	if (state == GUNBOX_STATE_DIE)
 	{
@@ -63,7 +70,7 @@ void CGunBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 int CGunBox::getAniId() {
 
-	if (this->state == GUNBOX_STATE_UNACTIVE) return ID_ANI_GUNBOX_UNACTIVE;
+	if (this->state == GUNBOX_STATE_UNACTIVE || this->state== GUNBOX_STATE_CLOSE) return ID_ANI_GUNBOX_UNACTIVE;
 	else if (this->state == GUNBOX_STATE_PRE_OPEN) return ID_ANI_GUNBOX_PRE_OPEN;
 	else if (this->state == GUNBOX_STATE_OPEN) return	ID_ANI_GUNBOX_OPEN;
 	else return -1;
@@ -93,6 +100,9 @@ void CGunBox::SetState(int state)
 		isOpen = true;
 		break;
 	case GUNBOX_STATE_DIE:
+		break;
+	case GUNBOX_STATE_CLOSE:
+		isOpen = false;
 		break;
 	}
 }

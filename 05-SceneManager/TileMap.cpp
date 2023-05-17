@@ -17,7 +17,10 @@ void CTileMap::Render()
 			float l, t;
 			l = j * 16;
 			t = (lengthY - i) * 16;
-			if (l >= cx - 16 && l <= cx + game->GetBackBufferWidth() + 16 && t >= cy - 16 && t <= cy + game->GetBackBufferHeight())
+			if (l >= cx - 16 
+				&& l <= cx + game->GetBackBufferWidth() + 16 
+				&& t >= cy - 16 
+				&& t <= cy + game->GetBackBufferHeight())
 			{
 				animations->Get(stoi(tileMap[i-1][j]))->Render(l, t);
 			}
