@@ -16,7 +16,6 @@ void Quadtree::Clear()
     m_objects_list.clear();
 
     //delete m_objects_list;
-    //delete m_region;
 }
 bool Quadtree::IsContain(LPGAMEOBJECT objSrc)
 {
@@ -109,33 +108,30 @@ void Quadtree::Retrieve(vector<LPGAMEOBJECT> return_objects_list, LPGAMEOBJECT e
         }
     }
 }
-void DetectCollision()
+void DetectCollision(vector<LPGAMEOBJECT> entity_list)
 {
-    //Quadtree* quadtree = CreateQuadTree();
+    Quadtree* quadtree = CreateQuadTree();
 
-    //vector<LPGAMEOBJECT> return_objects_list;
-    //vector<LPGAMEOBJECT> entity_list = LPGAMEOBJECTManager::GetInstance()->GetLPGAMEOBJECTList();
+    vector<LPGAMEOBJECT> return_objects_list;
 
-    //for (list::iterator i = entity_list->begin(); i != entity_list->end(); i++)
-    //{
-    //    //Get all objects that can collide with current entity
-    //    quadtree->Retrieve(return_objects_list, *i);
+    for (size_t i = 1; i < entity_list.size(); i++)
+    {
+        //Get all objects that can collide with current entity
+        quadtree->Retrieve(return_objects_list, entity_list[i]);
 
-    //    for (auto x = return_objects_list->begin(); x != return_objects_list->end(); x++)
-    //    {
-    //        if (IsCollide(*i, *x))  // Your algorithm about Collision Detection
-    //        {
-    //            // Do something here
-    //        }
-    //    }
+        for (size_t i = 1; i < return_objects_list.size(); i++)
+        {
+        // Your algorithm about Collision Detection
+        // Do something here
+        }
 
-    //    return_objects_list->clear();
-    //}
+        return_objects_list.clear();
+    }
 
     //quadtree->Release();
 
     //delete return_objects_list;
-    //delete quadtree;
+    delete quadtree;
 }
 Quadtree* CreateQuadTree()
 {
