@@ -179,6 +179,13 @@ int CMario::GetAniId()
 			else
 				aniId = ID_ANI_MARIO_SWIMMING_SHOOTING_LEFT;
 		}
+		else if (isSitting)
+		{
+			if (nx > 0)
+				aniId = ID_ANI_MARIO_SIT_RIGHT;
+			else
+				aniId = ID_ANI_MARIO_SIT_LEFT;
+		}
 		else
 		{
 			if (nx >= 0)
@@ -394,7 +401,7 @@ void CMario::SetState(int state)
 	case MARIO_STATE_SHOOTING:
 		shooting_start = GetTickCount64();
 		isShooting = true;
-		createGun();
+		handleShooting();
 		break;
 	case MARIO_STATE_LOOKUP: 
 		if (isOnPlatform)
@@ -471,7 +478,7 @@ void CMario::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		}
 }
 
-void CMario::createGun() {
+void CMario::handleShooting() {
 
 	switch (gunType)
 	{
@@ -486,13 +493,28 @@ void CMario::createGun() {
 
 		break;
 	}
-
 	if (nx < 0) {
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT/4, -1);
+		if (isLookingUp) {
+			if (vx == 0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4, 0, 1);
+			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4, -1, 1);
+		}
+		else if (isSitting) {
+			if (vx == 0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x, y, -1);
+			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4, -1, -1);
+		}
+		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT/4, -1);
 	}
 	else
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4,1);
+		if (isLookingUp) {
+			if (vx == 0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4, 0, 1);
+			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4, 1, 1);
+		}
+		else if (isSitting) {
+			if (vx == 0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x, y, 1);
+			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4, 1, -1);
+		}
+		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + MARIO_BIG_BBOX_WIDTH / 2, y + MARIO_BIG_BBOX_HEIGHT / 4,1);
 
 	}
 }

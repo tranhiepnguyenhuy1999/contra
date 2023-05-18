@@ -26,7 +26,7 @@ soldier.txt
 #gun-machine1
 #23	200	30
 #gun-machine2
-25	200	30
+#25	200	30
 #gunbox
 #10	200	30	1
 #gunship

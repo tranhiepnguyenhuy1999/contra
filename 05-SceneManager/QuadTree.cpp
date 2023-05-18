@@ -108,6 +108,19 @@ void Quadtree::Retrieve(vector<LPGAMEOBJECT> return_objects_list, LPGAMEOBJECT e
         }
     }
 }
+
+Quadtree* CreateQuadTree()
+{
+    // Init base game region for detecting collision
+    Quadtree* quadtree = new Quadtree(1, 0, 0, 800, 600);
+    // add objects to quadtree
+    vector<LPGAMEOBJECT> entity_list;
+    for (auto i = entity_list.begin(); i != entity_list.end(); i++)
+        quadtree->Insert(*i);
+
+    return quadtree;
+}
+
 void DetectCollision(vector<LPGAMEOBJECT> entity_list)
 {
     Quadtree* quadtree = CreateQuadTree();
@@ -132,15 +145,4 @@ void DetectCollision(vector<LPGAMEOBJECT> entity_list)
 
     //delete return_objects_list;
     delete quadtree;
-}
-Quadtree* CreateQuadTree()
-{
-    // Init base game region for detecting collision
-    Quadtree* quadtree = new Quadtree(1, 0, 0, 800, 600);
-    // add objects to quadtree
-    vector<LPGAMEOBJECT> entity_list;
-    for (auto i = entity_list.begin(); i != entity_list.end(); i++)
-        quadtree->Insert(*i);
-
-    return quadtree;
 }

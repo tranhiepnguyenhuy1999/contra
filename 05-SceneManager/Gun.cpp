@@ -9,12 +9,11 @@
 
 #include "debug.h"
 
-CGun::CGun(float x, float y, float nx, float ny, int type) :CGameObject(x, y)
+CGun::CGun(float x, float y, float nx=0, float ny=0, int type=0) :CGameObject(x, y)
 {
-	if (nx < 0)
-		vx = -GUN_ATTACK_SPEED;
-	else
-		vx = GUN_ATTACK_SPEED;
+	vx = nx * GUN_ATTACK_SPEED;
+	vy = ny * GUN_ATTACK_SPEED;
+
 	gunType = type;
 	dmg = getDamage();
 	SetState(GUN_STATE_RELASE);

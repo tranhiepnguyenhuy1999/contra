@@ -13,10 +13,10 @@
 #define MARIO_ACCEL_WALK_X	0.0005f
 #define MARIO_ACCEL_RUN_X	0.008f
 
-#define MARIO_JUMP_SPEED_Y		0.6f
+#define MARIO_JUMP_SPEED_Y		0.4f
 #define MARIO_JUMP_RUN_SPEED_Y	0.7f
 
-#define MARIO_GRAVITY	0.002f
+#define MARIO_GRAVITY	0.001f
 
 #define MARIO_JUMP_DEFLECT_SPEED  0.3f
 
@@ -51,7 +51,7 @@
 
 #pragma region ANIMATION_ID
 //BIG
-#define ID_ANI_MARIO_IDLE_RIGHT 4110
+#define ID_ANI_MARIO_IDLE_RIGHT 1001
 #define ID_ANI_MARIO_IDLE_LEFT 1002
 
 #define ID_ANI_MARIO_WALKING_RIGHT 1005
@@ -90,7 +90,7 @@
 
 #define GROUND_Y 160.0f
 
-#define MARIO_BIG_BBOX_WIDTH  8
+#define MARIO_BIG_BBOX_WIDTH  16
 #define MARIO_BIG_BBOX_HEIGHT 34
 #define MARIO_BIG_UP_BBOX_HEIGHT 46
 #define MARIO_BIG_SITTING_BBOX_WIDTH  32
@@ -142,6 +142,7 @@ class CMario : public CGameObject
 	void OnCollisionWithEnemyGun(LPCOLLISIONEVENT e);
 
 	int GetAniId();
+	void handleShooting();
 public:
 	CMario(float x, float y) : CGameObject(x, y)
 	{
@@ -185,6 +186,5 @@ public:
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); };
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
-	void createGun();
 
 };

@@ -19,6 +19,7 @@ private:
 
     bool           IsContain(LPGAMEOBJECT obj);
     void           Split();
+    //Quadtree* CreateQuadTree();
 public:
     Quadtree() {
         m_level = 0;

@@ -1,10 +1,12 @@
 #include "Collision.h"
 #include "GameObject.h"
+
 #include "DownBrick.h"
+#include "Gun.h"
 
 #include "debug.h"
 
-#define BLOCK_PUSH_FACTOR 0.4f
+#define BLOCK_PUSH_FACTOR 0.2f
 
 CCollision* CCollision::__instance = NULL;
 
@@ -183,6 +185,7 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 	int filterX = 1,			// 1 = process events on X-axis, 0 = skip events on X 
 	int filterY = 1)			// 1 = process events on Y-axis, 0 = skip events on Y
 {
+
 	float min_tx, min_ty;
 
 	min_tx = 1.0f;
@@ -235,9 +238,10 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	{
 		Scan(objSrc, dt, coObjects, coEvents);
 	}
-
+	// gun is not detect collie with blocking obj
+	if (dynamic_cast<CGun*>(objSrc)) objSrc->OnNoCollision(dt);
 	// No collision detected
-	if (coEvents.size() == 0)
+	else if (coEvents.size() == 0)
 	{
 		objSrc->OnNoCollision(dt);
 	}
