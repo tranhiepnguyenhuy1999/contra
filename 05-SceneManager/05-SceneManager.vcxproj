@@ -160,6 +160,7 @@
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="GunBox.cpp" />
     <ClCompile Include="GunMachine1.cpp" />
+    <ClCompile Include="GunMachine2.cpp" />
     <ClCompile Include="GunShip.cpp" />
     <ClCompile Include="GunSoldier.cpp" />
     <ClCompile Include="GunType.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="Gun.h" />
     <ClInclude Include="GunBox.h" />
     <ClInclude Include="GunMachine1.h" />
+    <ClInclude Include="GunMachine2.h" />
     <ClInclude Include="GunShip.h" />
     <ClInclude Include="GunSoldier.h" />
     <ClInclude Include="GunType.h" />
