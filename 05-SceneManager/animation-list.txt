@@ -1,3 +1,5 @@
+tile	0	0
+
 main	10000	1000
 
 soldier	20000	2000
@@ -5,3 +7,5 @@ soldier	20000	2000
 gun	30000	3000
 
 enemies-stage1	40000	4000
+
+intro	100000	10000

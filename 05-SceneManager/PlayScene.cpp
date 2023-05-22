@@ -175,8 +175,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
 			return;
 		}
-		obj = new CMario(x,y); 
-		player = (CMario*)obj;  
+		obj = new CLance(x,y); 
+		player = (CLance*)obj;  
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
@@ -423,7 +423,7 @@ void CPlayScene::Update(DWORD dt)
 void CPlayScene::Render()
 {
 	// render tilemap first
-	//tiledMapObject[0]->Render();
+	tiledMapObject[0]->Render();
 
 	// obj render
 	for (int i = 0; i < objects.size(); i++)

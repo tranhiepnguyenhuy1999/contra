@@ -165,8 +165,9 @@
     <ClCompile Include="GunSoldier.cpp" />
     <ClCompile Include="GunType.cpp" />
     <ClCompile Include="HiddenBrick.cpp" />
+    <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mario.cpp" />
+    <ClCompile Include="Lance.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
@@ -206,8 +207,9 @@
     <ClInclude Include="GunSoldier.h" />
     <ClInclude Include="GunType.h" />
     <ClInclude Include="HiddenBrick.h" />
+    <ClInclude Include="IntroScene.h" />
     <ClInclude Include="KeyEventHandler.h" />
-    <ClInclude Include="Mario.h" />
+    <ClInclude Include="Lance.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Portal.h" />

@@ -43,6 +43,11 @@ void Quadtree::Split()
 }
 void Quadtree::Insert(LPGAMEOBJECT entity)
 {
+
+    CGame* game = CGame::GetInstance();
+    int screenWidth= game->GetBackBufferWidth();
+    int screenHeight = game->GetBackBufferHeight();
+
     // Insert entity into corresponding nodes
     if (m_nodes)
     {
@@ -63,7 +68,7 @@ void Quadtree::Insert(LPGAMEOBJECT entity)
         m_objects_list.push_back(entity);
 
     // Split and move all objects in list into it’s corresponding nodes
-    if (m_objects_list.size() > MAX_OBJECT_IN_REGION && m_level < MAX_LEVEL)
+    if (false)
     {
         Split();
 

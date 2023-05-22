@@ -1,7 +1,5 @@
 #include "GameObject.h"
 #include "PlayScene.h"
-#define MAX_LEVEL                5
-#define MAX_OBJECT_IN_REGION     4
 #include <vector>
 
 using namespace std;

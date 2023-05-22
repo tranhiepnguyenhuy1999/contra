@@ -33,7 +33,7 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Animation.h"
 #include "Animations.h"
 
-#include "Mario.h"
+#include "Lance.h"
 #include "Brick.h"
 #include "Goomba.h"
 #include "Platform.h"
