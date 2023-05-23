@@ -3,7 +3,7 @@
 using namespace std;
 #include <Windows.h>
 
-#define MAX_MAP_WIDTH 2000
+#define MAX_MAP_WIDTH 300
 #define MAX_MAP_HEIGHT 2000
 
 class Camera
@@ -25,7 +25,8 @@ public:
 	void transformCoordinates( float &ix, float &iy);
 	void setCamWidth(float width) { cWidth = width; };
 	void setCamHeight(float height) { cHeight = height; };
-
+	void getCamWidth(float &width) { width = cWidth; };
+	void getCamHeight(float &height) { height = cHeight; };
 	void setCamPosition(float px, float py) {
 		l = px - cWidth / 2;
 		r = l + cWidth;

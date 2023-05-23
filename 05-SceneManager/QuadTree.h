@@ -10,7 +10,7 @@ class Quadtree
 {
 private:
     int            m_level;
-    float ql, qt;
+    float ql, qt, qr, qb;
     int qWidth, qHeight;
     vector<LPGAMEOBJECT> m_objects_list;
     Quadtree** m_nodes;

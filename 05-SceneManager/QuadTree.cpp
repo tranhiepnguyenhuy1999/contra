@@ -1,4 +1,6 @@
 #include "QuadTree.h"
+#include "Camera.h"
+
 void Quadtree::Clear()
 {
     // Clear all nodes
@@ -11,11 +13,10 @@ void Quadtree::Clear()
         }
         delete[] m_nodes;
     }
-
     // Clear current Quadtree
+    for (UINT i = 0; i < m_objects_list.size(); i++) delete m_objects_list[i];
     m_objects_list.clear();
 
-    //delete m_objects_list;
 }
 bool Quadtree::IsContain(LPGAMEOBJECT objSrc)
 {
@@ -24,8 +25,8 @@ bool Quadtree::IsContain(LPGAMEOBJECT objSrc)
 
     return !(er < ql ||
         eb > qt ||
-        el > ql+ qWidth ||
-        et < qt-qHeight);
+        el > qr ||
+        et < qb);
 }
 void Quadtree::Split()
 {
@@ -44,10 +45,6 @@ void Quadtree::Split()
 void Quadtree::Insert(LPGAMEOBJECT entity)
 {
 
-    CGame* game = CGame::GetInstance();
-    int screenWidth= game->GetBackBufferWidth();
-    int screenHeight = game->GetBackBufferHeight();
-
     // Insert entity into corresponding nodes
     if (m_nodes)
     {
@@ -63,15 +60,20 @@ void Quadtree::Insert(LPGAMEOBJECT entity)
         return; // Return here to ignore rest.
     }
 
+    Camera* cam = Camera::GetInstance();
+    float cWidth, cHeight;
+    cam->getCamWidth(cWidth);
+    cam->getCamHeight(cHeight);
+
     // Insert entity into current quadtree
     if (this->IsContain(entity))
         m_objects_list.push_back(entity);
-
     // Split and move all objects in list into it’s corresponding nodes
-    if (false)
+    if (m_objects_list.size() !=0 && qWidth > cWidth/2 && qHeight > cHeight/2)
     {
         Split();
 
+        // start moving all object form father node
         while (!m_objects_list.empty())
         {
             if (m_nodes[0]->IsContain(m_objects_list.back()))
@@ -126,24 +128,22 @@ Quadtree* CreateQuadTree()
     return quadtree;
 }
 
-void DetectCollision(vector<LPGAMEOBJECT> entity_list)
+void DetectCollision(vector<LPGAMEOBJECT> objList, vector<LPGAMEOBJECT> coObjects)
 {
     Quadtree* quadtree = CreateQuadTree();
 
-    vector<LPGAMEOBJECT> return_objects_list;
-
-    for (size_t i = 1; i < entity_list.size(); i++)
+    for (size_t i = 1; i < objList.size(); i++)
     {
         //Get all objects that can collide with current entity
-        quadtree->Retrieve(return_objects_list, entity_list[i]);
+        quadtree->Retrieve(coObjects, objList[i]);
 
-        for (size_t i = 1; i < return_objects_list.size(); i++)
+        for (size_t i = 1; i < coObjects.size(); i++)
         {
         // Your algorithm about Collision Detection
         // Do something here
         }
 
-        return_objects_list.clear();
+        coObjects.clear();
     }
 
     //quadtree->Release();
