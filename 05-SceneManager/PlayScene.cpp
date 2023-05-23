@@ -23,6 +23,7 @@
 #include "Explode.h"
 #include "Water.h"
 
+#include "Camera.h"
 #include "TileMap.h"
 #include "SampleKeyEventHandler.h"
 
@@ -399,22 +400,11 @@ void CPlayScene::Update(DWORD dt)
 	if (player == NULL) return; 
 
 	// Update camera to follow mario
-	float cx, cy;
-	player->GetPosition(cx, cy);
+	float px, py;
+	player->GetPosition(px, py);
 
-	CGame *game = CGame::GetInstance();
-	cx -= game->GetBackBufferWidth() / 2;
-	cy -= game->GetBackBufferHeight() / 2;
-
-	if (cx < 0) cx = 0;
-	if (cy < 0) cy = 0;
-
-	//if (cy + game->GetBackBufferHeight() > 464) cy = 464 - game->GetBackBufferHeight();s
-	if (cx + game->GetBackBufferWidth() > 2800) cx = 2800 - game->GetBackBufferWidth();
-
-	//CGame::GetInstance()->SetCamPos(cx, 250);
-
-	CGame::GetInstance()->SetCamPos(cx, 0);
+	Camera::GetInstance()->setCamPosition(px, 0);
+	//CGame::GetInstance()->SetCamPos(cx, 0);
 	//CUserBoard::GetInstance()->SetPosition(200, 432);
 
 	PurgeDeletedObjects();

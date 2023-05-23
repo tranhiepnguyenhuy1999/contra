@@ -32,6 +32,7 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Textures.h"
 #include "Animation.h"
 #include "Animations.h"
+#include "Camera.h"
 
 #include "Lance.h"
 #include "Brick.h"
@@ -195,8 +196,14 @@ int WINAPI WinMain(
 	SetDebugWindow(hWnd);
 
 	LPGAME game = CGame::GetInstance();
+
 	game->Init(hWnd, hInstance);
 	game->InitKeyboard();
+
+	Camera* cam = Camera::GetInstance();
+	cam->setCamWidth(game->GetBackBufferWidth());
+	cam->setCamHeight(game->GetBackBufferHeight());
+
 
 
 	//IMPORTANT: this is the only place where a hardcoded file name is allowed ! 

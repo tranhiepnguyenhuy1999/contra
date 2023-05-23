@@ -1,11 +1,13 @@
 #include "TileMap.h"
-#include "debug.h" 
+#include "debug.h"
+#include "Camera.h"
 
 void CTileMap::Render()
 {
-		float cx, cy;
-	CGame* game = CGame::GetInstance();
-	game->GetCamPos(cx, cy);
+	float cx, cy;
+	Camera* cam = Camera::GetInstance();
+	cam->getCamPosition(cx, cy);
+
 	CAnimations* animations = CAnimations::GetInstance();
 	
 	int lengthY = tileMap.size();
@@ -14,13 +16,13 @@ void CTileMap::Render()
 	{
 		for (float j = 0; j < tileMap[i-1].size(); j++)
 		{
-			float l, t;
+			float l, t, r, b;
 			l = j * 16;
 			t = (lengthY - i) * 16;
-			if (l >= cx - 16 
-				&& l <= cx + game->GetBackBufferWidth() + 16 
-				&& t >= cy - 16 
-				&& t <= cy + game->GetBackBufferHeight())
+			r = l + 16;
+			b = t - 16;
+
+			if (cam->isCamContain(l,t, r, b))
 			{
 				animations->Get(stoi(tileMap[i-1][j]))->Render(l, t);
 			}
