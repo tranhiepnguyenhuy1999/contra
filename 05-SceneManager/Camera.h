@@ -3,7 +3,7 @@
 using namespace std;
 #include <Windows.h>
 
-#define MAX_MAP_WIDTH 300
+#define MAX_MAP_WIDTH 2000
 #define MAX_MAP_HEIGHT 2000
 
 class Camera

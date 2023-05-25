@@ -404,7 +404,7 @@ void CPlayScene::Update(DWORD dt)
 	player->GetPosition(px, py);
 
 	Camera::GetInstance()->setCamPosition(px, 0);
-	//CGame::GetInstance()->SetCamPos(cx, 0);
+
 	//CUserBoard::GetInstance()->SetPosition(200, 432);
 
 	PurgeDeletedObjects();

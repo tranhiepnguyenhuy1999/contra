@@ -1,6 +1,15 @@
 #include "QuadTree.h"
 #include "Camera.h"
 
+Quadtree::Quadtree(float l, float b, int width, int height) {
+    qWidth = width;
+    qHeight = height;
+    ql = l;
+    qb = b;
+    qr = ql + qWidth;
+    qt = qb + qHeight;
+    m_nodes = NULL;
+};
 void Quadtree::Clear()
 {
     // Clear all nodes
@@ -32,13 +41,13 @@ void Quadtree::Split()
 {
     m_nodes = new Quadtree * [4];
 
-    m_nodes[0] = new Quadtree(m_level + 1,
+    m_nodes[0] = new Quadtree(
         ql, qt, qWidth / 2, qHeight / 2);
-    m_nodes[1] = new Quadtree(m_level + 1,
+    m_nodes[1] = new Quadtree(
         ql + qWidth / 2, qt, qWidth/2 ,qHeight / 2);
-    m_nodes[2] = new Quadtree(m_level + 1,
+    m_nodes[2] = new Quadtree(
         ql, qt - qHeight / 2, qWidth / 2, qHeight / 2);
-    m_nodes[3] = new Quadtree(m_level + 1,
+    m_nodes[3] = new Quadtree(
         ql + qWidth / 2,
             qt - qHeight / 2, qWidth / 2, qHeight / 2);
 }
@@ -119,7 +128,7 @@ void Quadtree::Retrieve(vector<LPGAMEOBJECT> return_objects_list, LPGAMEOBJECT e
 Quadtree* CreateQuadTree()
 {
     // Init base game region for detecting collision
-    Quadtree* quadtree = new Quadtree(1, 0, 0, 800, 600);
+    Quadtree* quadtree = new Quadtree(0, 0, 800, 600);
     // add objects to quadtree
     vector<LPGAMEOBJECT> entity_list;
     for (auto i = entity_list.begin(); i != entity_list.end(); i++)

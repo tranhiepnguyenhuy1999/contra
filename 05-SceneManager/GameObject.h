@@ -42,7 +42,6 @@ public:
 	bool IsDeleted() { return isDeleted; }
 
 	void RenderBoundingBox();
-	void RenderBoundingBox2();
 	CGameObject();
 	CGameObject(float x, float y) :CGameObject() { this->x = x; this->y = y; }
 

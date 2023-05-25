@@ -9,7 +9,6 @@ typedef CGameObject* LPGAMEOBJECT;
 class Quadtree
 {
 private:
-    int            m_level;
     float ql, qt, qr, qb;
     int qWidth, qHeight;
     vector<LPGAMEOBJECT> m_objects_list;
@@ -19,22 +18,7 @@ private:
     void           Split();
     //Quadtree* CreateQuadTree();
 public:
-    Quadtree() {
-        m_level = 0;
-        ql = 0;
-        qt = 0;
-        qWidth = 0;
-        qHeight = 0;
-        m_nodes = NULL;
-    };
-    Quadtree(int level, float l, float t, int width, int height) {
-        m_level = level;
-        ql = l;
-        qt = t;
-        qWidth = width;
-        qHeight = height;
-        m_nodes = NULL;
-    };
+    Quadtree( float l, float b, int width, int height);
     ~Quadtree() {};
 
     void    Clear();

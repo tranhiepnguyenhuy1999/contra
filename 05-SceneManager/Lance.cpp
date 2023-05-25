@@ -472,9 +472,9 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		else 
 		{
 			left = x - LANCE_BIG_BBOX_WIDTH/2;
-			top = y - LANCE_BIG_BBOX_HEIGHT/2;
+			top = y + LANCE_BIG_BBOX_HEIGHT/2;
 			right = left + LANCE_BIG_BBOX_WIDTH;
-			bottom = top + LANCE_BIG_BBOX_HEIGHT;
+			bottom = top - LANCE_BIG_BBOX_HEIGHT;
 		}
 }
 

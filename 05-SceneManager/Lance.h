@@ -155,6 +155,8 @@ public:
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = -LANCE_GRAVITY;
+		//ay =0;
+
 		untouchable = 0;
 		untouchable_start = -1;
 		count_start = -1;

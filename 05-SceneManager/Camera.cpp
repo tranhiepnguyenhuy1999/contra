@@ -12,8 +12,8 @@ void Camera::transformCoordinates(float &ix, float &iy) {
 	ix = (FLOAT)floor(ix);
 	iy = (FLOAT)floor(iy);
 
-	ix = ix- cx;
-	iy = iy-cy;
+	ix = ix - cx;
+	iy = iy - cy;
 }
 Camera* Camera::GetInstance()
 {
