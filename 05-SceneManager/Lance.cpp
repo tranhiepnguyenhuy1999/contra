@@ -287,18 +287,6 @@ void CLance::SetState(int state)
 	if (this->state == LANCE_STATE_DIE) return;
 	switch (state)
 	{
-	//case LANCE_STATE_RUNNING_RIGHT:
-
-	//	maxVx = LANCE_RUNNING_SPEED;
-	//	ax = LANCE_ACCEL_RUN_X;
-	//	nx = 1;
-	//	break;
-	//case LANCE_STATE_RUNNING_LEFT:
-	//	if (isSitting) y += LANCE_SIT_HEIGHT_ADJUST;
-	//	maxVx = -LANCE_RUNNING_SPEED;
-	//	ax = -LANCE_ACCEL_RUN_X;
-	//	nx = -1;
-	//	break;
 	case LANCE_STATE_RUNNING_UP_LEFT:
 		if (isLookingUp && !isRunning) y -= LANCE_BIG_UP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
 		maxVx = -LANCE_RUNNING_SPEED;
@@ -442,34 +430,41 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 {
 		if (isSwimming) {
 			left = x - LANCE_BIG_SWIMMING_BBOX_WIDTH / 2;
-			top = y - LANCE_BIG_SWIMMING_BBOX_HEIGHT / 2;
+			top = y + LANCE_BIG_SWIMMING_BBOX_HEIGHT / 2;
 			right = left + LANCE_BIG_SWIMMING_BBOX_WIDTH;
-			bottom = top + LANCE_BIG_SWIMMING_BBOX_HEIGHT;
+			bottom = top - LANCE_BIG_SWIMMING_BBOX_HEIGHT;
 		}
 		else if (isLookingUp) {
 			if (vx != 0)
 			{
 				left = x - LANCE_BIG_BBOX_WIDTH / 2;
-				top = y - LANCE_BIG_BBOX_HEIGHT / 2;
+				top = y + LANCE_BIG_BBOX_HEIGHT / 2;
 				right = left + LANCE_BIG_BBOX_WIDTH;
-				bottom = top + LANCE_BIG_BBOX_HEIGHT;
+				bottom = top - LANCE_BIG_BBOX_HEIGHT;
 
 			}
 			else {
 				left = x - LANCE_BIG_BBOX_WIDTH / 2;
-				top = y - LANCE_BIG_UP_BBOX_HEIGHT / 2;
+				top = y + LANCE_BIG_UP_BBOX_HEIGHT / 2;
 				right = left + LANCE_BIG_BBOX_WIDTH;
-				bottom = top + LANCE_BIG_UP_BBOX_HEIGHT;
+				bottom = top - LANCE_BIG_UP_BBOX_HEIGHT;
 			}
 		}
 		else if ((isSitting || isPreDied) && vx==0)
 		{
 			left = x - LANCE_BIG_SITTING_BBOX_WIDTH / 2;
-			top = y - LANCE_BIG_SITTING_BBOX_HEIGHT / 2;
+			top = y + LANCE_BIG_SITTING_BBOX_HEIGHT / 2;
 			right = left + LANCE_BIG_SITTING_BBOX_WIDTH;
-			bottom = top + LANCE_BIG_SITTING_BBOX_HEIGHT;
+			bottom = top - LANCE_BIG_SITTING_BBOX_HEIGHT;
 		}
-		else 
+		//else if (!isOnPlatform)
+		//{
+		//	left = x - LANCE_BIG_JUMPING_BBOX_WIDTH / 2;
+		//	top = y + LANCE_BIG_JUMPING_BBOX_HEIGHT / 2;
+		//	right = left + LANCE_BIG_JUMPING_BBOX_WIDTH;
+		//	bottom = top - LANCE_BIG_JUMPING_BBOX_HEIGHT;
+		//}
+		else
 		{
 			left = x - LANCE_BIG_BBOX_WIDTH/2;
 			top = y + LANCE_BIG_BBOX_HEIGHT/2;

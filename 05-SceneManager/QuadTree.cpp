@@ -2,13 +2,26 @@
 #include "Camera.h"
 
 Quadtree::Quadtree(float l, float b, int width, int height) {
+    m_nodes = NULL;
+    
     qWidth = width;
     qHeight = height;
+    
     ql = l;
     qb = b;
     qr = ql + qWidth;
     qt = qb + qHeight;
+};
+Quadtree::Quadtree() {
     m_nodes = NULL;
+
+    qWidth = 0;
+    qHeight = 0;
+
+    ql = 0;
+    qb = 0;
+    qr = ql + 0;
+    qt = qb + 0;
 };
 void Quadtree::Clear()
 {
@@ -98,18 +111,20 @@ void Quadtree::Insert(LPGAMEOBJECT entity)
         }
     }
 }
-void Quadtree::Retrieve(vector<LPGAMEOBJECT> return_objects_list, LPGAMEOBJECT entity)
+void Quadtree::Retrieve(vector<LPGAMEOBJECT> &coObjects, LPGAMEOBJECT entity)
 {
+    Camera* cam = Camera::GetInstance();
+    if (!cam->isCamContain(ql, qt, qr, qb)) return;
     if (m_nodes)
     {
         if (m_nodes[0]->IsContain(entity))
-            m_nodes[0]->Retrieve(return_objects_list, entity);
+            m_nodes[0]->Retrieve(coObjects, entity);
         if (m_nodes[1]->IsContain(entity))
-            m_nodes[1]->Retrieve(return_objects_list, entity);
+            m_nodes[1]->Retrieve(coObjects, entity);
         if (m_nodes[2]->IsContain(entity))
-            m_nodes[2]->Retrieve(return_objects_list, entity);
+            m_nodes[2]->Retrieve(coObjects, entity);
         if (m_nodes[3]->IsContain(entity))
-            m_nodes[3]->Retrieve(return_objects_list, entity);
+            m_nodes[3]->Retrieve(coObjects, entity);
 
         return; // Return here to ignore rest.
     }
@@ -120,43 +135,7 @@ void Quadtree::Retrieve(vector<LPGAMEOBJECT> return_objects_list, LPGAMEOBJECT e
         for (auto i = m_objects_list.begin(); i != m_objects_list.end(); i++)
         {
             if (entity != *i)
-                return_objects_list.push_back(*i);
+                coObjects.push_back(*i);
         }
     }
-}
-
-Quadtree* CreateQuadTree()
-{
-    // Init base game region for detecting collision
-    Quadtree* quadtree = new Quadtree(0, 0, 800, 600);
-    // add objects to quadtree
-    vector<LPGAMEOBJECT> entity_list;
-    for (auto i = entity_list.begin(); i != entity_list.end(); i++)
-        quadtree->Insert(*i);
-
-    return quadtree;
-}
-
-void DetectCollision(vector<LPGAMEOBJECT> objList, vector<LPGAMEOBJECT> coObjects)
-{
-    Quadtree* quadtree = CreateQuadTree();
-
-    for (size_t i = 1; i < objList.size(); i++)
-    {
-        //Get all objects that can collide with current entity
-        quadtree->Retrieve(coObjects, objList[i]);
-
-        for (size_t i = 1; i < coObjects.size(); i++)
-        {
-        // Your algorithm about Collision Detection
-        // Do something here
-        }
-
-        coObjects.clear();
-    }
-
-    //quadtree->Release();
-
-    //delete return_objects_list;
-    delete quadtree;
 }

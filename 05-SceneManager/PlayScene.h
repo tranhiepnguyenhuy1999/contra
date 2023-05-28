@@ -31,6 +31,7 @@ protected:
 	void LoadAssets(LPCWSTR assetFile);
 
 	virtual void createNewObject(int id, float x, float y, float nx, float ny, int type);
+	void  DetectCollision(vector<LPGAMEOBJECT>& coObjects);
 	
 public: 
 	CPlayScene(int id, LPCWSTR filePath);

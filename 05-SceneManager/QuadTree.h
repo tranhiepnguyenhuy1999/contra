@@ -18,10 +18,11 @@ private:
     void           Split();
     //Quadtree* CreateQuadTree();
 public:
+    Quadtree();
     Quadtree( float l, float b, int width, int height);
     ~Quadtree() {};
 
     void    Clear();
     void    Insert(LPGAMEOBJECT entity);
-    void Retrieve(vector<LPGAMEOBJECT> return_objects_list, LPGAMEOBJECT entity);
+    void Retrieve(vector<LPGAMEOBJECT> &coObjects, LPGAMEOBJECT entity);
 };
