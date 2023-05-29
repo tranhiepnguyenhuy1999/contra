@@ -387,15 +387,15 @@ Quadtree* CreateQuadTree(vector<LPGAMEOBJECT> objList)
 	// Init base game region for detecting collision
 	Quadtree* quadtree = new Quadtree(0, 0, 1000, 1000);
 	// add objects to quadtree
-	for (auto i = objList.begin(); i != objList.end(); i++)
-		quadtree->Insert(*i);
+	for (size_t i = 1; i < objList.size(); i++)
+		quadtree->Insert(objList[i]);
 
 	return quadtree;
 }
 
 void CPlayScene::DetectCollision(vector<LPGAMEOBJECT>& coObjects)
 {
-	Quadtree* quadtree = CreateQuadTree(this->objects);
+	Quadtree* quadtree = CreateQuadTree(objects);
 
 	for (size_t i = 1; i < objects.size(); i++)
 	{
@@ -403,26 +403,28 @@ void CPlayScene::DetectCollision(vector<LPGAMEOBJECT>& coObjects)
 		quadtree->Retrieve(coObjects, objects[i]);
 	}
 
-	quadtree->Clear();
+	//quadtree->Clear();
 
-	delete quadtree;
+	//delete quadtree;
 }
 void CPlayScene::Update(DWORD dt)
 {
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
+	//for (size_t i = 1; i < objects.size(); i++)
+	//{
+	//	coObjects.push_back(objects[i]);
+	//}
+
 	vector<LPGAMEOBJECT> coObjects;
 	coObjects.clear();
 
-	//DetectCollision(coObjects);
-	for (size_t i = 1; i < objects.size(); i++)
-	{
-		coObjects.push_back(objects[i]);
-	}
-
 	for (size_t i = 0; i < objects.size(); i++)
 	{
+		coObjects.clear();
+		DetectCollision(coObjects);
+		DebugOut(L">>> object collie %d >>> \n", coObjects.size());
 		objects[i]->Update(dt, &coObjects);
 	}
 
