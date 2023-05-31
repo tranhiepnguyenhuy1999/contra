@@ -37,9 +37,7 @@ void Quadtree::Clear()
         delete[] m_nodes;
     }
     // Clear current Quadtree
-     DebugOut(L">>> node list %d >>> \n", m_objects_list.size());
-
-    //for (UINT i = 0; i < m_objects_list.size(); i++) delete m_objects_list[i];
+    for (UINT i = 0; i < m_objects_list.size(); i++) delete m_objects_list[i];
 }
 
 bool Quadtree::IsContain(LPGAMEOBJECT objSrc)
@@ -91,32 +89,32 @@ void Quadtree::Insert(LPGAMEOBJECT entity)
     // Insert entity into current quadtree
     if (this->IsContain(entity))
         m_objects_list.push_back(entity);
-    //// Split and move all objects in list into it’s corresponding nodes
-    //if (m_objects_list.size() !=0 && qWidth > cWidth/2 && qHeight > cHeight/2)
-    //{
-    //    Split();
+    // Split and move all objects in list into it’s corresponding nodes
+    if (m_objects_list.size() !=0 && qWidth > cWidth/2 && qHeight > cHeight/2)
+    {
+        Split();
 
-    //    // start moving all object form father node
-    //    while (!m_objects_list.empty())
-    //    {
-    //        if (m_nodes[0]->IsContain(m_objects_list.back()))
-    //            m_nodes[0]->Insert(m_objects_list.back());
-    //        if (m_nodes[1]->IsContain(m_objects_list.back()))
-    //            m_nodes[1]->Insert(m_objects_list.back());
-    //        if (m_nodes[2]->IsContain(m_objects_list.back()))
-    //            m_nodes[2]->Insert(m_objects_list.back());
-    //        if (m_nodes[3]->IsContain(m_objects_list.back()))
-    //            m_nodes[3]->Insert(m_objects_list.back());
+        // start moving all object form father node
+        while (!m_objects_list.empty())
+        {
+            if (m_nodes[0]->IsContain(m_objects_list.back()))
+                m_nodes[0]->Insert(m_objects_list.back());
+            if (m_nodes[1]->IsContain(m_objects_list.back()))
+                m_nodes[1]->Insert(m_objects_list.back());
+            if (m_nodes[2]->IsContain(m_objects_list.back()))
+                m_nodes[2]->Insert(m_objects_list.back());
+            if (m_nodes[3]->IsContain(m_objects_list.back()))
+                m_nodes[3]->Insert(m_objects_list.back());
 
-    //        m_objects_list.pop_back();
-    //    }
-    //}
+            m_objects_list.pop_back();
+        }
+    }
 }
 void Quadtree::Retrieve(vector<LPGAMEOBJECT> &coObjects, LPGAMEOBJECT entity)
 {
     Camera* cam = Camera::GetInstance();
 
-    if (!cam->isCamContain(ql, qt, qr, qb)) return;
+    //if (!cam->isCamContain(ql, qt, qr, qb)) return;
     
     if (m_nodes)
     {
@@ -137,7 +135,6 @@ void Quadtree::Retrieve(vector<LPGAMEOBJECT> &coObjects, LPGAMEOBJECT entity)
     {
         for (size_t i = 0; i < m_objects_list.size(); i++)
         {
-            DebugOut(L">>> here >>> \n");
             if (entity != m_objects_list[i])
             {
                 bool isContained = false;
@@ -145,7 +142,6 @@ void Quadtree::Retrieve(vector<LPGAMEOBJECT> &coObjects, LPGAMEOBJECT entity)
                 {
                     if (m_objects_list[i] == coObjects[j]) isContained = true;
                 }
-
                 if(!isContained) coObjects.push_back(m_objects_list[i]);
 
             }

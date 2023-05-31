@@ -1,6 +1,10 @@
 #include "Soldier.h"
-#include "debug.h"
+
 #include "AssetIDs.h"
+#include "PlayerData.h"
+
+#include "debug.h"
+
 CSoldier::CSoldier(float x, float y) :CGameObject(x, y)
 {
 	this->ax = 0;
@@ -12,9 +16,9 @@ CSoldier::CSoldier(float x, float y) :CGameObject(x, y)
 void CSoldier::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 		left = x - SOLDIER_BBOX_WIDTH / 2;
-		top = y - SOLDIER_BBOX_HEIGHT / 2;
+		top = y + SOLDIER_BBOX_HEIGHT / 2;
 		right = left + SOLDIER_BBOX_WIDTH;
-		bottom = top + SOLDIER_BBOX_HEIGHT;
+		bottom = top - SOLDIER_BBOX_HEIGHT;
 }
 
 void CSoldier::OnNoCollision(DWORD dt)
@@ -64,6 +68,7 @@ void CSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if ((state == SOLDIER_STATE_DIE) && (GetTickCount64() - die_start > SOLDIER_DIE_TIMEOUT))
 	{
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 2);
+		CPlayerData::GetInstance()->updatePoint(100);
 		isDeleted = true;
 		return;
 	}

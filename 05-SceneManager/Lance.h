@@ -6,8 +6,7 @@
 
 #include "debug.h"
 
-#define LANCE_WALKING_SPEED		0.15f
-#define LANCE_RUNNING_SPEED		0.2f
+#define LANCE_WALKING_SPEED		0.075f
 #define LANCE_PRE_DIE_SPEED		0.05f
 
 #define LANCE_ACCEL_WALK_X	0.0005f
@@ -86,13 +85,18 @@
 #define ID_ANI_LANCE_SWIMMING_LEFT 1025
 #define ID_ANI_LANCE_SWIMMING_RIGHT 1024
 
+
+#define ID_ANI_LANCE_LIFE 3401
 #pragma endregion
 
 #define GROUND_Y 160.0f
 
 #define LANCE_BIG_BBOX_WIDTH  16
 #define LANCE_BIG_BBOX_HEIGHT 34
-#define LANCE_BIG_UP_BBOX_HEIGHT 46
+
+#define LANCE_BIG_LOOKUP_BBOX_HEIGHT 46
+#define LANCE_BIG_LOOKUP_BBOX_WIDTH 14
+
 #define LANCE_BIG_SITTING_BBOX_WIDTH  32
 #define LANCE_BIG_SITTING_BBOX_HEIGHT 12
 
@@ -132,9 +136,6 @@ class CLance : public CGameObject
 	ULONGLONG count_start;
 	ULONGLONG shooting_start;
 
-	int coin;
-	int point;
-	int life;
 	int gunType;
 
 	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
@@ -165,9 +166,6 @@ public:
 		count_start = -1;
 		shooting_start = -1;
 		isOnPlatform = false;
-		coin = 0;
-		point = 0;
-		life = 1;
 		gunType = 0;
 
 	}
@@ -178,11 +176,6 @@ public:
 	{
 		//return (state != LANCE_STATE_DIE);
 		return 1;
-	}
-	void GetProps(int& coinP, int& pointP, int& lifeP, int& isFlyStakP) {
-		coinP = coin;
-		pointP = point;
-		lifeP = life;
 	}
 	int IsBlocking() { return (state != LANCE_STATE_DIE && untouchable == 0); }
 

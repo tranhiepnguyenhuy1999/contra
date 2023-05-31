@@ -16,6 +16,7 @@
 
 #include "AssetIDs.h"
 #include "Collision.h"
+#include "PlayerData.h"
 
 void CLance::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -23,7 +24,6 @@ void CLance::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vx += ax * dt;
 
 	isOnPlatform = false;
-	isSwimming = false;
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
 
@@ -65,8 +65,8 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = 0;
 	}
-	if (dynamic_cast<CWater*>(e->obj)) {
-		SetState(LANCE_STATE_SWIMMING);
+	if (dynamic_cast<CWater*>(e->obj) && !isSwimming) {
+		isSwimming = true;
 	}
 	else if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
@@ -171,30 +171,7 @@ int CLance::GetAniId()
 			else
 				aniId = ID_ANI_LANCE_JUMP_LEFT;
 	}
-	else if (isShooting)
-	{
-		if (isSwimming) {
-			if (nx >= 0)
-				aniId = ID_ANI_LANCE_SWIMMING_SHOOTING_RIGHT;
-			else
-				aniId = ID_ANI_LANCE_SWIMMING_SHOOTING_LEFT;
-		}
-		else if (isSitting)
-		{
-			if (nx > 0)
-				aniId = ID_ANI_LANCE_SIT_RIGHT;
-			else
-				aniId = ID_ANI_LANCE_SIT_LEFT;
-		}
-		else
-		{
-			if (nx >= 0)
-				aniId = ID_ANI_LANCE_SHOOTING_RIGHT;
-			else
-				aniId = ID_ANI_LANCE_SHOOTING_LEFT;
-		}
-	}
-	else if (isSwimming)
+	else if (isSwimming && !isShooting)
 	{
 		if (isSitting)
 			aniId = ID_ANI_LANCE_DIVE;
@@ -203,6 +180,58 @@ int CLance::GetAniId()
 		else
 			aniId = ID_ANI_LANCE_SWIMMING_RIGHT;
 
+	}
+	else if (isShooting)
+	{
+		if (isSwimming) {
+			if (isSitting) aniId = ID_ANI_LANCE_DIVE;
+			else if (nx >= 0)
+				aniId = ID_ANI_LANCE_SWIMMING_SHOOTING_RIGHT;
+			else
+				aniId = ID_ANI_LANCE_SWIMMING_SHOOTING_LEFT;
+		}
+		else if (vx == 0)
+		{
+			if (isSitting)
+			{
+				if (nx > 0)
+					aniId = ID_ANI_LANCE_SIT_RIGHT;
+				else
+					aniId = ID_ANI_LANCE_SIT_LEFT;
+			}
+			else if (isLookingUp)
+			{
+				if (nx > 0)
+					aniId = ID_ANI_LANCE_STAND_UP_RIGHT;
+				else
+					aniId = ID_ANI_LANCE_STAND_UP_LEFT;
+			}
+			else
+			{
+				if (nx >= 0)
+					aniId = ID_ANI_LANCE_SHOOTING_RIGHT;
+				else
+					aniId = ID_ANI_LANCE_SHOOTING_LEFT;
+			}
+		}
+		else {
+			if (vx > 0)
+			{
+				if (isSitting)
+						aniId = ID_ANI_LANCE_RUNNING_DOWN_RIGHT;
+				else if (isLookingUp)
+						aniId = ID_ANI_LANCE_RUNNING_UP_RIGHT;
+				else	aniId = ID_ANI_LANCE_WALKING_RIGHT;
+			}
+			else // vx < 0
+			{
+				if (isSitting)
+					aniId = ID_ANI_LANCE_RUNNING_DOWN_LEFT;
+				else if (isLookingUp)
+					aniId = ID_ANI_LANCE_RUNNING_UP_LEFT;
+				else	aniId = ID_ANI_LANCE_WALKING_LEFT;
+			}
+		}
 	}
 	else if (vx == 0)
 			{
@@ -222,33 +251,23 @@ int CLance::GetAniId()
 				else if (nx > 0) aniId = ID_ANI_LANCE_IDLE_RIGHT;
 				else aniId = ID_ANI_LANCE_IDLE_LEFT;
 			}
-			else if (vx > 0)
-			{
-				if (ax == LANCE_ACCEL_RUN_X)
-				{
-					if (isSitting)
-					{
-						aniId = ID_ANI_LANCE_RUNNING_DOWN_RIGHT;
-					}
-					else if (isLookingUp) {
-						aniId = ID_ANI_LANCE_RUNNING_UP_RIGHT;
-					}
-				}
-				else if (ax == LANCE_ACCEL_WALK_X)
-					aniId = ID_ANI_LANCE_WALKING_RIGHT;
-			}
-			else // vx < 0
-			{
-				if (isSitting)
-				{
-					aniId = ID_ANI_LANCE_RUNNING_DOWN_LEFT;
-				}
-				else if (isLookingUp) {
-					aniId = ID_ANI_LANCE_RUNNING_UP_LEFT;
-				}
-				else if (ax == -LANCE_ACCEL_WALK_X)
-					aniId = ID_ANI_LANCE_WALKING_LEFT;
-			}
+	else if (vx > 0)
+	{
+		if (isSitting)
+			aniId = ID_ANI_LANCE_RUNNING_DOWN_RIGHT;
+		else if (isLookingUp)
+			aniId = ID_ANI_LANCE_RUNNING_UP_RIGHT;
+		else
+			aniId = ID_ANI_LANCE_WALKING_RIGHT;
+	}
+	else // vx < 0
+	{
+		if (isSitting)
+			aniId = ID_ANI_LANCE_RUNNING_DOWN_LEFT;
+		else if (isLookingUp)
+			aniId = ID_ANI_LANCE_RUNNING_UP_LEFT;
+		else aniId = ID_ANI_LANCE_WALKING_LEFT;
+	}
 	if (aniId == -1) aniId = ID_ANI_LANCE_IDLE_RIGHT;
 	return aniId;
 }
@@ -268,7 +287,7 @@ void CLance::Render()
 
 	RenderBoundingBox();
 
-	DebugOutTitle(L"x: %f", x);
+	//DebugOutTitle(L"point: %f", CPlayerData::GetInstance()->point);
 
 }
 void CLance::SetState(int state)
@@ -288,31 +307,30 @@ void CLance::SetState(int state)
 	switch (state)
 	{
 	case LANCE_STATE_RUNNING_UP_LEFT:
-		if (isLookingUp && !isRunning) y -= LANCE_BIG_UP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
-		maxVx = -LANCE_RUNNING_SPEED;
-		ax = -LANCE_ACCEL_RUN_X;
+		if (isLookingUp && !isRunning && !isSwimming) y -= LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
+		maxVx = -LANCE_WALKING_SPEED;
+		ax = -LANCE_ACCEL_WALK_X;
 		nx = -1;
 		isRunning = true;
 		break;
 	case LANCE_STATE_RUNNING_DOWN_LEFT:
-		if (isSitting && !isRunning) y += LANCE_SIT_HEIGHT_ADJUST;
-		maxVx = -LANCE_RUNNING_SPEED;
-		ax = -LANCE_ACCEL_RUN_X;
+		if (isSitting && !isRunning && !isSwimming) y += LANCE_SIT_HEIGHT_ADJUST;
+		maxVx = -LANCE_WALKING_SPEED;
+		ax = -LANCE_ACCEL_WALK_X;
 		nx = -1;
 		isRunning = true;
 		break;
 	case LANCE_STATE_RUNNING_UP_RIGHT:
-		if(isLookingUp && !isRunning) y -= LANCE_BIG_UP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
-		maxVx = LANCE_RUNNING_SPEED;
-		ax = LANCE_ACCEL_RUN_X;
+		if(isLookingUp && !isRunning && !isSwimming) y -= LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
+		maxVx = LANCE_WALKING_SPEED;
+		ax = LANCE_ACCEL_WALK_X;
 		nx = 1;
 		isRunning = true;
 		break;
 	case LANCE_STATE_RUNNING_DOWN_RIGHT:
-		// update y first time when cheng
-		if (isSitting && !isRunning) y += LANCE_SIT_HEIGHT_ADJUST;
-		maxVx = LANCE_RUNNING_SPEED;
-		ax = LANCE_ACCEL_RUN_X;
+		if (isSitting && !isRunning && !isSwimming) y += LANCE_SIT_HEIGHT_ADJUST;
+		maxVx = LANCE_WALKING_SPEED;
+		ax = LANCE_ACCEL_WALK_X;
 		nx = 1;
 		isRunning = true;
 		break;
@@ -330,16 +348,7 @@ void CLance::SetState(int state)
 		break;
 	case LANCE_STATE_JUMP:
 		if (isSwimming) break;
-		if (isOnPlatform)
-		{
-			if (abs(this->vx) == LANCE_RUNNING_SPEED)
-				vy = LANCE_JUMP_RUN_SPEED_Y;
-			else
-				vy = LANCE_JUMP_SPEED_Y;
-		}
-		break;
-	case LANCE_STATE_SWIMMING:
-		isSwimming = true;
+		if (isOnPlatform) vy = LANCE_JUMP_SPEED_Y;
 		break;
 	case LANCE_STATE_RELEASE_JUMP:
 		if (vy < 0) vy -= LANCE_JUMP_SPEED_Y / 2;
@@ -348,11 +357,11 @@ void CLance::SetState(int state)
 	case LANCE_STATE_SIT:
 		if (isSwimming) {
 			//DebugOut(L">>> Main touched gun soldier >>> \n");
-
 			isSitting = true;
+
 			break;
 		}
-		if (isOnPlatform)
+		else if (isOnPlatform)
 		{
 
 			state = LANCE_STATE_IDLE;
@@ -363,7 +372,8 @@ void CLance::SetState(int state)
 		break;
 
 	case LANCE_STATE_SIT_RELEASE:
-		if (isSitting)
+		if (isSwimming) isSitting = false;
+		else if (isSitting)
 		{
 			isSitting = false;
 			state = LANCE_STATE_IDLE;
@@ -371,11 +381,12 @@ void CLance::SetState(int state)
 		}
 		break;
 	case LANCE_STATE_MOVING_RELEASE:
-		if (isLookingUp)
+		if (isSwimming) return;
+		else if (isLookingUp)
 		{
-			y += LANCE_BIG_UP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
+			y += LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
 		}
-		if (isSitting && !isRunning)
+		else if (isSitting && !isRunning)
 		{
 			y -= LANCE_SIT_HEIGHT_ADJUST;
 		}
@@ -391,20 +402,22 @@ void CLance::SetState(int state)
 		isShooting = true;
 		handleShooting();
 		break;
-	case LANCE_STATE_LOOKUP: 
-		if (isOnPlatform)
+	case LANCE_STATE_LOOKUP:
+		if (isSwimming) isLookingUp = true;
+		else if (isOnPlatform)
 		{
-			if(vx==0) y += LANCE_BIG_UP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
+			if(vx==0) y += LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
 			state = LANCE_STATE_IDLE;
 			isLookingUp = true;
 			vx = 0; vy = 0.0f;
 		}
 		break;
 	case LANCE_STATE_LOOKUP_RELEASE:
-		if (isLookingUp)
+		if (isSwimming) isLookingUp = false;
+		else if (isLookingUp)
 		{
 			// update y when not moving
-			if(vx==0 && !isRunning) y -= LANCE_BIG_UP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
+			if(vx==0 && !isRunning) y -= LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
 			isLookingUp = false;
 			state = LANCE_STATE_IDLE;
 		}
@@ -412,6 +425,7 @@ void CLance::SetState(int state)
 	case LANCE_STATE_DIE:
 		vx = 0;
 		ax = 0;
+		CPlayerData::GetInstance()->updateLife(1, -1);
 		break;
 	case LANCE_STATE_PRE_DIE:
 		isPreDied = true;
@@ -445,9 +459,9 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			}
 			else {
 				left = x - LANCE_BIG_BBOX_WIDTH / 2;
-				top = y + LANCE_BIG_UP_BBOX_HEIGHT / 2;
+				top = y + LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2;
 				right = left + LANCE_BIG_BBOX_WIDTH;
-				bottom = top - LANCE_BIG_UP_BBOX_HEIGHT;
+				bottom = top - LANCE_BIG_LOOKUP_BBOX_HEIGHT;
 			}
 		}
 		else if ((isSitting || isPreDied) && vx==0)
@@ -474,7 +488,7 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 }
 
 void CLance::handleShooting() {
-
+	if (isSwimming && isSitting) return; // diving can't shoot
 	switch (gunType)
 	{
 	case 1:
@@ -488,28 +502,25 @@ void CLance::handleShooting() {
 
 		break;
 	}
-	if (nx < 0) {
-		if (isLookingUp) {
-			if (vx == 0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4, 0, 1);
-			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4, -1, 1);
-		}
-		else if (isSitting) {
-			if (vx == 0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x, y, -1);
-			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4, -1, -1);
-		}
-		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT/4, -1);
+	if (vx == 0){
+		if (isLookingUp)
+			if (isSwimming) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y + LANCE_BIG_SWIMMING_BBOX_HEIGHT / 2, 0, 1);
+			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 2, 0, 1);
+		else if (isSwimming)
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y - LANCE_BIG_SWIMMING_BBOX_HEIGHT/4, nx);
+		else if (isSitting)
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SITTING_BBOX_WIDTH / 2, y, nx);
+		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 5, nx);
 	}
-	else
-	{
-		if (isLookingUp) {
-			if (vx == 0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4, 0, 1);
-			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4, 1, 1);
-		}
-		else if (isSitting) {
-			if (vx == 0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x, y, 1);
-			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x - LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4, 1, -1);
-		}
-		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4,1);
-
+	else{
+		if (isLookingUp)
+			if(isSwimming) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y - LANCE_BIG_SWIMMING_BBOX_HEIGHT / 4, nx, 1);
+			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT/2, nx, 1);
+		else if (isSwimming)
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y - LANCE_BIG_SWIMMING_BBOX_HEIGHT / 4, nx);
+		else if (isSitting) 
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 5, nx, -1);
+		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4, nx);
 	}
+	
 }

@@ -170,6 +170,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lance.cpp" />
     <ClCompile Include="Platform.cpp" />
+    <ClCompile Include="PlayerData.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Portal.cpp" />
     <ClCompile Include="QuadTree.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Lance.h" />
     <ClInclude Include="Platform.h" />
+    <ClInclude Include="PlayerData.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Portal.h" />
     <ClInclude Include="QuadTree.h" />

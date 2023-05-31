@@ -1,6 +1,6 @@
 # list of object assets to load in this scene
 [ASSETS]
-mario.txt
+lance.txt
 enemies-stage1.txt
 gun.txt
 soldier.txt
@@ -32,7 +32,7 @@ soldier.txt
 #gunship
 #11	0	20	1
 #brick
-1	100	50
+#1	100	50
 
 # downbrick
 #4	100	50	4
@@ -42,6 +42,6 @@ soldier.txt
 #1	2224	576
 
 #Platform
-3	0	0	16	15	39	1089	1090	1091
+3	0	0	100	15	20	1089	1090	1091
 #water
-#7	100	50	16	15	10
+7	100	50	16	15	10

@@ -23,7 +23,6 @@ class CGun : public CGameObject {
 	int getAniId();
 	int getDamage();
 
-	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunMachine1(LPCOLLISIONEVENT e);

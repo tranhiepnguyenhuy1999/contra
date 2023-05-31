@@ -9,6 +9,8 @@
 #include "Sprites.h"
 #include "Collision.h"
 
+#include "PlayerData.h"
+
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
@@ -35,6 +37,7 @@ public:
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
+
 	virtual void getLevel(int& level) {};
 
 	int GetState() { return this->state; }

@@ -24,6 +24,7 @@
 #include "Water.h"
 
 #include "Camera.h"
+#include "PlayerData.h"
 #include "QuadTree.h"
 #include "TileMap.h"
 #include "SampleKeyEventHandler.h"
@@ -424,7 +425,6 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.clear();
 		DetectCollision(coObjects);
-		DebugOut(L">>> object collie %d >>> \n", coObjects.size());
 		objects[i]->Update(dt, &coObjects);
 	}
 
@@ -450,6 +450,9 @@ void CPlayScene::Render()
 	// obj render
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
+
+	CPlayerData::GetInstance()->Render();
+
 }
 
 /*

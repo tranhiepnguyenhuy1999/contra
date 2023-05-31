@@ -1,5 +1,7 @@
 #include "Water.h"
 
+#include "Camera.h"
+
 #include "Sprite.h"
 #include "Sprites.h"
 
@@ -18,10 +20,10 @@ void CWater::RenderBoundingBox()
 	rect.left = 0;
 	rect.top = 0;
 	rect.right = (int)r - (int)l;
-	rect.bottom = (int)b - (int)t;
+	rect.bottom = (int)t - (int)b;
 
 	float cx, cy;
-	CGame::GetInstance()->GetCamPos(cx, cy);
+	Camera::GetInstance()->getCamPosition(cx, cy);
 
 	float xx = x - this->cellWidth / 2 + rect.right / 2;
 
@@ -37,7 +39,7 @@ void CWater::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	float cellWidth_div_2 = this->cellWidth / 2;
 	l = x - cellWidth_div_2;
-	t = y - this->cellHeight / 2;
+	t = y + this->cellHeight / 2;
 	r = l + this->cellWidth * this->length;
-	b = t + this->cellHeight;
+	b = t - this->cellHeight;
 }

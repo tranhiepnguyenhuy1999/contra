@@ -27,6 +27,7 @@ public:
 	void setCamHeight(float height) { cHeight = height; };
 	void getCamWidth(float &width) { width = cWidth; };
 	void getCamHeight(float &height) { height = cHeight; };
+	void getCamBoundingBox(float& cl, float& ct, float& cr, float& cb) { cl = l; ct = t; cr = r; cb = b; };
 	void setCamPosition(float px, float py) {
 		l = px - cWidth / 2;
 		r = l + cWidth;

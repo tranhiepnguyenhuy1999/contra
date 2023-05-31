@@ -90,9 +90,7 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 	{
 		vx = -vx;
 	}
-	if (dynamic_cast<CGoomba*>(e->obj))
-		OnCollisionWithGoomba(e);
-	else if (dynamic_cast<CSoldier*>(e->obj))
+	 if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
 	//else if (dynamic_cast<CGunSoldier*>(e->obj))
 	//	OnCollisionWithGunSoldier(e);
@@ -102,11 +100,6 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGunMachine1(e);
 	else if (dynamic_cast<CGunShip*>(e->obj))
 		OnCollisionWithGunShip(e);
-}
-void CGun::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
-{
-	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-	goomba->SetState(GOOMBA_STATE_DIE);
 }
 void CGun::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 {
@@ -160,9 +153,9 @@ void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CGun::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x - GUN_BBOX_WIDTH / 2;
-	t = y - GUN_BBOX_HEIGHT / 2;
+	t = y + GUN_BBOX_HEIGHT / 2;
 	r = l + GUN_BBOX_WIDTH;
-	b = t + GUN_BBOX_HEIGHT;
+	b = t - GUN_BBOX_HEIGHT;
 }
 void CGun::SetState(int state)
 {

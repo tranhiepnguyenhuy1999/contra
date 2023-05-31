@@ -1,6 +1,6 @@
 # list of object assets to load in this scene
 [ASSETS]
-mario.txt
+lance.txt
 intro.txt
 
 [OBJECTS]

@@ -32,12 +32,14 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Textures.h"
 #include "Animation.h"
 #include "Animations.h"
-#include "Camera.h"
 
 #include "Lance.h"
 #include "Brick.h"
 #include "Goomba.h"
 #include "Platform.h"
+
+#include "Camera.h"
+#include "PlayerData.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -204,10 +206,10 @@ int WINAPI WinMain(
 	cam->setCamWidth(game->GetBackBufferWidth());
 	cam->setCamHeight(game->GetBackBufferHeight());
 
-
+	CPlayerData::GetInstance();
 
 	//IMPORTANT: this is the only place where a hardcoded file name is allowed ! 
-	game->Load(L"mario-sample.txt");  
+	game->Load(L"contra-sample.txt");  
 
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH*2, SCREEN_HEIGHT*2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
