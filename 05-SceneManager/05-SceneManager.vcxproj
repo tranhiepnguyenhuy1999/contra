@@ -153,6 +153,7 @@
     <ClCompile Include="CountdownTimer.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="DownBrick.cpp" />
+    <ClCompile Include="EndWall.cpp" />
     <ClCompile Include="EnemyGun.cpp" />
     <ClCompile Include="Explode.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="CountdownTimer.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="DownBrick.h" />
+    <ClInclude Include="EndWall.h" />
     <ClInclude Include="EnemyGun.h" />
     <ClInclude Include="Explode.h" />
     <ClInclude Include="Game.h" />

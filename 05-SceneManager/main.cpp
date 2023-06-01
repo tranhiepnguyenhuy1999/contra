@@ -40,6 +40,7 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 
 #include "Camera.h"
 #include "PlayerData.h"
+#include "EndWall.h"
 
 #include "SampleKeyEventHandler.h"
 
@@ -207,7 +208,7 @@ int WINAPI WinMain(
 	cam->setCamHeight(game->GetBackBufferHeight());
 
 	CPlayerData::GetInstance();
-
+	CEndWall::GetInstance();
 	//IMPORTANT: this is the only place where a hardcoded file name is allowed ! 
 	game->Load(L"contra-sample.txt");  
 

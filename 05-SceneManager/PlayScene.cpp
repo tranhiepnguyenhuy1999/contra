@@ -497,6 +497,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.clear();
 		DetectCollision(coObjects);
+		if (i == 0) coObjects.push_back(CEndWall::GetInstance());
 		objects[i]->Update(dt, &coObjects);
 	}
 
@@ -520,6 +521,8 @@ void CPlayScene::Render()
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 
+	CEndWall::GetInstance()->Render();
+	
 	// render player infomation
 	CPlayerData::GetInstance()->Render();
 

@@ -13,6 +13,7 @@
 #include "Water.h"
 #include "Land.h"
 #include "DownBrick.h"
+#include "EndWall.h"
 #include "Portal.h"
 
 #include "AssetIDs.h"
@@ -79,7 +80,7 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
-		vx = 0;
+		if (!dynamic_cast<CEndWall*>(e->obj)) vx = 0; 
 	}
 
 	// others
