@@ -167,6 +167,7 @@
     <ClCompile Include="GunType.cpp" />
     <ClCompile Include="HiddenBrick.cpp" />
     <ClCompile Include="IntroScene.cpp" />
+    <ClCompile Include="Land.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lance.cpp" />
     <ClCompile Include="Platform.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="IntroScene.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Lance.h" />
+    <ClInclude Include="Land.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="PlayScene.h" />

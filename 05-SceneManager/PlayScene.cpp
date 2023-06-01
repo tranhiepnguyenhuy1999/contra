@@ -22,6 +22,7 @@
 #include "EnemyGun.h"
 #include "Explode.h"
 #include "Water.h"
+#include "Land.h"
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -74,7 +75,6 @@ void CPlayScene::_ParseSection_SPRITES(string line)
 
 	CSprites::GetInstance()->Add(ID, l, t, r, b, tex);
 }
-
 void CPlayScene::_ParseSection_ASSETS(string line)
 {
 	vector<string> tokens = split(line);
@@ -85,7 +85,6 @@ void CPlayScene::_ParseSection_ASSETS(string line)
 	
 	LoadAssets(path.c_str());
 }
-
 void CPlayScene::_ParseSection_ANIMATIONS(string line)
 {
 	vector<string> tokens = split(line);
@@ -106,7 +105,6 @@ void CPlayScene::_ParseSection_ANIMATIONS(string line)
 
 	CAnimations::GetInstance()->Add(ani_id, ani);
 }
-
 void CPlayScene::_ParseSection_TILESET(string line)
 {
 	vector<string> tokens = split(line);
@@ -239,6 +237,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		break;
 	}
+	case OBJECT_TYPE_LAND_PLATFORM:
+	{
+
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+
+		obj = new CLand(
+			x, y,
+			cell_width, cell_height, length
+		);
+
+		break;
+	}
 	case OBJECT_TYPE_PORTAL:
 	{
 		float r = (float)atof(tokens[3].c_str());
@@ -343,7 +355,6 @@ void CPlayScene::LoadAssets(LPCWSTR assetFile)
 
 	DebugOut(L"[INFO] Done loading assets from %s\n", assetFile);
 }
-
 void CPlayScene::Load()
 {
 	DebugOut(L"[INFO] Start loading scene from : %s \n", sceneFilePath);
@@ -382,7 +393,6 @@ void CPlayScene::Load()
 
 	DebugOut(L"[INFO] Done loading scene  %s\n", sceneFilePath);
 }
-
 Quadtree* CreateQuadTree(vector<LPGAMEOBJECT> objList)
 {
 	// Init base game region for detecting collision
@@ -393,7 +403,6 @@ Quadtree* CreateQuadTree(vector<LPGAMEOBJECT> objList)
 
 	return quadtree;
 }
-
 void CPlayScene::DetectCollision(vector<LPGAMEOBJECT>& coObjects)
 {
 	Quadtree* quadtree = CreateQuadTree(objects);
@@ -437,11 +446,8 @@ void CPlayScene::Update(DWORD dt)
 
 	Camera::GetInstance()->setCamPosition(px, 0);
 
-	//CUserBoard::GetInstance()->SetPosition(200, 432);
-
 	PurgeDeletedObjects();
 }
-
 void CPlayScene::Render()
 {
 	// render tilemap first
@@ -451,10 +457,10 @@ void CPlayScene::Render()
 	for (int i = 0; i < objects.size(); i++)
 		objects[i]->Render();
 
+	// render player infomation
 	CPlayerData::GetInstance()->Render();
 
 }
-
 /*
 *	Clear all objects from this scene
 */
@@ -467,7 +473,6 @@ void CPlayScene::Clear()
 	}
 	objects.clear();
 }
-
 /*
 	Unload scene
 

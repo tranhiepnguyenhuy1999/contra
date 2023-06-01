@@ -7,7 +7,7 @@
 #include "debug.h"
 
 #define LANCE_WALKING_SPEED		0.075f
-#define LANCE_PRE_DIE_SPEED		0.05f
+#define LANCE_PRE_DIE_SPEED		0.035f
 
 #define LANCE_ACCEL_WALK_X	0.0005f
 #define LANCE_ACCEL_RUN_X	0.008f
@@ -47,6 +47,8 @@
 #define LANCE_STATE_MOVING_RELEASE 1000
 
 #define LANCE_STATE_SWIMMING 1100
+
+#define LANCE_STATE_CLIMB 1200
 
 #pragma region ANIMATION_ID
 //BIG
@@ -122,6 +124,7 @@ class CLance : public CGameObject
 	BOOLEAN isShooting;
 	BOOLEAN isRunning;
 	BOOLEAN isSwimming;
+	BOOLEAN isClimb;
 
 
 
@@ -138,7 +141,6 @@ class CLance : public CGameObject
 
 	int gunType;
 
-	void OnCollisionWithGoomba(LPCOLLISIONEVENT e);
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
@@ -156,6 +158,8 @@ public:
 		isShooting = false;
 		isRunning = false;
 		isSwimming = false;
+		isClimb = false;
+
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = -LANCE_GRAVITY;

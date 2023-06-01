@@ -11,6 +11,7 @@
 #include "EnemyGun.h"
 
 #include "Water.h"
+#include "Land.h"
 #include "DownBrick.h"
 #include "Portal.h"
 
@@ -33,8 +34,12 @@ void CLance::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		untouchable_start = 0;
 		untouchable = 0;
 	}
-	if(state == LANCE_STATE_PRE_DIE ) DebugOut(L">>> Mario DIE >>> %f \n", vx);
-	if (state==LANCE_STATE_PRE_DIE && GetTickCount64() - count_start > 500)
+
+	if (isClimb) {
+		SetState(LANCE_STATE_CLIMB);
+		return;
+	}
+	else if (state==LANCE_STATE_PRE_DIE && GetTickCount64() - count_start > 500)
 	{
 		DebugOut(L">>> Mario DIE >>> %f \n", vx);
 		count_start = -1;
@@ -60,12 +65,19 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 		vy = 0;
 		if (e->ny > 0) isOnPlatform = true;
 	}
-	else 
-	if (e->nx != 0 && e->obj->IsBlocking())
+	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
 		vx = 0;
 	}
-	if (dynamic_cast<CWater*>(e->obj) && !isSwimming) {
+
+	// others
+	if (dynamic_cast<CLand*>(e->obj) && isSwimming) {
+		isSwimming = false;
+		isClimb = true;
+		ay = 0;
+		vy = 0;
+	}
+	else if (dynamic_cast<CWater*>(e->obj) && !isSwimming) {
 		isSwimming = true;
 	}
 	else if (dynamic_cast<CSoldier*>(e->obj))
@@ -78,32 +90,6 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	//	OnCollisionWithEnemyGun(e);
 	else if (dynamic_cast<CPortal*>(e->obj))
 		OnCollisionWithPortal(e);
-}
-void CLance::OnCollisionWithGoomba(LPCOLLISIONEVENT e)
-{
-	CGoomba* goomba = dynamic_cast<CGoomba*>(e->obj);
-
-	// jump on top >> kill Goomba and deflect a bit 
-	if (e->ny < 0)
-	{
-		if (goomba->GetState() != GOOMBA_STATE_DIE)
-		{
-			goomba->SetState(GOOMBA_STATE_DIE);
-			vy = -LANCE_JUMP_DEFLECT_SPEED;
-		}
-	}
-	else // hit by Goomba
-	{
-		if (untouchable == 0)
-		{
-			if (goomba->GetState() != GOOMBA_STATE_DIE)
-			{
-
-					DebugOut(L">>> Mario DIE >>> \n");
-					SetState(LANCE_STATE_DIE);
-			}
-		}
-	}
 }
 void CLance::OnCollisionWithGunType(LPCOLLISIONEVENT e)
 {
@@ -314,11 +300,19 @@ void CLance::SetState(int state)
 		isRunning = true;
 		break;
 	case LANCE_STATE_RUNNING_DOWN_LEFT:
-		if (isSitting && !isRunning && !isSwimming) y += LANCE_SIT_HEIGHT_ADJUST;
-		maxVx = -LANCE_WALKING_SPEED;
-		ax = -LANCE_ACCEL_WALK_X;
-		nx = -1;
-		isRunning = true;
+		if (isSwimming) {
+			maxVx = 0;
+			ax = 0;
+			nx = -1;
+		}
+		else
+		{
+			if (isSitting && !isRunning) y += LANCE_SIT_HEIGHT_ADJUST;
+			maxVx = -LANCE_WALKING_SPEED;
+			ax = -LANCE_ACCEL_WALK_X;
+			nx = -1;
+			isRunning = true;
+		}
 		break;
 	case LANCE_STATE_RUNNING_UP_RIGHT:
 		if(isLookingUp && !isRunning && !isSwimming) y -= LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
@@ -328,11 +322,30 @@ void CLance::SetState(int state)
 		isRunning = true;
 		break;
 	case LANCE_STATE_RUNNING_DOWN_RIGHT:
-		if (isSitting && !isRunning && !isSwimming) y += LANCE_SIT_HEIGHT_ADJUST;
-		maxVx = LANCE_WALKING_SPEED;
-		ax = LANCE_ACCEL_WALK_X;
-		nx = 1;
-		isRunning = true;
+		if (isSwimming) {
+			maxVx = 0;
+			ax = 0;
+			nx = 1;
+		}
+		else
+		{
+			if (isSitting && !isRunning) y += LANCE_SIT_HEIGHT_ADJUST;
+			maxVx = LANCE_WALKING_SPEED;
+			ax = LANCE_ACCEL_WALK_X;
+			nx = 1;
+			isRunning = true;
+		}
+		break;
+	case LANCE_STATE_MOVING_RELEASE:
+		if (isSwimming) return;
+		else if (isLookingUp)
+		{
+			y += LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
+		}
+		else if (isSitting && !isRunning)
+		{
+			y -= LANCE_SIT_HEIGHT_ADJUST;
+		}
 		break;
 	case LANCE_STATE_WALKING_RIGHT:
 		//if (isSitting) break;
@@ -353,7 +366,6 @@ void CLance::SetState(int state)
 	case LANCE_STATE_RELEASE_JUMP:
 		if (vy < 0) vy -= LANCE_JUMP_SPEED_Y / 2;
 		break;
-
 	case LANCE_STATE_SIT:
 		if (isSwimming) {
 			//DebugOut(L">>> Main touched gun soldier >>> \n");
@@ -363,14 +375,12 @@ void CLance::SetState(int state)
 		}
 		else if (isOnPlatform)
 		{
-
 			state = LANCE_STATE_IDLE;
 			isSitting = true;
 			vx = 0; vy = 0.0f;
 			if(!isRunning) y -=LANCE_SIT_HEIGHT_ADJUST;
 		}
 		break;
-
 	case LANCE_STATE_SIT_RELEASE:
 		if (isSwimming) isSitting = false;
 		else if (isSitting)
@@ -379,28 +389,6 @@ void CLance::SetState(int state)
 			state = LANCE_STATE_IDLE;
 			if(!isRunning) y += LANCE_SIT_HEIGHT_ADJUST;
 		}
-		break;
-	case LANCE_STATE_MOVING_RELEASE:
-		if (isSwimming) return;
-		else if (isLookingUp)
-		{
-			y += LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
-		}
-		else if (isSitting && !isRunning)
-		{
-			y -= LANCE_SIT_HEIGHT_ADJUST;
-		}
-		break;
-	case LANCE_STATE_IDLE:
-		ax = 0.0f;
-		vx = 0.0f;
-		isRunning = false;
-		break;
-
-	case LANCE_STATE_SHOOTING:
-		shooting_start = GetTickCount64();
-		isShooting = true;
-		handleShooting();
 		break;
 	case LANCE_STATE_LOOKUP:
 		if (isSwimming) isLookingUp = true;
@@ -413,14 +401,25 @@ void CLance::SetState(int state)
 		}
 		break;
 	case LANCE_STATE_LOOKUP_RELEASE:
-		if (isSwimming) isLookingUp = false;
-		else if (isLookingUp)
+		isLookingUp = false;
+		if (isSwimming) return;
+		if (isLookingUp)
 		{
 			// update y when not moving
 			if(vx==0 && !isRunning) y -= LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
-			isLookingUp = false;
 			state = LANCE_STATE_IDLE;
 		}
+		break;
+	case LANCE_STATE_SHOOTING:
+		shooting_start = GetTickCount64();
+		isShooting = true;
+		handleShooting();
+		break;
+	case LANCE_STATE_CLIMB:
+		isClimb = false;
+		ay = - LANCE_GRAVITY;
+		x += 16;
+		y += 17 + LANCE_BIG_BBOX_HEIGHT/2-LANCE_BIG_SWIMMING_BBOX_HEIGHT/2;
 		break;
 	case LANCE_STATE_DIE:
 		vx = 0;
@@ -435,6 +434,11 @@ void CLance::SetState(int state)
 		ax = -nx* LANCE_ACCEL_WALK_X;
 		if(maxVx==0) maxVx = LANCE_PRE_DIE_SPEED;
 		maxVx = -maxVx;
+		break;
+	case LANCE_STATE_IDLE:
+		ax = 0.0f;
+		vx = 0.0f;
+		isRunning = false;
 		break;
 	}
 	CGameObject::SetState(state);
