@@ -9,7 +9,7 @@
 
 #include "debug.h"
 
-CGun::CGun(float x, float y, float nx=0, float ny=0, int type=0) :CGameObject(x, y)
+CGun::CGun(float x, float y, int type = 0, float nx=0, float ny=0) :CGameObject(x, y)
 {
 	vx = nx * GUN_ATTACK_SPEED;
 	vy = ny * GUN_ATTACK_SPEED;
@@ -23,7 +23,14 @@ void CGun::Render()
 {
 	int aniId = -1;
 	aniId=getAniId();
-	if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if (gunType == 3)
+		for (int i = 0; i < 3; i++) {
+			if(nx!=0)
+			CAnimations::GetInstance()->Get(aniId)->Render(x + i * GUN_L_BBOX_WIDTH + GUN_L_BBOX_WIDTH / 2, y);
+			else 
+			CAnimations::GetInstance()->Get(aniId)->Render(x, y + i * GUN_L_BBOX_HEIGHT + GUN_L_BBOX_HEIGHT / 2);
+		}
+	else if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	//RenderBoundingBox();
 }
 int CGun::getAniId() {
@@ -33,19 +40,13 @@ int CGun::getAniId() {
 	{
 		case 0: return ID_ANI_GUN_DEFAULT;
 		case 1:
-			return 1;
+			return ID_ANI_GUN_M;
 		case 2:
-			return 1;
+			return ID_ANI_GUN_F;
 		case 3:
-			return 1;
+			return ID_ANI_GUN_L;
 		case 4:
-			return 1;
-		case 5:
-			return 1;
-		case 6:
-			return 1;
-		case 7:
-			return 1;
+			return ID_ANI_GUN_S;
 	default:
 		break;
 	}
@@ -63,12 +64,6 @@ int CGun::getDamage() {
 		return 1;
 	case 4:
 		return 1;
-	case 5:
-		return 1;
-	case 6:
-		return 1;
-	case 7:
-		return 1;
 	default:
 		break;
 	}
@@ -82,15 +77,7 @@ void CGun::OnNoCollision(DWORD dt)
 
 void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (e->ny != 0)
-	{
-		vy = 0;
-	}
-	else if (e->nx != 0)
-	{
-		vx = -vx;
-	}
-	 if (dynamic_cast<CSoldier*>(e->obj))
+	if (dynamic_cast<CSoldier*>(e->obj))
 		OnCollisionWithSoldier(e);
 	//else if (dynamic_cast<CGunSoldier*>(e->obj))
 	//	OnCollisionWithGunSoldier(e);
@@ -152,10 +139,20 @@ void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void CGun::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
+	if (gunType == 3)
+	{
+		l = x - GUN_L_BBOX_WIDTH / 2;
+		t = y + GUN_L_BBOX_HEIGHT / 2;
+		r = l + GUN_BBOX_WIDTH * 3;
+		b = t - GUN_L_BBOX_HEIGHT;
+	}
+	else
+	{
 	l = x - GUN_BBOX_WIDTH / 2;
 	t = y + GUN_BBOX_HEIGHT / 2;
 	r = l + GUN_BBOX_WIDTH;
 	b = t - GUN_BBOX_HEIGHT;
+	}
 }
 void CGun::SetState(int state)
 {

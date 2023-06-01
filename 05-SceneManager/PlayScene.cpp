@@ -273,12 +273,75 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=0, int type =0)
 {
 	CGameObject* obj = NULL;
+	vector<CGameObject*> gunlist;
 	switch (id)
 	{
 	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
-	case OBJECT_TYPE_GUNTYPE: obj = new CGunType(x, y,1,1); break;
-	case OBJECT_TYPE_GUN: obj = new CGun(x, y, nx, ny, type); break;
+	case OBJECT_TYPE_GUNTYPE: obj = new CGunType(x, y, 1, type); break;
+	case OBJECT_TYPE_GUN:
+	{
+		obj = new CGun(x, y, type, nx, ny); 
+
+		if (type == 3)
+		{
+			
+			CLance* lance = (CLance*)player;
+			if (lance->getPreGun()) {
+				lance->getPreGun()->Delete();
+				lance->setPreGun(obj);
+			}
+			else lance->setPreGun(obj);
+
+		}
+		else if (type == 4) {
+			CGameObject* extra = NULL;
+			gunlist.clear();
+			float big1 = 0.95f;
+			float big2 = 0.9f;
+			float small1 = 0.25f;
+			float small2 = 0.125f;
+
+			if (ny == 0)
+			{
+				extra = new CGun(x, y, type, big2*nx, small1);
+				gunlist.push_back(extra);
+				extra = new CGun(x, y, type, big1*nx, small2);
+				gunlist.push_back(extra);
+				extra = new CGun(x, y, type, big1*nx, -small2);
+				gunlist.push_back(extra);
+				extra = new CGun(x, y, type, big2*nx, -small1);
+				gunlist.push_back(extra);
+			}
+			else if (nx == 0)
+			{
+				extra = new CGun(x, y, type, small1, big2*ny);
+				gunlist.push_back(extra);
+				extra = new CGun(x, y, type, small2, big1*ny);
+				gunlist.push_back(extra);
+				extra = new CGun(x, y, type, -small2, big1*ny);
+				gunlist.push_back(extra);
+				extra = new CGun(x, y, type, -small1, big2*ny);
+				gunlist.push_back(extra);
+			}
+			else 
+			{
+				extra = new CGun(x, y, type, (1.0f - small1) * nx,  ny);
+				gunlist.push_back(extra);
+				extra = new CGun(x, y, type, (1.0f - small2) * nx,  ny);
+				gunlist.push_back(extra);
+				extra = new CGun(x, y, type, nx, (1.0f - small2) * ny);
+				gunlist.push_back(extra);
+				extra = new CGun(x, y, type, nx, (1.0f - small1) *  ny);
+				gunlist.push_back(extra);
+			}
+			for (UINT i = 0; i < gunlist.size(); i++) {
+				gunlist[i]->SetPosition(x, y);
+				objects.push_back(gunlist[i]);
+			}
+		}
+		break;
+	}
 	case OBJECT_TYPE_ENEMY_GUN: obj = new CEnemyGun(x, y, nx, ny, type); break;
 	case OBJECT_TYPE_EXPLODE: obj = new CExplode(x, y, nx); break;
 	default:

@@ -13,9 +13,9 @@ CGunBox::CGunBox(float x, float y, float typeGun) :CGameObject(x, y)
 void CGunBox::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 		left = x - GUNBOX_BBOX_WIDTH / 2;
-		top = y - (GUNBOX_BBOX_HEIGHT / 2);
+		top = y + (GUNBOX_BBOX_HEIGHT / 2);
 		right = left + GUNBOX_BBOX_WIDTH;
-		bottom = top + GUNBOX_BBOX_HEIGHT;
+		bottom = top - GUNBOX_BBOX_HEIGHT;
 }
 
 void CGunBox::OnNoCollision(DWORD dt)
@@ -44,7 +44,7 @@ void CGunBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == GUNBOX_STATE_DIE)
 	{
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUNTYPE, x,y,1,1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUNTYPE, x,y,1,1,typeGun);
 		isDeleted = true;
 		return;
 	}

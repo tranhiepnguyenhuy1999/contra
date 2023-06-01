@@ -1,7 +1,7 @@
 #include "GunType.h"
 #include "debug.h"
 
-CGunType::CGunType(float x, float y, float nx, float gunType) :CGameObject(x, y)
+CGunType::CGunType(float x, float y, float nx, int gunType) :CGameObject(x, y)
 {
 	if (nx < 0)
 		vx = -GUNTYPE_SPEED;
@@ -38,17 +38,17 @@ int CGunType::getAniID()
 	case 1:
 		return ID_ANI_GUNTYPE_M;
 	case 2:
-		return ID_ANI_GUNTYPE_B;
-	case 3:
 		return ID_ANI_GUNTYPE_F;
+	case 3:
+		return ID_ANI_GUNTYPE_L;
 	case 4:
 		return ID_ANI_GUNTYPE_S;
 	case 5:
-		return ID_ANI_GUNTYPE_L;
-	case 6:
 		return ID_ANI_GUNTYPE_R;
-	case 7:
+	case 6:
 		return ID_ANI_GUNTYPE_UNDEAD;
+	case 7:
+		return ID_ANI_GUNTYPE_B;
 	default:
 		return -1;
 	}
@@ -73,10 +73,10 @@ void CGunType::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void CGunType::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x - GUNTYPE_BBOX_WIDTH / 2;
-	t = y - GUNTYPE_BBOX_HEIGHT / 2;
-	r = l + GUNTYPE_BBOX_WIDTH;
-	b = t + GUNTYPE_BBOX_HEIGHT;
+		l = x - GUNTYPE_BBOX_WIDTH / 2;
+		t = y + GUNTYPE_BBOX_HEIGHT / 2;
+		r = l + GUNTYPE_BBOX_WIDTH;
+		b = t - GUNTYPE_BBOX_HEIGHT;
 }
 void CGunType::SetState(int state)
 {

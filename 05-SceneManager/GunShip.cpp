@@ -14,16 +14,16 @@ void CGunShip::GetBoundingBox(float& left, float& top, float& right, float& bott
 	if (state == GUNSHIP_STATE_DIE)
 	{
 		left = x - GUNSHIP_BBOX_WIDTH / 2;
-		top = y - (GUNSHIP_BBOX_HEIGHT_DIE / 2);
+		top = y + (GUNSHIP_BBOX_HEIGHT_DIE / 2);
 		right = left + GUNSHIP_BBOX_WIDTH;
-		bottom = top + GUNSHIP_BBOX_HEIGHT_DIE;
+		bottom = top - GUNSHIP_BBOX_HEIGHT_DIE;
 	}
 	else
 	{
 		left = x - GUNSHIP_BBOX_WIDTH / 2;
-		top = y - (GUNSHIP_BBOX_HEIGHT / 2);
+		top = y + (GUNSHIP_BBOX_HEIGHT / 2);
 		right = left + GUNSHIP_BBOX_WIDTH;
-		bottom = top + GUNSHIP_BBOX_HEIGHT;
+		bottom = top - GUNSHIP_BBOX_HEIGHT;
 	}
 }
 

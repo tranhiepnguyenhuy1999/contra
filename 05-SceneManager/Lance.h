@@ -132,7 +132,7 @@ class CLance : public CGameObject
 	BOOLEAN isOnDownBrick;
 
 
-
+	CGameObject* preGun;
 
 	float maxVx;
 	float ax;				// acceleration on x 
@@ -178,7 +178,9 @@ public:
 		count_start = -1;
 		shooting_start = -1;
 		isOnPlatform = false;
-		gunType = 0;
+		gunType =4;
+
+		preGun = NULL;
 
 	}
 	void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -196,5 +198,8 @@ public:
 
 	void StartUntouchable() { untouchable = 1; untouchable_start = GetTickCount64(); };
 	void GetBoundingBox(float& left, float& top, float& right, float& bottom);
+
+	void setPreGun(CGameObject* pre) { preGun = pre; };
+	CGameObject* getPreGun() { return preGun; };
 
 };
