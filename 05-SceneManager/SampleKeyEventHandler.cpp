@@ -47,9 +47,6 @@ void CSampleKeyHandler::OnKeyUp(int KeyCode)
 	mario->getLevel(level);
 	switch (KeyCode)
 	{
-	case DIK_X:
-			mario->SetState(LANCE_STATE_RELEASE_JUMP);
-		break;
 	case DIK_DOWN:
 		mario->SetState(LANCE_STATE_SIT_RELEASE);
 		break;
@@ -93,6 +90,14 @@ void CSampleKeyHandler::KeyState(BYTE *states)
 		}
 		else
 			mario->SetState(LANCE_STATE_WALKING_LEFT);
+	}
+	else if (game->IsKeyDown(DIK_DOWN))
+	{
+		if (game->IsKeyDown(DIK_X))
+		{
+			mario->SetState(LANCE_STATE_GO_DOWN);
+		}
+		else mario->SetState(LANCE_STATE_IDLE);
 	}
 	else mario->SetState(LANCE_STATE_IDLE);
 

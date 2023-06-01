@@ -47,6 +47,10 @@ void CLance::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 
 	CCollision::GetInstance()->Process(this, dt, coObjects);
+
+	if (isJumping && isOnPlatform) {
+		SetState(LANCE_STATE_RELEASE_JUMP);
+	}
 }
 
 void CLance::OnNoCollision(DWORD dt)
@@ -63,7 +67,15 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
-		if (e->ny > 0) isOnPlatform = true;
+		if (e->ny > 0)
+		{
+			isOnPlatform = true;
+			if (dynamic_cast<CDownBrick*>(e->obj)) {
+				//DebugOut(L">>> Touched >>> \n");
+
+				isOnDownBrick = true;
+			}
+		}
 	}
 	else if (e->nx != 0 && e->obj->IsBlocking())
 	{
@@ -150,12 +162,19 @@ int CLance::GetAniId()
 			aniId = ID_ANI_LANCE_PRE_DIE;
 
 	}
-	else if (!isOnPlatform)
+	else if (!isOnPlatform && isJumping)
 	{
 			if (nx >= 0)
 				aniId = ID_ANI_LANCE_JUMP_RIGHT;
 			else
 				aniId = ID_ANI_LANCE_JUMP_LEFT;
+	}
+	else if (!isOnPlatform)
+	{
+		if (nx >= 0)
+			aniId = ID_ANI_LANCE_FALLING_RIGHT;
+		else
+			aniId = ID_ANI_LANCE_FALLING_LEFT;
 	}
 	else if (isSwimming && !isShooting)
 	{
@@ -361,22 +380,32 @@ void CLance::SetState(int state)
 		break;
 	case LANCE_STATE_JUMP:
 		if (isSwimming) break;
-		if (isOnPlatform) vy = LANCE_JUMP_SPEED_Y;
-		break;
-	case LANCE_STATE_RELEASE_JUMP:
-		if (vy < 0) vy -= LANCE_JUMP_SPEED_Y / 2;
-		break;
-	case LANCE_STATE_SIT:
-		if (isSwimming) {
-			//DebugOut(L">>> Main touched gun soldier >>> \n");
-			isSitting = true;
-
+		if (isSitting && isOnDownBrick) {
+			isOnDownBrick = false; // can't change in state LANCE_STATE_GO_DOWN bcs keydown after keystate
 			break;
 		}
+		if (isOnPlatform)
+		{
+			isJumping = true;
+			vy = LANCE_JUMP_SPEED_Y;
+		}
+		break;
+	case LANCE_STATE_RELEASE_JUMP:
+		isJumping = false;
+		if(isRunning)
+			y += LANCE_BIG_BBOX_HEIGHT / 2 - LANCE_BIG_JUMPING_BBOX_HEIGHT / 2;
+		else if (isSitting)
+			y += LANCE_BIG_SITTING_BBOX_HEIGHT / 2 - LANCE_BIG_JUMPING_BBOX_HEIGHT / 2;
+		else if (isLookingUp)
+			y += LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_JUMPING_BBOX_HEIGHT / 2;
+		else y += LANCE_BIG_BBOX_HEIGHT / 2 - LANCE_BIG_JUMPING_BBOX_HEIGHT / 2;
+		break;
+	case LANCE_STATE_SIT:
+		isSitting = true;
+		if (isSwimming) break;
 		else if (isOnPlatform)
 		{
 			state = LANCE_STATE_IDLE;
-			isSitting = true;
 			vx = 0; vy = 0.0f;
 			if(!isRunning) y -=LANCE_SIT_HEIGHT_ADJUST;
 		}
@@ -391,20 +420,19 @@ void CLance::SetState(int state)
 		}
 		break;
 	case LANCE_STATE_LOOKUP:
-		if (isSwimming) isLookingUp = true;
+		isLookingUp = true;
+		if (isSwimming) break;
 		else if (isOnPlatform)
 		{
 			if(vx==0) y += LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
 			state = LANCE_STATE_IDLE;
-			isLookingUp = true;
 			vx = 0; vy = 0.0f;
 		}
 		break;
 	case LANCE_STATE_LOOKUP_RELEASE:
-		isLookingUp = false;
-		if (isSwimming) return;
-		if (isLookingUp)
+		if (isLookingUp && !isSwimming)
 		{
+		isLookingUp = false;
 			// update y when not moving
 			if(vx==0 && !isRunning) y -= LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
 			state = LANCE_STATE_IDLE;
@@ -418,18 +446,24 @@ void CLance::SetState(int state)
 	case LANCE_STATE_CLIMB:
 		isClimb = false;
 		ay = - LANCE_GRAVITY;
-		x += 16;
-		y += 17 + LANCE_BIG_BBOX_HEIGHT/2-LANCE_BIG_SWIMMING_BBOX_HEIGHT/2;
+		x += 16.0f;
+		y += 17.0f + LANCE_BIG_BBOX_HEIGHT/2-LANCE_BIG_SWIMMING_BBOX_HEIGHT/2;
+		break;
+	case LANCE_STATE_GO_DOWN:
+		if (isOnDownBrick)
+		{
+			y -= 1.0f;
+		}
 		break;
 	case LANCE_STATE_DIE:
-		vx = 0;
-		ax = 0;
+		vx = 0.0f;
+		ax = 0.0f;
 		CPlayerData::GetInstance()->updateLife(1, -1);
 		break;
 	case LANCE_STATE_PRE_DIE:
 		isPreDied = true;
 		count_start = GetTickCount64();
-		vy = 2*LANCE_JUMP_DEFLECT_SPEED;
+		vy = 2*LANCE_DIE_DEFLECT_SPEED;
 		if (nx) nx = 1;
 		ax = -nx* LANCE_ACCEL_WALK_X;
 		if(maxVx==0) maxVx = LANCE_PRE_DIE_SPEED;
@@ -451,6 +485,13 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			top = y + LANCE_BIG_SWIMMING_BBOX_HEIGHT / 2;
 			right = left + LANCE_BIG_SWIMMING_BBOX_WIDTH;
 			bottom = top - LANCE_BIG_SWIMMING_BBOX_HEIGHT;
+		}
+		else if (isJumping)
+		{
+			left = x - LANCE_BIG_JUMPING_BBOX_WIDTH / 2;
+			top = y + LANCE_BIG_JUMPING_BBOX_HEIGHT / 2;
+			right = left + LANCE_BIG_JUMPING_BBOX_WIDTH;
+			bottom = top - LANCE_BIG_JUMPING_BBOX_HEIGHT;
 		}
 		else if (isLookingUp) {
 			if (vx != 0)
@@ -475,13 +516,6 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			right = left + LANCE_BIG_SITTING_BBOX_WIDTH;
 			bottom = top - LANCE_BIG_SITTING_BBOX_HEIGHT;
 		}
-		//else if (!isOnPlatform)
-		//{
-		//	left = x - LANCE_BIG_JUMPING_BBOX_WIDTH / 2;
-		//	top = y + LANCE_BIG_JUMPING_BBOX_HEIGHT / 2;
-		//	right = left + LANCE_BIG_JUMPING_BBOX_WIDTH;
-		//	bottom = top - LANCE_BIG_JUMPING_BBOX_HEIGHT;
-		//}
 		else
 		{
 			left = x - LANCE_BIG_BBOX_WIDTH/2;

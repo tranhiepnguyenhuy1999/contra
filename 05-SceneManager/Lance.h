@@ -12,12 +12,11 @@
 #define LANCE_ACCEL_WALK_X	0.0005f
 #define LANCE_ACCEL_RUN_X	0.008f
 
-#define LANCE_JUMP_SPEED_Y		0.35f
-#define LANCE_JUMP_RUN_SPEED_Y	0.7f
+#define LANCE_JUMP_SPEED_Y		0.215f
 
-#define LANCE_GRAVITY	0.001f
+#define LANCE_GRAVITY	0.00035f
 
-#define LANCE_JUMP_DEFLECT_SPEED  0.3f
+#define LANCE_DIE_DEFLECT_SPEED  0.3f
 
 #define LANCE_STATE_DIE				-10
 #define LANCE_STATE_IDLE			0
@@ -49,6 +48,8 @@
 #define LANCE_STATE_SWIMMING 1100
 
 #define LANCE_STATE_CLIMB 1200
+
+#define LANCE_STATE_GO_DOWN 1300
 
 #pragma region ANIMATION_ID
 //BIG
@@ -87,6 +88,8 @@
 #define ID_ANI_LANCE_SWIMMING_LEFT 1025
 #define ID_ANI_LANCE_SWIMMING_RIGHT 1024
 
+#define ID_ANI_LANCE_FALLING_RIGHT 1028
+#define ID_ANI_LANCE_FALLING_LEFT 1029
 
 #define ID_ANI_LANCE_LIFE 3401
 #pragma endregion
@@ -119,12 +122,15 @@
 class CLance : public CGameObject
 {
 	BOOLEAN isSitting;
+	BOOLEAN isJumping;
 	BOOLEAN isLookingUp;
 	BOOLEAN isPreDied;
 	BOOLEAN isShooting;
 	BOOLEAN isRunning;
 	BOOLEAN isSwimming;
 	BOOLEAN isClimb;
+	BOOLEAN isOnDownBrick;
+
 
 
 
@@ -153,6 +159,8 @@ public:
 	CLance(float x, float y) : CGameObject(x, y)
 	{
 		isSitting = false;
+		isOnDownBrick = false;
+		isJumping = false;
 		isLookingUp = false;
 		isPreDied = false;
 		isShooting = false;
