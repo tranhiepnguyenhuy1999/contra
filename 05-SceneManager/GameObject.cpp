@@ -16,6 +16,8 @@ CGameObject::CGameObject()
 	nx = 1;	
 	state = -1;
 	isDeleted = false;
+	isCameraOver = false;
+
 }
 
 void CGameObject::RenderBoundingBox()

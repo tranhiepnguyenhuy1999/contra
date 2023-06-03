@@ -355,23 +355,26 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 
 	objects.push_back(obj);
 }
-void CPlayScene::_ParseSection_TILEDMAP()
+void CPlayScene::_ParseSection_TILEDMAP(string line)
 {
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 1) return;
 	CGameObject* obj = NULL;
 	string fname;
-	fname = "map1_map.csv";
+	fname = tokens[0];
 	vector<vector<string>> content;
 	vector<string> row;
-	string line, word;
+	string fline, word;
 
 	fstream file(fname, ios::in);
 	if (file.is_open())
 	{
-		while (getline(file, line))
+		while (getline(file, fline))
 		{
 			row.clear();
 
-			stringstream str(line);
+			stringstream str(fline);
 
 			while (getline(str, word, ','))
 				row.push_back(word);
@@ -447,7 +450,7 @@ void CPlayScene::Load()
 		{ 
 			case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
 			case SCENE_SECTION_TILESET: _ParseSection_TILESET(line); break;
-			case SCENE_SECTION_TILEDMAP: _ParseSection_TILEDMAP(); break;
+			case SCENE_SECTION_TILEDMAP: _ParseSection_TILEDMAP(line); break;
 			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		}
 	}
@@ -497,7 +500,7 @@ void CPlayScene::Update(DWORD dt)
 	{
 		coObjects.clear();
 		DetectCollision(coObjects);
-		if (i == 0) coObjects.push_back(CEndWall::GetInstance());
+		//if (i == 0) coObjects.push_back(CEndWall::GetInstance());
 		objects[i]->Update(dt, &coObjects);
 	}
 
@@ -509,7 +512,7 @@ void CPlayScene::Update(DWORD dt)
 	player->GetPosition(px, py);
 
 	Camera::GetInstance()->setCamPosition(px, 0);
-
+	Camera::GetInstance()->checkIsCameraOver(objects);
 	PurgeDeletedObjects();
 }
 void CPlayScene::Render()
@@ -519,7 +522,9 @@ void CPlayScene::Render()
 
 	// obj render
 	for (int i = 0; i < objects.size(); i++)
-		objects[i]->Render();
+	{
+		if(!objects[i]->IsCameraOver()) objects[i]->Render();
+	}
 
 	CEndWall::GetInstance()->Render();
 	

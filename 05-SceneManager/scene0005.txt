@@ -8,17 +8,18 @@ soldier.txt
 [TILESET]
 # width|height|maxTiles|lengthTileX|lengthTileY|frame_time|textID
 16	16	300	13	21	10000	200
-
+#16	16	130	11	10	10000	210
 [TILEDMAP]
 # load tile map
-
+map1_map.csv
+#map3_map.csv
 [OBJECTS]
 # type	x	y	extra_settings per object type
 # type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	50	50
+0	50	100
 #soldier
 #20	200	30
 #gun-soldier
@@ -26,7 +27,7 @@ soldier.txt
 #gun-machine1
 #23	200	30
 #gun-machine2
-#25	200	30
+25	200	30
 #gunbox
 #10	200	30	3
 #gunship
@@ -35,8 +36,9 @@ soldier.txt
 #1	100	50
 
 # downbrick
+#4	30	96	100
+4	150	100	4
 4	100	50	4
-#4	150	100	4
 #hidden brick
 
 #1	2224	576

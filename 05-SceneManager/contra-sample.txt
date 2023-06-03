@@ -22,3 +22,4 @@ height	240
 100	textures\intro.png
 # tilemap
 200	textures\map1_bank.png
+210	textures\map3_bank.png

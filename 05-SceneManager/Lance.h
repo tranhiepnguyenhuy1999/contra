@@ -178,7 +178,7 @@ public:
 		count_start = -1;
 		shooting_start = -1;
 		isOnPlatform = false;
-		gunType =4;
+		gunType =0;
 
 		preGun = NULL;
 

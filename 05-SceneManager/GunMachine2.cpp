@@ -14,7 +14,6 @@ CGunMachine2::CGunMachine2(float x, float y) :CGameObject(x, y)
 	this->life = 8;
 	SetState(GUNMACHINE2_STATE_UNACTIVE);
 }
-
 void CGunMachine2::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
 	if (state == GUNMACHINE2_STATE_UNACTIVE)
@@ -27,16 +26,15 @@ void CGunMachine2::GetBoundingBox(float& left, float& top, float& right, float& 
 	else {
 
 		left = x - GUNMACHINE2_BBOX_WIDTH / 2;
-		top = y - (GUNMACHINE2_BBOX_HEIGHT / 2);
+		top = y + (GUNMACHINE2_BBOX_HEIGHT / 2);
 		right = left + GUNMACHINE2_BBOX_WIDTH;
-		bottom = top + GUNMACHINE2_BBOX_HEIGHT;
+		bottom = top - GUNMACHINE2_BBOX_HEIGHT;
 	}
 }
 void CGunMachine2::OnNoCollision(DWORD dt)
 {
 	y += vy * dt;
 };
-
 void CGunMachine2::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 }
@@ -114,7 +112,6 @@ int CGunMachine2::getAniId(int flag) {
 	else return -1;
 
 };
-
 int CGunMachine2::getPlayerPosition() {
 	float px, py;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);

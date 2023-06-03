@@ -24,7 +24,8 @@ void CTileMap::Render()
 
 			if (cam->isCamContain(l,t, r, b))
 			{
-				animations->Get(stoi(tileMap[i-1][j]))->Render(l, t);
+				animations->Get(stoi(tileMap[i - 1][j]))->Render(l + 8, t);
+				//animations->Get(stoi(tileMap[i-1][j]))->Render(l + 8, t);
 			}
 		}
 	}

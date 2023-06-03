@@ -31,7 +31,7 @@ protected:
 	int state;
 
 	bool isDeleted; 
-
+	bool isCameraOver;
 public: 
 	void SetPosition(float x, float y) { this->x = x, this->y = y; }
 	void SetSpeed(float vx, float vy) { this->vx = vx, this->vy = vy; }
@@ -44,6 +44,10 @@ public:
 	virtual void Delete() { isDeleted = true;  }
 	bool IsDeleted() { return isDeleted; }
 
+	void setIsCameraOverTrue() {
+		isCameraOver = true;
+	}
+	bool IsCameraOver() { return isCameraOver; }
 	void RenderBoundingBox();
 	CGameObject();
 	CGameObject(float x, float y) :CGameObject() { this->x = x; this->y = y; }

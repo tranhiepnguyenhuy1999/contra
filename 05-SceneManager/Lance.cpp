@@ -73,7 +73,6 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 			isOnPlatform = true;
 			if (dynamic_cast<CDownBrick*>(e->obj)) {
 				//DebugOut(L">>> Touched >>> \n");
-
 				isOnDownBrick = true;
 			}
 		}
@@ -358,7 +357,7 @@ void CLance::SetState(int state)
 		break;
 	case LANCE_STATE_MOVING_RELEASE:
 		if (isSwimming) return;
-		else if (isLookingUp)
+		else if (isLookingUp && !isRunning)
 		{
 			y += LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
 		}

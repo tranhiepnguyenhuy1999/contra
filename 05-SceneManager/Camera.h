@@ -17,11 +17,14 @@ class Camera
 	float cWidth;
 	float cHeight;
 
+	float nx, ny;
+
 public:
 	Camera() {
 		l = 0; t = 0; r = 0; b = 0;
 		cWidth = 0;
 		cHeight = 0;
+		nx = 1; ny = 0;
 	}
 	void transformCoordinates( float &ix, float &iy);
 	void setCamWidth(float width) { cWidth = width; };
@@ -30,14 +33,26 @@ public:
 	void getCamHeight(float &height) { height = cHeight; };
 	void getCamBoundingBox(float& cl, float& ct, float& cr, float& cb) { cl = l; ct = t; cr = r; cb = b; };
 	void setCamPosition(float px, float py) {
-		if (px < l + cWidth / 2) return;
-		else {
-			l = px - cWidth / 2;
-			r = l + cWidth;
+		if (nx == 1)
+		{
+			if (px < l + cWidth / 2) return;
+			else {
+				l = px - cWidth / 2;
+				r = l + cWidth;
+			}
+			b = 0;
+			t = b + cHeight;
 		}
-		//b = py;
-		b = 0;
-		t = b + cHeight;
+		else if (ny == 1)
+		{
+			if (py < t - cHeight / 4) return;
+			else {
+				b = py - 0.75f * cHeight;
+				t = b + cHeight;
+			}
+			l = 0;
+			r = l + cWidth;
+		};
 
 		if (l < 0) { l = 0; r = l + cWidth; }
 		else if (r > MAX_MAP_WIDTH) { r = MAX_MAP_WIDTH; l = r - cWidth; }
@@ -55,7 +70,16 @@ public:
 	static Camera* GetInstance();
 	bool isCamContain(float objl, float objt, float objr, float objb) {
 		return !( objr < l || objl > r || objt < b || objb > t);
-
+	}
+	void checkIsCameraOver(vector<LPGAMEOBJECT> &objects) {
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			float objx, objy;
+			objects[i]->GetPosition(objx, objy);
+			if (objx < l || objy < b) {
+				objects[i]->setIsCameraOverTrue();
+			}
+		}
 	}
 };
 
