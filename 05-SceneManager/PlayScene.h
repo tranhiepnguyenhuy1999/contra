@@ -30,7 +30,7 @@ protected:
 	void _ParseSection_TILESET(string line);
 	void LoadAssets(LPCWSTR assetFile);
 
-	virtual void createNewObject(int id, float x, float y, float nx, float ny, int type);
+	virtual void createNewObject(int id, float x, float y, float nx, float ny, int type, LPGAMEOBJECT srcObject);
 	void  DetectCollision(vector<LPGAMEOBJECT>& coObjects);
 	
 public: 

@@ -92,8 +92,8 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	else if (dynamic_cast<CWater*>(e->obj) && !isSwimming) {
 		isSwimming = true;
 	}
-	else if (dynamic_cast<CSoldier*>(e->obj))
-		OnCollisionWithSoldier(e);
+	//else if (dynamic_cast<CSoldier*>(e->obj))
+	//	OnCollisionWithSoldier(e);
 	//else if (dynamic_cast<CGunSoldier*>(e->obj))
 	//	OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunType*>(e->obj))

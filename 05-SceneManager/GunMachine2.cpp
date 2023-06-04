@@ -4,13 +4,10 @@
 
 CGunMachine2::CGunMachine2(float x, float y) :CGameObject(x, y)
 {
-	this->ax = 0;
-	this->ay = 0;
-	this->isShooting = true;
-	this->gunLeft = 3;
+	position = 2;
 	this->activeRange = 200;
 	this->loop_start = -1;
-	this->gun_loop_start = -1;
+	shooting_loop_start = -1;
 	this->life = 8;
 	SetState(GUNMACHINE2_STATE_UNACTIVE);
 }
@@ -45,67 +42,81 @@ void CGunMachine2::handleGetAttack(int dmg)
 }
 void CGunMachine2::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	if (isCameraOver) return;
+	float px, py;
+	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
+	int new_position;
+	new_position = getPlayerPosition();
 	if (state == GUNMACHINE2_STATE_DIE)
 	{
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
 		isDeleted = true;
 		return;
 	}
-
-	float px, py;
-	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
-
-	if (state == GUNMACHINE2_STATE_UNACTIVE && px > x - activeRange)
+	else if (state == GUNMACHINE2_STATE_UNACTIVE && px > x - activeRange)
 		return	SetState(GUNMACHINE2_STATE_PRE_ACTIVE);
-
-	if ((state == GUNMACHINE2_STATE_PRE_ACTIVE) && (GetTickCount64() - loop_start > GUNMACHINE2_LOOP_TIMEOUT))
+	else if ((state == GUNMACHINE2_STATE_PRE_ACTIVE) && (GetTickCount64() - loop_start > GUNMACHINE2_LOOP_TIMEOUT))
 	{
 		return	SetState(GUNMACHINE2_STATE_ACTIVE);
 	}
+	else if (position != new_position) {
+		if (GetTickCount64() - loop_start > GUNMACHINE2_CHANGE_ANGLE_TIMEOUT) {
+			int extra=1;
+			if (position > new_position)
+				extra=-1;
+			// checking if it's pass hafe circle
+			if (abs(new_position - position >= 6))
+				extra = -extra;
 
-	// shooting
-	if ((state == GUNMACHINE2_STATE_ACTIVE) && (GetTickCount64() - loop_start > GUNMACHINE2_SHOOTING_TIMEOUT))
-	{
-		isShooting = true;
-		if (gunLeft <= 0)
-		{
+			position += extra;
+			
+			if (position <= 0) position = 12;
+			else if (position >= 13) position = 1;
+
 			loop_start = GetTickCount64();
-			gun_loop_start = -1;
-			gunLeft = 3;
-			isShooting = false;
 		}
-		else if (GetTickCount64() - gun_loop_start > GUNMACHINE2_SHOOTING_LOOP_TIMEOUT) {
-			handleShooting();
-			gun_loop_start = GetTickCount64();
-			gunLeft -= 1;
-		}
-		return;
+	}
+	// shooting
+	else if ((state == GUNMACHINE2_STATE_ACTIVE) && (GetTickCount64() - shooting_loop_start > GUNMACHINE2_SHOOTING_TIMEOUT))
+	{
+		handleShooting();
+		shooting_loop_start = GetTickCount64();
 	}
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
-int CGunMachine2::getAniId(int flag) {
-	if (this->state == GUNMACHINE2_STATE_UNACTIVE) return ID_ANI_GUNMACHINE2_UNACTIVE;
+int CGunMachine2::getAniId() {
+
+	if (this->state == GUNMACHINE2_STATE_UNACTIVE || isCameraOver) return ID_ANI_GUNMACHINE2_UNACTIVE;
 	else if (this->state == GUNMACHINE2_STATE_PRE_ACTIVE) return ID_ANI_GUNMACHINE2_PRE_ACTIVE;
 	else if (this->state == GUNMACHINE2_STATE_ACTIVE) {
-		switch (flag)
+		switch (position)
 		{
 		case 1:
-			if (getPercent() >= 1) return ID_ANI_GUNMACHINE2_LEFTTOP;
-			else return ID_ANI_GUNMACHINE2_TOPLEFT;
+			return ID_ANI_GUNMACHINE2_TOP;
 		case 2:
-			return ID_ANI_GUNMACHINE2_LEFT;
+			return ID_ANI_GUNMACHINE2_TOPLEFT;
 		case 3:
-			if (getPercent() >= 1) return ID_ANI_GUNMACHINE2_LEFTDOWN;
-			else return ID_ANI_GUNMACHINE2_DOWNLEFT;
+			return ID_ANI_GUNMACHINE2_LEFTTOP;
 		case 4:
-			if (getPercent() >= 1) return ID_ANI_GUNMACHINE2_RIGHTTOP;
-			else return ID_ANI_GUNMACHINE2_TOPRIGHT;
+			return ID_ANI_GUNMACHINE2_LEFT;
 		case 5:
-			return ID_ANI_GUNMACHINE2_RIGHT;
+			return ID_ANI_GUNMACHINE2_LEFTDOWN;
 		case 6:
-			if (getPercent() >= 1) return ID_ANI_GUNMACHINE2_RIGHTDOWN;
-			else return ID_ANI_GUNMACHINE2_DOWNRIGHT;
+			return ID_ANI_GUNMACHINE2_DOWNLEFT;
+		case 7:
+			return ID_ANI_GUNMACHINE2_DOWN;
+		case 8:
+			return ID_ANI_GUNMACHINE2_DOWNRIGHT;
+		case 9:
+			return ID_ANI_GUNMACHINE2_RIGHTDOWN;
+		case 10:
+			return ID_ANI_GUNMACHINE2_RIGHT;
+		case 11:
+			return ID_ANI_GUNMACHINE2_RIGHTTOP;
+		case 12:
+			return ID_ANI_GUNMACHINE2_TOPRIGHT;
+
 		}
 		return -1;
 	}
@@ -115,16 +126,35 @@ int CGunMachine2::getAniId(int flag) {
 int CGunMachine2::getPlayerPosition() {
 	float px, py;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
-	if (px < x) {
-		if (py > y + GUNMACHINE2_BBOX_HEIGHT) return 1; //left-top
-		else if (py <= y + GUNMACHINE2_BBOX_HEIGHT / 2 && py >= y - GUNMACHINE2_BBOX_HEIGHT / 2) return 2;// left
-		else return 3; //left-bottom
+	float perAxisXSpeed, perAxisYSpeed;
+	getPercentXYSpeed(perAxisXSpeed, perAxisYSpeed);
+
+	if (px >= x - GUNMACHINE2_BBOX_WIDTH / 2 && px <= x + GUNMACHINE2_BBOX_WIDTH / 2)
+	{
+		if (py > y) return 1;//top
+		else return 7;//down
+
+	}
+	else if (px < x) {
+		if (py > y + GUNMACHINE2_BBOX_HEIGHT) {
+			if (perAxisYSpeed > perAxisXSpeed) return 2; //top-left
+			else return 3; // left-top
+		} 
+		else if (py <= y + GUNMACHINE2_BBOX_HEIGHT / 2 && py >= y - GUNMACHINE2_BBOX_HEIGHT / 2) return 4;// left
+		else {
+			if (perAxisYSpeed > perAxisXSpeed) return 6; //down-left
+			else return 5; // left-down
+		}; 
 	}
 	else
 	{
-		if (py > y + GUNMACHINE2_BBOX_HEIGHT) return 4; //right-top
-		else if (py <= y + GUNMACHINE2_BBOX_HEIGHT / 2 && py >= y - GUNMACHINE2_BBOX_HEIGHT / 2) return 5;// right
-		else return 6; //right-bottom
+		if (py > y + GUNMACHINE2_BBOX_HEIGHT) 
+			if (perAxisYSpeed > perAxisXSpeed) return 12; //top-right
+			else return 11; // right-top
+		else if (py <= y + GUNMACHINE2_BBOX_HEIGHT / 2 && py >= y - GUNMACHINE2_BBOX_HEIGHT / 2) return 10;// right
+		else 
+			if (perAxisYSpeed > perAxisXSpeed) return 8; //down-right
+			else return 9; // right-down
 	}
 }
 void CGunMachine2::handleShooting()
@@ -135,26 +165,37 @@ void CGunMachine2::handleShooting()
 	switch (flag)
 	{
 	case 1:
-		nx = -1; ny = 1;
+		nx = 0; ny = 1;
 		break;
 	case 2:
-		nx = -1; ny = 0;
-		break;
 	case 3:
-		nx = -1; ny = -1;
+		nx = -1; ny = 1;
 		break;
 	case 4:
-		nx = 1; ny = 1;
+		nx = -1; ny = 0;
 		break;
 	case 5:
-		nx = 1; ny = 0;
-		break;
 	case 6:
+		nx = -1; ny = -1;
+		break;
+	case 7:
+		nx = 0; ny = -1;
+		break;
+	case 8:
+	case 9:
 		nx = 1; ny = -1;
 		break;
+	case 10:
+		nx = 1; ny = 0;
+		break;
+	case 11:
+	case 12:
+		nx = 1; ny = 1;
+		break;
 	}
-	float altShootingSpeed = getPercent();
-	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y,nx*altShootingSpeed * GUNMACHINE2_GUN_SPEED, ny* GUNMACHINE2_GUN_SPEED, 0);
+	float perAxisXSpeed, perAxisYSpeed;
+	getPercentXYSpeed(perAxisXSpeed, perAxisYSpeed);
+	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y,nx* perAxisXSpeed * GUNMACHINE2_GUN_SPEED, ny* perAxisYSpeed *GUNMACHINE2_GUN_SPEED, 0);
 }
 int CGunMachine2::translateToPercent(float data, boolean isXAxis) {
 	float px, py;
@@ -178,7 +219,7 @@ int CGunMachine2::translateToPercent(float data, boolean isXAxis) {
 	else if (result >= 0.2f) return 2;
 	else return 1;
 }
-float CGunMachine2::getPercent()
+void CGunMachine2::getPercentXYSpeed(float & perAxisXSpeed, float & perAxisYSpeed)
 {
 	float px, py;
 
@@ -186,32 +227,29 @@ float CGunMachine2::getPercent()
 
 	float percentX = translateToPercent(x, true);
 	float percentY = translateToPercent(y, false);
-	//DebugOut(L">>> x: %f >>> \n", percentX);
-	//DebugOut(L">>> y: %f >>> \n", percentY);
 	float percent = percentX / percentY;
-	float altShootingSpeed = 0;
+	perAxisXSpeed = 1;
+	perAxisYSpeed = 1;
 
-	if (percent >= 2)
+	if (percent >= 4)
 	{
-		altShootingSpeed = 2;
+		perAxisYSpeed = 0.5f;
 	}
 	else if (percent >= 1)
 	{
-		altShootingSpeed = 1;
 	}
-	else if (percent >= 0.5f)
+	else if (percent >= 0.25f)
 	{
-		altShootingSpeed = 0.5f;
+		perAxisXSpeed = 0.5f;
 	}
-	return altShootingSpeed;
 }
 void CGunMachine2::Render()
 {
 	int flag = getPlayerPosition();
-	int aniId = getAniId(flag);
+	int aniId = getAniId();
 
 	if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 void CGunMachine2::SetState(int state)
 {

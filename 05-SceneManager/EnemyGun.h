@@ -4,7 +4,7 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define ENEMY_GUN_ATTACK_SPEED 0.1f
+#define ENEMY_GUN_ATTACK_SPEED 0.5f
 
 #define ENEMY_GUN_WIDTH 3
 #define	ENEMY_GUN_BBOX_WIDTH 3

@@ -23,6 +23,7 @@
 #include "Explode.h"
 #include "Water.h"
 #include "Land.h"
+#include "FallObject.h"
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -182,7 +183,6 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 		DebugOut(L"[INFO] Player object has been created!\n");
 		break;
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x,y); break;
 	case OBJECT_TYPE_GUNBOX:
 	{
 		float typeGun = (float)atof(tokens[3].c_str());
@@ -270,13 +270,23 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	objects.push_back(obj);
 }
-void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=0, int type =0)
+void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=0, int type =0, LPGAMEOBJECT srcObject = NULL)
 {
 	CGameObject* obj = NULL;
 	vector<CGameObject*> gunlist;
 	switch (id)
 	{
-	case OBJECT_TYPE_GOOMBA: obj = new CGoomba(x, y); break;
+	case OBJECT_TYPE_FALL_OBJECT:
+	{
+		obj = new CFallObject(x, y, nx);
+		if (dynamic_cast<CSoldier*>(srcObject))
+		{
+			CSoldier* i = dynamic_cast<CSoldier*>(srcObject);
+			i->addFallObject(obj);
+		}
+		break;
+		
+	}
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_GUNTYPE: obj = new CGunType(x, y, 1, type); break;
 	case OBJECT_TYPE_GUN:

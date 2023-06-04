@@ -1,8 +1,9 @@
 #pragma once
 #include "GameObject.h"
+#include "FallObject.h"
 
 #define SOLDIER_GRAVITY 0.002f
-#define SOLDIER_WALKING_SPEED 0.05f
+#define SOLDIER_SPEED 0.05f
 #define SOLDIER_DIE_DEFLECT 0.25f
 
 #define SOLDIER_BBOX_WIDTH 16
@@ -21,11 +22,13 @@
 class CSoldier : public CGameObject
 {
 protected:
-	float ax;
 	float ay;
 	bool isActive = false;
+	bool isOnPlatform;
 
 	ULONGLONG die_start;
+
+	CFallObject* fallObject;
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -38,5 +41,14 @@ protected:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 public:
 	CSoldier(float x, float y);
+	void addFallObject(LPGAMEOBJECT obj) { 
+		if (dynamic_cast<CFallObject*>(obj))
+		{
+			CFallObject* i = dynamic_cast<CFallObject*>(obj);
+			fallObject = i;
+		}
+		else fallObject = NULL;
+	}
+	void removeFallObject() { fallObject->Delete(); fallObject = NULL; }
 	virtual void SetState(int state);
 };

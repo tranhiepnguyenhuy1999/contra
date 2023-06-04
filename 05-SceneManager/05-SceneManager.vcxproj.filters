@@ -144,6 +144,9 @@
     <ClCompile Include="EndWall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FallObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -285,6 +288,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EndWall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FallObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

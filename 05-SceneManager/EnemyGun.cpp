@@ -5,8 +5,8 @@
 
 CEnemyGun::CEnemyGun(float x, float y, float nx, float ny, int type) :CGameObject(x, y)
 {
-	vx = nx;
-	vy = ny;
+	vx = nx*ENEMY_GUN_ATTACK_SPEED;
+	vy = ny*ENEMY_GUN_ATTACK_SPEED;
 	gunType = type;
 	SetState(ENEMY_GUN_STATE_RELASE);
 
@@ -76,9 +76,9 @@ void CEnemyGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CEnemyGun::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
 	l = x - ENEMY_GUN_BBOX_WIDTH / 2;
-	t = y - ENEMY_GUN_BBOX_HEIGHT / 2;
+	t = y + ENEMY_GUN_BBOX_HEIGHT / 2;
 	r = l + ENEMY_GUN_BBOX_WIDTH;
-	b = t + ENEMY_GUN_BBOX_HEIGHT;
+	b = t - ENEMY_GUN_BBOX_HEIGHT;
 }
 void CEnemyGun::SetState(int state)
 {

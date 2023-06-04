@@ -156,6 +156,7 @@
     <ClCompile Include="EndWall.cpp" />
     <ClCompile Include="EnemyGun.cpp" />
     <ClCompile Include="Explode.cpp" />
+    <ClCompile Include="FallObject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="EndWall.h" />
     <ClInclude Include="EnemyGun.h" />
     <ClInclude Include="Explode.h" />
+    <ClInclude Include="FallObject.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />

@@ -7,7 +7,7 @@
 
 #define GUNMACHINE2_LOOP_TIMEOUT 300
 #define GUNMACHINE2_SHOOTING_TIMEOUT 3000
-#define GUNMACHINE2_SHOOTING_LOOP_TIMEOUT 250
+#define GUNMACHINE2_CHANGE_ANGLE_TIMEOUT 750
 
 #define GUNMACHINE2_STATE_UNACTIVE 100
 #define GUNMACHINE2_STATE_PRE_ACTIVE 200
@@ -31,7 +31,7 @@
 #define ID_ANI_GUNMACHINE2_RIGHTDOWN	4111
 
 #define ID_ANI_GUNMACHINE2_DOWNLEFT	4112
-#define ID_ANI_GUNMACHINE2_DONW	4113
+#define ID_ANI_GUNMACHINE2_DOWN	4113
 #define ID_ANI_GUNMACHINE2_DOWNRIGHT	4114
 
 
@@ -44,24 +44,18 @@ class CGunMachine2 : public CGameObject
 {
 
 protected:
-	float yLimit;
 	float activeRange;
-	float ax;
-	float ay;
-	float ani_pow_id;
-
 	float life;
-	BOOLEAN isShooting;
-	int gunLeft;
+	int position;
+
 
 	ULONGLONG loop_start;
-	ULONGLONG gun_loop_start;
-
+	ULONGLONG shooting_loop_start;
 	int getPlayerPosition();
-	int getAniId(int flag);
+	int getAniId();
 	void handleShooting();
 	int translateToPercent(float data, boolean isXAxis);
-	float getPercent();
+	void getPercentXYSpeed(float &perAxisX, float &perAxisY);
 
 public:
 	void handleGetAttack(int dmg);
