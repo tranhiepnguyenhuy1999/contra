@@ -123,9 +123,6 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BreakBridge.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GunMachine2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -145,6 +142,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FallObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BombBridge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BombBridgeChild.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -269,9 +272,6 @@
     <ClInclude Include="TileMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BreakBridge.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GunMachine2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -291,6 +291,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FallObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BombBridge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BombBridgeChild.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

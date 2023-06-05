@@ -24,6 +24,7 @@
 #include "Water.h"
 #include "Land.h"
 #include "FallObject.h"
+#include "BombBridge.h"
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -187,6 +188,11 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		float typeGun = (float)atof(tokens[3].c_str());
 		obj = new CGunBox(x, y, typeGun); break;
+	}
+	case OBJECT_TYPE_BOMB_BRIDGE:
+	{
+		float type = (float)atof(tokens[3].c_str());
+		obj = new CBombBridge(x, y, type); break;
 	}
 	case OBJECT_TYPE_GUNSHIP:
 	{

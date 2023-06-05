@@ -16,6 +16,9 @@ class Camera
 
 	float cWidth;
 	float cHeight;
+		
+	float px; // player x
+	float py; // player y
 
 	float nx, ny;
 
@@ -31,8 +34,11 @@ public:
 	void setCamHeight(float height) { cHeight = height; t = b + cHeight; };
 	void getCamWidth(float& width) { width = cWidth; r = l + cWidth; };
 	void getCamHeight(float &height) { height = cHeight; };
+	void getPlayerPosition(float& x, float& y) { x = px; y = py; };
 	void getCamBoundingBox(float& cl, float& ct, float& cr, float& cb) { cl = l; ct = t; cr = r; cb = b; };
 	void setCamPosition(float px, float py) {
+		this->px = px;
+		this->py = py;
 		if (nx == 1)
 		{
 			if (px < l + cWidth / 2) return;

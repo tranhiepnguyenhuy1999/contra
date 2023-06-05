@@ -145,8 +145,9 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Animations.cpp" />
+    <ClCompile Include="BombBridge.cpp" />
+    <ClCompile Include="BombBridgeChild.cpp" />
     <ClCompile Include="BreakBrick.cpp" />
-    <ClCompile Include="BreakBridge.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
@@ -192,8 +193,9 @@
     <ClInclude Include="AnimationFrame.h" />
     <ClInclude Include="Animations.h" />
     <ClInclude Include="AssetIDs.h" />
+    <ClInclude Include="BombBridge.h" />
+    <ClInclude Include="BombBridgeChild.h" />
     <ClInclude Include="BreakBrick.h" />
-    <ClInclude Include="BreakBridge.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
