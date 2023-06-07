@@ -9,6 +9,7 @@
 #include "GunSoldier.h"
 #include "GunType.h"
 #include "EnemyGun.h"
+#include "Fire.h"
 
 #include "Water.h"
 #include "Land.h"
@@ -94,6 +95,8 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	//else if (dynamic_cast<CSoldier*>(e->obj))
 	//	OnCollisionWithSoldier(e);
+	else if (dynamic_cast<CFire*>(e->obj))
+	OnCollisionWithFire(e);
 	//else if (dynamic_cast<CGunSoldier*>(e->obj))
 	//	OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunType*>(e->obj))
@@ -146,7 +149,15 @@ void CLance::OnCollisionWithPortal(LPCOLLISIONEVENT e)
 	CPortal* p = (CPortal*)e->obj;
 	CGame::GetInstance()->InitiateSwitchScene(p->GetSceneId());
 }
+void CLance::OnCollisionWithFire(LPCOLLISIONEVENT e)
+{
+	CFire* i = dynamic_cast<CFire*>(e->obj);
 
+	if (untouchable == 0)
+	{
+		SetState(LANCE_STATE_PRE_DIE);
+	}
+}
 //
 // Get animdation ID for big Mario
 //
@@ -311,6 +322,10 @@ void CLance::SetState(int state)
 	if (this->state == LANCE_STATE_DIE) return;
 	switch (state)
 	{
+	case LANCE_STATE_UNTOUCHABLE:
+		untouchable = 1;
+		untouchable_start = GetTickCount64();
+		break;
 	case LANCE_STATE_RUNNING_UP_LEFT:
 		if (isLookingUp && !isRunning && !isSwimming) y -= LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
 		maxVx = -LANCE_WALKING_SPEED;

@@ -25,6 +25,7 @@
 #include "Land.h"
 #include "FallObject.h"
 #include "BombBridge.h"
+#include "Fire.h"
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -200,6 +201,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CGunShip(x, y, typeGun); break;
 	}
 	case OBJECT_TYPE_SOLDIER: obj = new CSoldier(x, y); break;
+	case OBJECT_TYPE_FIRE:
+	{
+		float nx = (float)atof(tokens[3].c_str());
+		float movingRange = (float)atof(tokens[4].c_str());
+		obj = new CFire(x, y, nx, movingRange); break;
+	}
 	case OBJECT_TYPE_GUN_SOLDIER: obj = new CGunSoldier(x, y); break;
 	case OBJECT_TYPE_GUNMACHINE1: obj = new CGunMachine1(x, y); break;
 	case OBJECT_TYPE_GUNMACHINE2: obj = new CGunMachine2(x, y); break;

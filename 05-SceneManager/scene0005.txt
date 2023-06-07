@@ -2,6 +2,7 @@
 [ASSETS]
 lance.txt
 enemies-stage1.txt
+enemies-stage3.txt
 gun.txt
 soldier.txt
 
@@ -20,10 +21,15 @@ map1_map.csv
 
 # MARIO
 0	50	100
+
+
+#fire
+40	150	50	1	75
+40	150	50	-1	75
 #soldier
 #20	300	150
 #bomb-bridge
-21	200	100	1
+#21	200	100	1
 #gun-soldier
 #24	200	50
 #gun-machine1

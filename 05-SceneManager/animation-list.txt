@@ -8,4 +8,7 @@ gun	30000	3000
 
 enemies-stage1	40000	4000
 
+
+enemies-stage3	50000	5000
+
 intro	100000	10000

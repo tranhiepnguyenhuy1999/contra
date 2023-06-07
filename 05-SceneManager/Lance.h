@@ -51,6 +51,8 @@
 
 #define LANCE_STATE_GO_DOWN 1300
 
+#define LANCE_STATE_UNTOUCHABLE 1400
+
 #pragma region ANIMATION_ID
 //BIG
 #define ID_ANI_LANCE_IDLE_RIGHT 1001
@@ -117,7 +119,7 @@
 #define LANCE_SMALL_BBOX_HEIGHT 12
 
 
-#define LANCE_UNTOUCHABLE_TIME 2500
+#define LANCE_UNTOUCHABLE_TIME 5000
 
 class CLance : public CGameObject
 {
@@ -152,6 +154,7 @@ class CLance : public CGameObject
 	void OnCollisionWithPortal(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunType(LPCOLLISIONEVENT e);
 	void OnCollisionWithEnemyGun(LPCOLLISIONEVENT e);
+	void OnCollisionWithFire(LPCOLLISIONEVENT e);
 
 	int GetAniId();
 	void handleShooting();
