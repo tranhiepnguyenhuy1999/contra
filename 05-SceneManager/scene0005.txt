@@ -22,17 +22,16 @@ map1_map.csv
 # MARIO
 0	50	100
 
-
 #fire
 #40	150	50	1	75
 #40	150	50	-1	75
 #moving-rock
 #41	150	50
 #fall-rock
-42	150	300
+#42	150	200
 
 #soldier
-#20	300	150
+#20	100	150	1	0
 #bomb-bridge
 #21	200	100	1
 #gun-soldier

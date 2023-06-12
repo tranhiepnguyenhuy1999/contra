@@ -4,20 +4,27 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define FALL_ROCK_GRAVITY 0.0005f
-#define FALL_ROCK_MAX_GRAVITY 0.25f
-#define FALL_ROCK_BOUNCE_DEFECT 0.15f
+#define FALL_ROCK_GRAVITY 0.0002f
+#define FALL_ROCK_MAX_GRAVITY 0.15f
+#define FALL_ROCK_BOUNCE_DEFECT 0.075f
+
+#define FALL_ROCK_UNACTIVE_TIMEOUT 3000
 
 #define	FALL_ROCK_BBOX_WIDTH 32
 #define FALL_ROCK_BBOX_HEIGHT 32
 
 #define FALL_ROCK_STATE_BOUNCE 100
+#define FALL_ROCK_STATE_ACTIVE	200
+#define FALL_ROCK_STATE_UNACTIVE	300
 
 #define ID_ANI_FALL_ROCK_DEFAULT 5001
 
 class CFallRock : public CGameObject {
 	float ay;
 	bool isBounce;
+
+	ULONGLONG count_start;
+
 public:
 	CFallRock(float x, float y);
 

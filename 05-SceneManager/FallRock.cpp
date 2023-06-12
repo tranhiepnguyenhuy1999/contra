@@ -4,8 +4,10 @@
 
 CFallRock::CFallRock(float x, float y) :CGameObject(x, y)
 {
-	ay = -FALL_ROCK_GRAVITY;
+	count_start = -1;
 	isBounce = true;
+	SetState(FALL_ROCK_STATE_UNACTIVE);
+
 }
 void CFallRock::Render()
 {
@@ -35,7 +37,10 @@ void CFallRock::OnCollisionWith(LPCOLLISIONEVENT e)
 }
 void CFallRock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	DebugOut(L">>> Mario DIE >>> %f \n", vy);
+	if (state == FALL_ROCK_STATE_UNACTIVE && GetTickCount64() - count_start > FALL_ROCK_UNACTIVE_TIMEOUT)
+	{
+		SetState(FALL_ROCK_STATE_ACTIVE);
+	}
 
 	vy += ay * dt;
 
@@ -47,6 +52,7 @@ void CFallRock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void CFallRock::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
+	if (state == FALL_ROCK_STATE_UNACTIVE) return;
 	l = x - FALL_ROCK_BBOX_WIDTH / 2;
 	t = y + FALL_ROCK_BBOX_HEIGHT / 2;
 	r = l + FALL_ROCK_BBOX_WIDTH;
@@ -57,6 +63,14 @@ void CFallRock::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
+	case FALL_ROCK_STATE_UNACTIVE:
+		ay = 0;
+		count_start = GetTickCount64();
+		break;
+	case FALL_ROCK_STATE_ACTIVE:
+		ay = -FALL_ROCK_GRAVITY;
+		count_start = -1;
+		break;
 	case FALL_ROCK_STATE_BOUNCE:
 		DebugOut(L"touch \n");
 		vy += FALL_ROCK_BOUNCE_DEFECT;

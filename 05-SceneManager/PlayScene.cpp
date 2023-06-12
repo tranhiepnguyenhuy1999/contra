@@ -176,7 +176,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	switch (object_type)
 	{
-	case OBJECT_TYPE_MARIO:
+	case OBJECT_TYPE_LANCE:
 		if (player!=NULL) 
 		{
 			DebugOut(L"[ERROR] MARIO object was created before!\n");
@@ -202,7 +202,12 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float typeGun = (float)atof(tokens[3].c_str());
 		obj = new CGunShip(x, y, typeGun); break;
 	}
-	case OBJECT_TYPE_SOLDIER: obj = new CSoldier(x, y); break;
+	case OBJECT_TYPE_SOLDIER:
+	{	
+		float isShooting = (float)atof(tokens[3].c_str());
+		float isHaveFallObj = (float)atof(tokens[4].c_str());
+		obj = new CSoldier(x, y, isShooting, isHaveFallObj); break;
+	}
 	case OBJECT_TYPE_GUN_SOLDIER: obj = new CGunSoldier(x, y); break;
 	case OBJECT_TYPE_GUNMACHINE1: obj = new CGunMachine1(x, y); break;
 	case OBJECT_TYPE_GUNMACHINE2: obj = new CGunMachine2(x, y); break;
