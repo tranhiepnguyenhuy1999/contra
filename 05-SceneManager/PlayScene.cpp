@@ -28,6 +28,7 @@
 #include "Fire.h"
 #include "MovingRock.h"
 #include "FallRock.h"
+#include "HideSoldier.h"
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -219,6 +220,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_MOVING_ROCK: obj = new CMovingRock(x, y); break;
 	case OBJECT_TYPE_FALL_ROCK: obj = new CFallRock(x, y); break;
+	case OBJECT_TYPE_HIDESOLDIER: obj = new CHideSoldier(x, y); break;
+
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_BREAKBRICK: obj = new CBreakBrick(x, y); break;
 	case OBJECT_TYPE_DOWNBRICK:

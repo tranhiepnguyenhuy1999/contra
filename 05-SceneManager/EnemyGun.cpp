@@ -25,7 +25,7 @@ int CEnemyGun::getAniId() {
 	{
 	case 0: return ID_ANI_ENEMY_GUN_DEFAULT;
 	case 1:
-		return 1;
+		return ID_ANI_ENEMY_GUN_HIDE_SOLIDER;
 	case 2:
 		return 1;
 	case 3:

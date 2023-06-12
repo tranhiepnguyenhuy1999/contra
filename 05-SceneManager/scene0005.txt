@@ -29,6 +29,8 @@ map1_map.csv
 #41	150	50
 #fall-rock
 #42	150	200
+#hide-soldier
+43	150	50
 
 #soldier
 #20	100	150	1	0

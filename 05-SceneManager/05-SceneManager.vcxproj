@@ -171,6 +171,7 @@
     <ClCompile Include="GunSoldier.cpp" />
     <ClCompile Include="GunType.cpp" />
     <ClCompile Include="HiddenBrick.cpp" />
+    <ClCompile Include="HideSoldier.cpp" />
     <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Land.cpp" />
     <ClCompile Include="main.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="GunSoldier.h" />
     <ClInclude Include="GunType.h" />
     <ClInclude Include="HiddenBrick.h" />
+    <ClInclude Include="HideSoldier.h" />
     <ClInclude Include="IntroScene.h" />
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Lance.h" />

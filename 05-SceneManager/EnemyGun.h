@@ -14,6 +14,8 @@
 #define ENEMY_GUN_STATE_DIE 200
 
 #define ID_ANI_ENEMY_GUN_DEFAULT 3302
+#define ID_ANI_ENEMY_GUN_HIDE_SOLIDER 3309
+
 #define ID_ANI_ENEMY_GUN_EXPLODE 3003
 class CEnemyGun : public CGameObject {
 	ULONGLONG count_start;
