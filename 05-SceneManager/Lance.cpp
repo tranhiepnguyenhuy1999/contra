@@ -10,6 +10,8 @@
 #include "GunType.h"
 #include "EnemyGun.h"
 #include "Fire.h"
+#include "MovingRock.h"
+
 
 #include "Water.h"
 #include "Land.h"
@@ -26,9 +28,11 @@ void CLance::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vy += ay * dt;
 	vx += ax * dt;
 
+	
 	isOnPlatform = false;
 
 	if (abs(vx) > abs(maxVx)) vx = maxVx;
+	//DebugOut(L">>> Mario DIE >>> %f \n", vx);
 
 	// reset untouchable timer if untouchable time has passed
 	if ( GetTickCount64() - untouchable_start > LANCE_UNTOUCHABLE_TIME) 
@@ -43,7 +47,6 @@ void CLance::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	}
 	else if (state==LANCE_STATE_PRE_DIE && GetTickCount64() - count_start > 500)
 	{
-		DebugOut(L">>> Mario DIE >>> %f \n", vx);
 		count_start = -1;
 		SetState(LANCE_STATE_DIE);
 	}
@@ -63,6 +66,7 @@ void CLance::OnNoCollision(DWORD dt)
 
 void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 {
+	movingObjVx = 0.0f;
 
 	if (state == LANCE_STATE_DIE || state == LANCE_STATE_PRE_DIE) return;
 
@@ -92,6 +96,12 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (dynamic_cast<CWater*>(e->obj) && !isSwimming) {
 		isSwimming = true;
+	}
+	else if (dynamic_cast<CMovingRock*>(e->obj)) {
+		float mrvx, mrvy;
+		e->obj->GetSpeed(mrvx, mrvy);
+		movingObjVx = mrvx;
+
 	}
 	//else if (dynamic_cast<CSoldier*>(e->obj))
 	//	OnCollisionWithSoldier(e);
@@ -273,8 +283,7 @@ int CLance::GetAniId()
 			aniId = ID_ANI_LANCE_RUNNING_DOWN_RIGHT;
 		else if (isLookingUp)
 			aniId = ID_ANI_LANCE_RUNNING_UP_RIGHT;
-		else
-			aniId = ID_ANI_LANCE_WALKING_RIGHT;
+		else if(movingObjVx == 0) aniId = ID_ANI_LANCE_IDLE_RIGHT;
 	}
 	else // vx < 0
 	{
@@ -282,7 +291,7 @@ int CLance::GetAniId()
 			aniId = ID_ANI_LANCE_RUNNING_DOWN_LEFT;
 		else if (isLookingUp)
 			aniId = ID_ANI_LANCE_RUNNING_UP_LEFT;
-		else aniId = ID_ANI_LANCE_WALKING_LEFT;
+		else if (movingObjVx == 0) aniId = ID_ANI_LANCE_WALKING_LEFT;
 	}
 	if (aniId == -1) aniId = ID_ANI_LANCE_IDLE_RIGHT;
 	return aniId;
@@ -486,7 +495,7 @@ void CLance::SetState(int state)
 		break;
 	case LANCE_STATE_IDLE:
 		ax = 0.0f;
-		vx = 0.0f;
+		if (movingObjVx != 0) vx = movingObjVx; else vx = 0.0f;
 		isRunning = false;
 		break;
 	}

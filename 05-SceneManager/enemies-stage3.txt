@@ -2,6 +2,9 @@
 [SPRITES]
 #fire
 50000	252	267	267	282	50
+#moving-rock
+50001	151	253	182	282	50
 # ani_id	sprite1_id	time1	sprite2_id	time2	...
 [ANIMATIONS]
 5000	50000	10000
+5001	50001	10000

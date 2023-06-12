@@ -1,8 +1,4 @@
 #include "Fire.h"
-#include "Fire.h"
-
-#include "debug.h"
-
 
 CFire::CFire(float x, float y, float nx, float movingRange) :CGameObject(x, y)
 {

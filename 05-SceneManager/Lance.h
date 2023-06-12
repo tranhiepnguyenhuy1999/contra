@@ -139,6 +139,7 @@ class CLance : public CGameObject
 	float maxVx;
 	float ax;				// acceleration on x 
 	float ay;				// acceleration on y 
+	float movingObjVx;
 
 	int untouchable;
 
@@ -147,7 +148,7 @@ class CLance : public CGameObject
 	ULONGLONG count_start;
 	ULONGLONG shooting_start;
 
-	int gunType;
+	float gunType;
 
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunSoldier(LPCOLLISIONEVENT e);

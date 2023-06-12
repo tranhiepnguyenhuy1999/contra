@@ -26,6 +26,8 @@
 #include "FallObject.h"
 #include "BombBridge.h"
 #include "Fire.h"
+#include "MovingRock.h"
+#include "FallRock.h"
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -201,15 +203,17 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CGunShip(x, y, typeGun); break;
 	}
 	case OBJECT_TYPE_SOLDIER: obj = new CSoldier(x, y); break;
+	case OBJECT_TYPE_GUN_SOLDIER: obj = new CGunSoldier(x, y); break;
+	case OBJECT_TYPE_GUNMACHINE1: obj = new CGunMachine1(x, y); break;
+	case OBJECT_TYPE_GUNMACHINE2: obj = new CGunMachine2(x, y); break;
 	case OBJECT_TYPE_FIRE:
 	{
 		float nx = (float)atof(tokens[3].c_str());
 		float movingRange = (float)atof(tokens[4].c_str());
 		obj = new CFire(x, y, nx, movingRange); break;
 	}
-	case OBJECT_TYPE_GUN_SOLDIER: obj = new CGunSoldier(x, y); break;
-	case OBJECT_TYPE_GUNMACHINE1: obj = new CGunMachine1(x, y); break;
-	case OBJECT_TYPE_GUNMACHINE2: obj = new CGunMachine2(x, y); break;
+	case OBJECT_TYPE_MOVING_ROCK: obj = new CMovingRock(x, y); break;
+	case OBJECT_TYPE_FALL_ROCK: obj = new CFallRock(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
 	case OBJECT_TYPE_BREAKBRICK: obj = new CBreakBrick(x, y); break;
 	case OBJECT_TYPE_DOWNBRICK:
@@ -485,7 +489,7 @@ void CPlayScene::Load()
 Quadtree* CreateQuadTree(vector<LPGAMEOBJECT> objList)
 {
 	// Init base game region for detecting collision
-	Quadtree* quadtree = new Quadtree(0, 0, 1000, 1000);
+	Quadtree* quadtree = new Quadtree(0, 0, 2000, 2000);
 	// add objects to quadtree
 	for (size_t i = 1; i < objList.size(); i++)
 		quadtree->Insert(objList[i]);
@@ -530,7 +534,7 @@ void CPlayScene::Update(DWORD dt)
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
 	if (player == NULL) return; 
 
-	// Update camera to follow mario
+	//Update camera to follow mario
 	float px, py;
 	player->GetPosition(px, py);
 

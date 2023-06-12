@@ -158,6 +158,7 @@
     <ClCompile Include="EnemyGun.cpp" />
     <ClCompile Include="Explode.cpp" />
     <ClCompile Include="FallObject.cpp" />
+    <ClCompile Include="FallRock.cpp" />
     <ClCompile Include="Fire.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="Land.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lance.cpp" />
+    <ClCompile Include="MovingRock.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlayerData.cpp" />
     <ClCompile Include="PlayScene.cpp" />
@@ -207,6 +209,7 @@
     <ClInclude Include="EnemyGun.h" />
     <ClInclude Include="Explode.h" />
     <ClInclude Include="FallObject.h" />
+    <ClInclude Include="FallRock.h" />
     <ClInclude Include="Fire.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -223,6 +226,7 @@
     <ClInclude Include="KeyEventHandler.h" />
     <ClInclude Include="Lance.h" />
     <ClInclude Include="Land.h" />
+    <ClInclude Include="MovingRock.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlayerData.h" />
     <ClInclude Include="PlayScene.h" />

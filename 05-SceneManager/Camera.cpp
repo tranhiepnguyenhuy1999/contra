@@ -1,19 +1,17 @@
 #include "Camera.h"
-#include <cstddef>
-#include <corecrt_math.h>
 
 Camera* Camera::__instance = NULL;
 
-void Camera::transformCoordinates(float &ix, float &iy) {
+void Camera::transformCoordinates(float &x, float &y) {
 	float cx, cy;
 
 	cx = (FLOAT)floor(l);
 	cy = (FLOAT)floor(b);
-	ix = (FLOAT)floor(ix);
-	iy = (FLOAT)floor(iy);
+	x = (FLOAT)floor(x);
+	y = (FLOAT)floor(y);
 
-	ix = ix - cx;
-	iy = iy - cy;
+	x -= cx;
+	y -= cy;
 }
 Camera* Camera::GetInstance()
 {

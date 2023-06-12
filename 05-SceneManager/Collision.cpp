@@ -3,6 +3,7 @@
 
 #include "DownBrick.h"
 #include "Gun.h"
+#include "FallRock.h"
 
 #include "debug.h"
 
@@ -200,11 +201,9 @@ void CCollision::Filter( LPGAMEOBJECT objSrc,
 		if (c->obj->IsDeleted()) continue; 
 
 		// ignore collision event with object having IsBlocking = 0 (like coin, mushroom, etc)
-		if (!dynamic_cast<CDownBrick*>(c->obj)) {
-			if (filterBlock == 1 && !c->obj->IsBlocking()) 
-			{
-				continue;
-			}
+		if (filterBlock == 1 && !c->obj->IsBlocking()) 
+		{
+			continue;
 		}
 		if (dynamic_cast<CDownBrick*>(c->obj) && c->nx != 0) continue;
 		if (dynamic_cast<CDownBrick*>(c->obj) && c->ny < 0) continue;
@@ -240,11 +239,43 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	}
 	// gun is not detect collie with blocking obj
 	if (dynamic_cast<CGun*>(objSrc)) objSrc->OnNoCollision(dt);
+	else if (dynamic_cast<CFallRock*>(objSrc))
+	{
+		CFallRock* fall_rock = dynamic_cast<CFallRock*>(objSrc);
+
+		if (coEvents.size() == 0)
+		{
+			objSrc->OnNoCollision(dt);
+		}
+		else
+		{
+			Filter(objSrc, coEvents, colX, colY);
+
+			float x, y, vx, vy, dx, dy;
+			objSrc->GetPosition(x, y);
+			objSrc->GetSpeed(vx, vy);
+			dx = vx * dt;
+			dy = vy * dt;
+
+			if (!fall_rock->IsBounce())
+			{
+				objSrc->OnNoCollision(dt);
+				if (colY != NULL) objSrc->OnCollisionWith(colY);
+			}
+			else if (colY != NULL)
+			{
+				x += dx;
+				y += colY->t * dy + colY->ny * BLOCK_PUSH_FACTOR;
+				objSrc->OnCollisionWith(colY);
+				objSrc->SetPosition(x, y);
+			}
+		}
+	}
 	// No collision detected
 	else if (coEvents.size() == 0)
 	{
 		objSrc->OnNoCollision(dt);
-	}
+	}	
 	else
 	{
 		Filter(objSrc, coEvents, colX, colY);

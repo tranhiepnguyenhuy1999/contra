@@ -82,7 +82,7 @@ void Quadtree::Insert(LPGAMEOBJECT entity)
     }
 
     Camera* cam = Camera::GetInstance();
-    float cWidth, cHeight;
+    int cWidth, cHeight;
     cam->getCamWidth(cWidth);
     cam->getCamHeight(cHeight);
 
