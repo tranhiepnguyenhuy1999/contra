@@ -7,7 +7,7 @@
 
 CHideSoldier::CHideSoldier(float x, float y) :CGameObject(x, y)
 {
-	isActive = false;
+	isActive = true;
 	count_start = -1;
 	activeRange = 100;
 	SetState(HIDE_SOLDIER_STATE_UNACTIVE);
@@ -26,20 +26,20 @@ void CHideSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float px, py;
 	Camera::GetInstance()->getPlayerPosition(px, py);
 
-	if (py > y + activeRange)
-	{
-		isActive = true;
-		count_start = GetTickCount64();
-	}
-	else isActive = false;
+	//if (py > y + activeRange)
+	//{
+	//	isActive = true;
+	//	count_start = GetTickCount64();
+	//}
+	//else isActive = false;
 
 	if (isActive && (GetTickCount64() - count_start) > HIDE_SOLDIER_WAITING_SHOOTING_TIMEOUT) {
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 1, 0, 0, 1);
 		count_start = GetTickCount64();
 	}
 	else if (state == HIDE_SOLDIER_STATE_DIE)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 2);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, 2);
 		CPlayerData::GetInstance()->updatePoint(100);
 		isDeleted = true;
 		return;

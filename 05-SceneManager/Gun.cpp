@@ -1,29 +1,30 @@
 #include "Gun.h"
-
-#include "Goomba.h"
 #include "Soldier.h"
 #include "GunSoldier.h"
 #include "GunBox.h"
 #include "GunShip.h"
 #include "GunMachine1.h"
-
+#include "BossStage1.h"
+#include "BossStage1Gun.h"
 #include "debug.h"
 
-CGun::CGun(float x, float y, int type = 0, float nx=0, float ny=0) :CGameObject(x, y)
+CGun::CGun(float x, float y, float nx, float ny, float vx, float vy, float type ) :CGameObject(x, y)
 {
-	vx = nx * GUN_ATTACK_SPEED;
-	vy = ny * GUN_ATTACK_SPEED;
-
-	gunType = type;
+	if (nx > 0) ax = GUN_ACCEL; else ax = -GUN_ACCEL;
+	if (ny > 0) ay = GUN_ACCEL; else ay = -GUN_ACCEL;
+	this->vx = vx;
+	this->vy = vy;
+	vxMax = nx * GUN_MAX_SPEED;
+	vyMax = ny * GUN_MAX_SPEED;
+	id = type;
 	dmg = getDamage();
-	SetState(GUN_STATE_RELASE);
-	
+	SetState(GUN_STATE_RELEASE);
 }
 void CGun::Render()
 {
 	int aniId = -1;
 	aniId=getAniId();
-	if (gunType == 3)
+	if (id == 3)
 		for (int i = 0; i < 3; i++) {
 			if(nx!=0)
 			CAnimations::GetInstance()->Get(aniId)->Render(x + i * GUN_L_BBOX_WIDTH + GUN_L_BBOX_WIDTH / 2, y);
@@ -36,7 +37,7 @@ void CGun::Render()
 int CGun::getAniId() {
 	if (state == GUN_STATE_DIE)
 		return ID_ANI_GUN_EXPLODE;
-	switch (gunType)
+	switch (id)
 	{
 		case 0: return ID_ANI_GUN_DEFAULT;
 		case 1:
@@ -53,7 +54,7 @@ int CGun::getAniId() {
 }
 int CGun::getDamage() {
 
-	switch (gunType)
+	switch (id)
 	{
 	case 0: return 1;
 	case 1:
@@ -87,6 +88,10 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGunMachine1(e);
 	else if (dynamic_cast<CGunShip*>(e->obj))
 		OnCollisionWithGunShip(e);
+	else if (dynamic_cast<CBossStage1*>(e->obj))
+		OnCollisionWithBossStage1(e);
+	else if (dynamic_cast<CBossStage1Gun*>(e->obj))
+		OnCollisionWithBossStage1Gun(e);
 }
 void CGun::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 {
@@ -120,15 +125,34 @@ void CGun::OnCollisionWithGunShip(LPCOLLISIONEVENT e)
 	i->SetState(GUNSHIP_STATE_DIE);
 	SetState(GUN_STATE_DIE);
 }
+void CGun::OnCollisionWithBossStage1(LPCOLLISIONEVENT e)
+{
+	DebugOut(L"yeah");
+	CBossStage1* i = dynamic_cast<CBossStage1*>(e->obj);
+	i->SetState(BOSS_STAGE_1_STATE_DMG);
+	SetState(GUN_STATE_DIE);
+}
+void CGun::OnCollisionWithBossStage1Gun(LPCOLLISIONEVENT e)
+{
+	CBossStage1Gun* i = dynamic_cast<CBossStage1Gun*>(e->obj);
+	i->SetState(BOSS_STAGE_1_GUN_STATE_DMG);
+	SetState(GUN_STATE_DIE);
+}
 void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if ((state != GUN_STATE_DIE) && (GetTickCount64() - count_start > 3000))
+	vx += ax * dt;
+	vy += ay * dt;
+
+	if (abs(vx) > abs(vxMax)) vx = vxMax;
+	if (abs(vy) > abs(vyMax)) vy = vyMax;
+
+	if (state != GUN_STATE_RELEASE && (GetTickCount64() - count_start > 3000))
 	{
 		count_start = -1;
 		isDeleted = true;
 		return;
 	}
-	if ((state == GUN_STATE_DIE) && (GetTickCount64() - count_start > 100))
+	else if (state == GUN_STATE_DIE)
 	{
 		count_start = -1;
 		isDeleted = true;
@@ -139,7 +163,7 @@ void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 }
 void CGun::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	if (gunType == 3)
+	if (id == 3)
 	{
 		l = x - GUN_L_BBOX_WIDTH / 2;
 		t = y + GUN_L_BBOX_HEIGHT / 2;
@@ -159,7 +183,7 @@ void CGun::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case GUN_STATE_RELASE:
+	case GUN_STATE_RELEASE:
 		count_start = GetTickCount64();
 		break;
 	}

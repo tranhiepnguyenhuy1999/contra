@@ -1,8 +1,6 @@
 
 #include "GunMachine1.h"
 #include "AssetIDs.h"
-#include "debug.h"
-
 CGunMachine1::CGunMachine1(float x, float y) :CGameObject(x, y)
 {
 	this->ax = 0;
@@ -127,11 +125,11 @@ void CGunMachine1::handleShooting()
 
 	if (flag==2)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, -GUNMACHINE1_GUN_SPEED, 0, 0);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, -1, 0);
 		return;
 	}
 	float altShootingSpeed = getPercent();
-	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, altShootingSpeed * -GUNMACHINE1_GUN_SPEED, GUNMACHINE1_GUN_SPEED, 0);
+	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, altShootingSpeed , 1);
 
 	//DebugOut(L">>> percent: %f >>> \n", percent);
 	//DebugOut(L">>> altShootingSpeed: %f >>> \n", altShootingSpeed);

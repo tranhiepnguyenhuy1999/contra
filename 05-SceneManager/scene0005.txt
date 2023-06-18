@@ -30,8 +30,10 @@ map1_map.csv
 #fall-rock
 #42	150	200
 #hide-soldier
-43	150	50
+#43	150	50	
 
+#boss
+31	50	100
 #soldier
 #20	100	150	1	0
 #bomb-bridge

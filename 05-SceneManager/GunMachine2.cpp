@@ -195,7 +195,7 @@ void CGunMachine2::handleShooting()
 	}
 	float perAxisXSpeed, perAxisYSpeed;
 	getPercentXYSpeed(perAxisXSpeed, perAxisYSpeed);
-	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y,nx* perAxisXSpeed * GUNMACHINE2_GUN_SPEED, ny* perAxisYSpeed *GUNMACHINE2_GUN_SPEED, 0);
+	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y,nx* perAxisXSpeed, ny* perAxisYSpeed);
 }
 int CGunMachine2::translateToPercent(float data, boolean isXAxis) {
 	float px, py;
@@ -222,7 +222,6 @@ int CGunMachine2::translateToPercent(float data, boolean isXAxis) {
 void CGunMachine2::getPercentXYSpeed(float & perAxisXSpeed, float & perAxisYSpeed)
 {
 	float px, py;
-
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
 
 	float percentX = translateToPercent(x, true);

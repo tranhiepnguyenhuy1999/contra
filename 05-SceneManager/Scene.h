@@ -30,7 +30,7 @@ public:
 	virtual void Render() = 0;
 	virtual void getPlayerPosition(float &x, float &y) = 0;
 	virtual void getPlayerLevel(int& level) = 0;
-	virtual void createNewObject(int id, float x, float y, float nx=0, float ny=0, int type = 0, LPGAMEOBJECT srcObject = NULL)=0;
+	virtual void createNewObject(int id, float x, float y, float nx = 0, float ny = 0, float vx = 0, float vy = 0, int type = 0, LPGAMEOBJECT srcObject = NULL) = 0;
 };
 typedef CScene * LPSCENE;
 

@@ -147,6 +147,8 @@
     <ClCompile Include="Animations.cpp" />
     <ClCompile Include="BombBridge.cpp" />
     <ClCompile Include="BombBridgeChild.cpp" />
+    <ClCompile Include="BossStage1.cpp" />
+    <ClCompile Include="BossStage1Gun.cpp" />
     <ClCompile Include="BreakBrick.cpp" />
     <ClCompile Include="Brick.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -159,6 +161,7 @@
     <ClCompile Include="Explode.cpp" />
     <ClCompile Include="FallObject.cpp" />
     <ClCompile Include="FallRock.cpp" />
+    <ClCompile Include="FGun.cpp" />
     <ClCompile Include="Fire.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -184,6 +187,7 @@
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />
     <ClCompile Include="Soldier.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprites.cpp" />
     <ClCompile Include="Textures.cpp" />
@@ -199,6 +203,8 @@
     <ClInclude Include="AssetIDs.h" />
     <ClInclude Include="BombBridge.h" />
     <ClInclude Include="BombBridgeChild.h" />
+    <ClInclude Include="BossStage1.h" />
+    <ClInclude Include="BossStage1Gun.h" />
     <ClInclude Include="BreakBrick.h" />
     <ClInclude Include="Brick.h" />
     <ClInclude Include="Camera.h" />
@@ -211,6 +217,7 @@
     <ClInclude Include="Explode.h" />
     <ClInclude Include="FallObject.h" />
     <ClInclude Include="FallRock.h" />
+    <ClInclude Include="FGun.h" />
     <ClInclude Include="Fire.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
@@ -238,6 +245,7 @@
     <ClInclude Include="SampleKeyEventHandler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Soldier.h" />
+    <ClInclude Include="Sound.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Sprites.h" />
     <ClInclude Include="Texture.h" />

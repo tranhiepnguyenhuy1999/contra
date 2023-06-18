@@ -13,9 +13,13 @@
 #define INFRASTRUCTURE_EXPLODE_TIMEOUT 750
 #define HUMAN_EXPLODE_TIMEOUT 400
 
+#define EXPLODE_TYPE_INFRASTRUCTURE 1
+#define EXPLODE_TYPE_HUMAN 2
+
+
 class CExplode : public CGameObject {
 	ULONGLONG count_start;
-	float exType;
+	float id;
 	int timeout;
 	int getAniId();
 	int getTimeout();

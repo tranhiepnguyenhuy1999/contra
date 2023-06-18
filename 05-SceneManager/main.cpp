@@ -39,6 +39,7 @@ HOW TO INSTALL Microsoft.DXSDK.D3DX
 #include "Platform.h"
 
 #include "Camera.h"
+#include "Sound.h"
 #include "PlayerData.h"
 #include "EndWall.h"
 
@@ -202,12 +203,14 @@ int WINAPI WinMain(
 
 	game->Init(hWnd, hInstance);
 	game->InitKeyboard();
-
+	
 	Camera* cam = Camera::GetInstance();
 	cam->setCamWidth(game->GetBackBufferWidth());
 	cam->setCamHeight(game->GetBackBufferHeight());
 
 	CPlayerData::GetInstance();
+	CSound::GetInstance();
+
 	CEndWall::GetInstance();
 	//IMPORTANT: this is the only place where a hardcoded file name is allowed ! 
 	game->Load(L"contra-sample.txt");  

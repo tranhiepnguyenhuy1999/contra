@@ -1,6 +1,5 @@
 #include "FallRock.h"
 #include "DownBrick.h"
-#include "debug.h"
 
 CFallRock::CFallRock(float x, float y) :CGameObject(x, y)
 {

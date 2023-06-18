@@ -200,7 +200,7 @@ void CGunSoldier::handleShooting()
 	else 
 		altShootingXSpeed = 0;
 
-	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, nx * altShootingXSpeed * GUNSOLDIER_GUN_SPEED, altShootingYSpeed * ny * GUNSOLDIER_GUN_SPEED, 0);
+	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, nx * altShootingXSpeed, altShootingYSpeed * ny, 0);
 
 	//DebugOut(L">>> percent: %f >>> \n", percent);
 	//DebugOut(L">>> altShootingSpeed: %f >>> \n", altShootingSpeed);

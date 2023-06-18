@@ -44,7 +44,7 @@ void CGunBox::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (state == GUNBOX_STATE_DIE)
 	{
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUNTYPE, x,y,1,1,typeGun);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUNTYPE, x, y, 1, 1, 0, 0, typeGun);
 		isDeleted = true;
 		return;
 	}

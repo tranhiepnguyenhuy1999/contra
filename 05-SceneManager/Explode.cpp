@@ -1,16 +1,10 @@
 #include "Explode.h"
 
-#include "Goomba.h"
-#include "Soldier.h"
-#include "GunBox.h"
-
-#include "debug.h"
-
 CExplode::CExplode(float x, float y, float type=1) :CGameObject(x, y)
 {
 	vx = 0;
 	vy = 0;
-	exType = type;
+	id = type;
 	timeout = getTimeout();
 	SetState(GUN_STATE_RELASE);
 }
@@ -45,22 +39,22 @@ void CExplode::GetBoundingBox(float& l, float& t, float& r, float& b)
 }
 
 int CExplode::getAniId() {
-	switch (int(exType))
+	switch (int(id))
 	{
-	case 1:
+	case EXPLODE_TYPE_INFRASTRUCTURE:
 		return ID_ANI_INFRASTRUCTURE_EXPLODE;
-	case 2:
+	case EXPLODE_TYPE_HUMAN:
 		return ID_ANI_HUMAN_EXPLODE;
 	default:
 		return ID_ANI_INFRASTRUCTURE_EXPLODE;
 	}
 }
 int CExplode::getTimeout() {
-	switch (int(exType))
+	switch (int(id))
 	{
-	case 1:
+	case EXPLODE_TYPE_INFRASTRUCTURE:
 		return INFRASTRUCTURE_EXPLODE_TIMEOUT;
-	case 2:
+	case EXPLODE_TYPE_HUMAN:
 		return HUMAN_EXPLODE_TIMEOUT;
 	default:
 		return INFRASTRUCTURE_EXPLODE_TIMEOUT;

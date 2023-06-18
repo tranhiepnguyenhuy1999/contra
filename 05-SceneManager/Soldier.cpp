@@ -52,7 +52,7 @@ void CSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		if (x < cx + CGame::GetInstance()->GetBackBufferWidth()) {
 			isActive = true;
-			if(isHaveFallObj !=0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_FALL_OBJECT, x - 50, y, -SOLDIER_SPEED,0,0,this);
+			if(isHaveFallObj !=0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_FALL_OBJECT, x - 50, y, 0, 0, -SOLDIER_SPEED, 0, 0, this);
 		}
 		return;
 	}
@@ -80,7 +80,7 @@ void CSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	else if (state == SOLDIER_STATE_DIE && (GetTickCount64() - die_start > SOLDIER_DIE_TIMEOUT))
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 2);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, 2);
 		CPlayerData::GetInstance()->updatePoint(100);
 		isDeleted = true;
 		return;

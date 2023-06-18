@@ -4,8 +4,8 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define GUN_ATTACK_SPEED 0.2f
-
+#define GUN_MAX_SPEED 0.25f
+#define GUN_ACCEL 0.00075f
 //bbox
 #define	GUN_BBOX_WIDTH 2
 #define GUN_BBOX_HEIGHT 2
@@ -14,7 +14,7 @@
 #define	GUN_L_BBOX_HEIGHT	6
 
 // state
-#define GUN_STATE_RELASE 100
+#define GUN_STATE_RELEASE 100
 #define GUN_STATE_DIE 200
 
 #define ID_ANI_GUN_DEFAULT 3301
@@ -26,9 +26,14 @@
 #define ID_ANI_GUN_L 3308
 #define ID_ANI_GUN_EXPLODE 3003
 class CGun : public CGameObject {
+
+protected:
 	ULONGLONG count_start;
-	int gunType;
+	int id;
 	int dmg;
+
+	float ax, ay;
+	float vxMax, vyMax;
 
 	int getAniId();
 	int getDamage();
@@ -38,15 +43,19 @@ class CGun : public CGameObject {
 	void OnCollisionWithGunMachine1(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunBox(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunShip(LPCOLLISIONEVENT e);
+	void OnCollisionWithBossStage1(LPCOLLISIONEVENT e);
+	void OnCollisionWithBossStage1Gun(LPCOLLISIONEVENT e);
+
 
 public:
-	CGun(float x, float y, int type, float nx, float ny);
+	CGun(float x, float y, float nx, float ny, float vx, float vy, float type);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 
 	virtual int IsCollidable() { return 1; };
+
 	virtual void OnNoCollision(DWORD dt);
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);

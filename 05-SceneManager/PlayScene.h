@@ -26,12 +26,15 @@ protected:
 
 	void _ParseSection_ASSETS(string line);
 	void _ParseSection_OBJECTS(string line);
+
 	void _ParseSection_TILEDMAP(string line);
 	void _ParseSection_TILESET(string line);
+	
 	void LoadAssets(LPCWSTR assetFile);
-
-	virtual void createNewObject(int id, float x, float y, float nx, float ny, int type, LPGAMEOBJECT srcObject);
+	
 	void  DetectCollision(vector<LPGAMEOBJECT>& coObjects);
+
+	virtual void createNewObject(int id, float x, float y, float nx, float ny, float vx, float vy, int type, LPGAMEOBJECT srcObject);
 	
 public: 
 	CPlayScene(int id, LPCWSTR filePath);

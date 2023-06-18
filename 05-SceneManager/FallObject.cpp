@@ -1,10 +1,5 @@
 #include "FallObject.h"
 
-#include "AssetIDs.h"
-#include "PlayerData.h"
-
-#include "debug.h"
-
 CFallObject::CFallObject(float x, float y, float nx) :CGameObject(x, y)
 {
 	this->ay = -FALL_OBJECT_GRAVITY;
@@ -34,9 +29,6 @@ void CFallObject::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CFallObject::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	float cx, cy;
-	CGame::GetInstance()->GetCamPos(cx, cy);
-
 	vy += ay * dt;
 
 	CGameObject::Update(dt, coObjects);

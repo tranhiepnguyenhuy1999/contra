@@ -19,6 +19,7 @@
 #include "GunShip.h"
 #include "GunType.h"
 #include "Gun.h"
+#include "FGun.h"
 #include "EnemyGun.h"
 #include "Explode.h"
 #include "Water.h"
@@ -29,6 +30,9 @@
 #include "MovingRock.h"
 #include "FallRock.h"
 #include "HideSoldier.h"
+#include "BossStage1.h"
+#include "BossStage1Gun.h"
+
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -193,6 +197,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float typeGun = (float)atof(tokens[3].c_str());
 		obj = new CGunBox(x, y, typeGun); break;
 	}
+	case OBJECT_TYPE_BOSS_STAGE_1:
+	{
+		CBossStage1* boss = new CBossStage1(x, y);
+		CBossStage1Gun* gun1= new CBossStage1Gun(x, y + 100);
+		CBossStage1Gun* gun2 = new CBossStage1Gun(x + 100, y + 100);
+
+		boss->addChild(gun1);
+		boss->addChild(gun2);
+
+		objects.push_back(boss);
+		objects.push_back(gun1);
+		objects.push_back(gun2);
+
+		return;
+	}
 	case OBJECT_TYPE_BOMB_BRIDGE:
 	{
 		float type = (float)atof(tokens[3].c_str());
@@ -295,7 +314,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 
 	objects.push_back(obj);
 }
-void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=0, int type =0, LPGAMEOBJECT srcObject = NULL)
+void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float ny = 0, float vx = 0, float vy = 0, int type = 0, LPGAMEOBJECT srcObject = NULL)
 {
 	CGameObject* obj = NULL;
 	vector<CGameObject*> gunlist;
@@ -316,7 +335,7 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 	case OBJECT_TYPE_GUNTYPE: obj = new CGunType(x, y, 1, type); break;
 	case OBJECT_TYPE_GUN:
 	{
-		obj = new CGun(x, y, type, nx, ny); 
+		obj = new CGun(x, y, nx, ny, vx, vy, type);
 
 		if (type == 3)
 		{
@@ -329,6 +348,11 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 			else lance->setPreGun(obj);
 
 		}
+		else if (type == 2)
+		{
+			obj = new CFGun(x, y, nx, 1, vx, vy, type);
+
+		}
 		else if (type == 4) {
 			CGameObject* extra = NULL;
 			gunlist.clear();
@@ -339,35 +363,35 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 
 			if (ny == 0)
 			{
-				extra = new CGun(x, y, type, big2*nx, small1);
+				extra = new CGun(x, y, big2*nx, small1, vx, vy, type);
 				gunlist.push_back(extra);
-				extra = new CGun(x, y, type, big1*nx, small2);
+				extra = new CGun(x, y, big1*nx, small2, vx, vy, type);
 				gunlist.push_back(extra);
-				extra = new CGun(x, y, type, big1*nx, -small2);
+				extra = new CGun(x, y, big1*nx, -small2, vx, vy, type);
 				gunlist.push_back(extra);
-				extra = new CGun(x, y, type, big2*nx, -small1);
+				extra = new CGun(x, y, big2*nx, -small1, vx, vy, type);
 				gunlist.push_back(extra);
 			}
 			else if (nx == 0)
 			{
-				extra = new CGun(x, y, type, small1, big2*ny);
+				extra = new CGun(x, y, small1, big2*ny, vx, vy, type);
 				gunlist.push_back(extra);
-				extra = new CGun(x, y, type, small2, big1*ny);
+				extra = new CGun(x, y,small2, big1*ny, vx, vy, type);
 				gunlist.push_back(extra);
-				extra = new CGun(x, y, type, -small2, big1*ny);
+				extra = new CGun(x, y,-small2, big1*ny, vx, vy, type);
 				gunlist.push_back(extra);
-				extra = new CGun(x, y, type, -small1, big2*ny);
+				extra = new CGun(x, y,-small1, big2*ny, vx, vy, type);
 				gunlist.push_back(extra);
 			}
 			else 
 			{
-				extra = new CGun(x, y, type, (1.0f - small1) * nx,  ny);
+				extra = new CGun(x, y,(1.0f - small1) * nx,  ny, vx, vy, type);
 				gunlist.push_back(extra);
-				extra = new CGun(x, y, type, (1.0f - small2) * nx,  ny);
+				extra = new CGun(x, y,(1.0f - small2) * nx,  ny, vx, vy, type);
 				gunlist.push_back(extra);
-				extra = new CGun(x, y, type, nx, (1.0f - small2) * ny);
+				extra = new CGun(x, y,nx, (1.0f - small2) * ny, vx, vy, type);
 				gunlist.push_back(extra);
-				extra = new CGun(x, y, type, nx, (1.0f - small1) *  ny);
+				extra = new CGun(x, y,nx, (1.0f - small1) *  ny, vx, vy, type);
 				gunlist.push_back(extra);
 			}
 			for (UINT i = 0; i < gunlist.size(); i++) {
@@ -377,7 +401,7 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx=0, float ny=
 		}
 		break;
 	}
-	case OBJECT_TYPE_ENEMY_GUN: obj = new CEnemyGun(x, y, nx, ny, type); break;
+	case OBJECT_TYPE_ENEMY_GUN: obj = new CEnemyGun(x, y, nx, ny, vx, vy, type); break;
 	case OBJECT_TYPE_EXPLODE: obj = new CExplode(x, y, nx); break;
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", id);
