@@ -5,13 +5,13 @@
 #define BOMB_BRIDGE_CHILD_BBOX_WIDTH 32
 #define BOMB_BRIDGE_CHILD_BBOX_HEIGHT 32
 
-#define BOMB_BRIDGE_EXPLODE_TIMEOUT 1500
+#define BOMB_BRIDGE_EXPLODE_TIMEOUT 750
 
 class CBombBridge : public CGameObject
 {
 protected:
 	float type;
-	bool isActive;
+	bool isDestroy;
 
 	ULONGLONG active_start;
 
@@ -21,8 +21,8 @@ protected:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
 	void RenderBoundingBox();
-	void setupBombBridgeChild();
+	void setupBombBridgeChild(float top1, float top2, float bot1, float bot2, float bot3);
 public:
-	CBombBridge(float x, float y, float type);
+	CBombBridge(float x, float y, float top1, float top2, float bot1, float bot2, float bot3);
 	virtual void SetState(int state);
 };

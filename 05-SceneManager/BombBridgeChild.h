@@ -18,7 +18,7 @@ protected:
 
 public:
 
-	CBombBridgeChild(float x, float y, float ani1, float ani2, float ani3, float ani4);
+	CBombBridgeChild(float x, float y, int ani1, int ani2, int ani3, int ani4);
 	
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom) {};
 	virtual void Update(DWORD dt){};

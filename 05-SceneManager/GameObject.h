@@ -30,6 +30,7 @@ protected:
 
 	int state;
 
+	bool isActive;
 	bool isDeleted; 
 	bool isCameraOver;
 public: 
@@ -42,12 +43,17 @@ public:
 
 	int GetState() { return this->state; }
 	virtual void Delete() { isDeleted = true;  }
-	bool IsDeleted() { return isDeleted; }
+	bool IsDeleted() { return isDeleted; }	
 
 	void setIsCameraOverTrue() {
 		isCameraOver = true;
 	}
+	void setIsActiveTrue() {
+		isActive = true;
+	}
 	bool IsCameraOver() { return isCameraOver; }
+	bool IsActive() { return isActive; }
+
 	void RenderBoundingBox();
 	CGameObject();
 	CGameObject(float x, float y) :CGameObject() { this->x = x; this->y = y; }

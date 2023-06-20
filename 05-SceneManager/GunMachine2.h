@@ -54,7 +54,7 @@ protected:
 	int getPlayerPosition();
 	int getAniId();
 	void handleShooting();
-	int translateToPercent(float data, boolean isXAxis);
+	float translateToPercent(float data, boolean isXAxis);
 	void getPercentXYSpeed(float &perAxisX, float &perAxisY);
 
 public:

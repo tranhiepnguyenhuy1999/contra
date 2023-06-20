@@ -1,6 +1,6 @@
 #include "Explode.h"
 
-CExplode::CExplode(float x, float y, float type=1) :CGameObject(x, y)
+CExplode::CExplode(float x, float y, float type) :CGameObject(x, y)
 {
 	vx = 0;
 	vy = 0;

@@ -16,6 +16,8 @@
 #define FGUN_BBOX_HEIGHT 8
 
 class CFGun : public CGun {
+	float ax, ay;
+	float vxMax, vyMax;
 	int nextMovement;
 public:
 	CFGun(float x, float y, float nx, float ny, float vx, float vy, float type);

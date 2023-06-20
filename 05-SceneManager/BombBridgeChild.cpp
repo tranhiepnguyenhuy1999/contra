@@ -5,7 +5,7 @@
 
 #include "debug.h"
 
-CBombBridgeChild::CBombBridgeChild(float x, float y, float ani1, float ani2, float ani3, float ani4) :CGameObject(x, y)
+CBombBridgeChild::CBombBridgeChild(float x, float y, int ani1, int ani2, int ani3, int ani4) :CGameObject(x, y)
 {
 	this->ani1 = ani1;
 	this->ani2 = ani2;

@@ -45,7 +45,7 @@ protected:
 	int getPlayerPosition();
 	int getAniId(int flag);
 	void handleShooting();
-	int translateToPercent(float data, boolean isXAxis);
+	float translateToPercent(float data, boolean isXAxis);
 	float getPercent();
 
 public:

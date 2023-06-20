@@ -43,19 +43,8 @@ void CSoldier::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	float cx, cy;
-	CGame::GetInstance()->GetCamPos(cx, cy);
-	
 	isOnPlatform = false;
 
-	if (!isActive)
-	{
-		if (x < cx + CGame::GetInstance()->GetBackBufferWidth()) {
-			isActive = true;
-			if(isHaveFallObj !=0) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_FALL_OBJECT, x - 50, y, 0, 0, -SOLDIER_SPEED, 0, 0, this);
-		}
-		return;
-	}
 	if (fallObject !=NULL)
 	{
 		if (fallObject->IsFallen()) {
@@ -71,7 +60,7 @@ void CSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(SOLDIER_STATE_SHOOTING);
 	}
 	else if (state == SOLDIER_STATE_SHOOTING && (GetTickCount64() - count_start) > SOLDIER_SHOOTING_TIMEOUT) {
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x , y, nx);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, (float)nx);
 		SetState(SOLDIER_STATE_WALKING);
 	}
 	else if (state == SOLDIER_STATE_DIE && vy > SOLDIER_DIE_DEFLECT) {

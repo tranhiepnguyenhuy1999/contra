@@ -1,6 +1,7 @@
 #include "GunSoldier.h"
+#include "EnemyGun.h"
+#include "Explode.h"
 #include "AssetIDs.h"
-#include "debug.h"
 
 CGunSoldier::CGunSoldier(float x, float y) :CGameObject(x, y)
 {
@@ -16,10 +17,11 @@ CGunSoldier::CGunSoldier(float x, float y) :CGameObject(x, y)
 
 void CGunSoldier::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-		left = x - GUNSOLDIER_BBOX_WIDTH / 2;
-		top = y - (GUNSOLDIER_BBOX_HEIGHT / 2);
-		right = left + GUNSOLDIER_BBOX_WIDTH;
-		bottom = top + GUNSOLDIER_BBOX_HEIGHT;
+	if (state == GUNSOLDIER_STATE_DIE) return;
+	left = x - GUNSOLDIER_BBOX_WIDTH / 2;
+	top = y + (GUNSOLDIER_BBOX_HEIGHT / 2);
+	right = left + GUNSOLDIER_BBOX_WIDTH;
+	bottom = top - GUNSOLDIER_BBOX_HEIGHT;
 }
 
 void CGunSoldier::OnNoCollision(DWORD dt)
@@ -33,33 +35,25 @@ void CGunSoldier::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
 	vy += ay * dt;
 
-	//DebugOut(L">>> Count time >>> %d \n", GetTickCount64() - loop_start);
-	float px, py;
-	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
-
-	if ( px < x-activeRange && state != GUNSOLDIER_STATE_DIE)
-		SetState(GUNSOLDIER_STATE_UNACTIVE);
-	else
-		SetState(GUNSOLDIER_STATE_ACTIVE);
-
-	// handle obj die
 	if (vy > GUNSOLDIER_DIE_DEFLECT) {
 		ay = 0;
 		vy = 0;
 	}
 
-	if ((state == GUNSOLDIER_STATE_DIE) && (GetTickCount64() - die_start > 500))
+	if (state == GUNSOLDIER_STATE_DIE)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 2);
-		isDeleted = true;
-		return;
+		if (GetTickCount64() - die_start > 500)
+		{
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_HUMAN);
+			CPlayerData::GetInstance()->updatePoint(GUNSOLDIER_POINT);
+			isDeleted = true;
+			return;
+		}
 	}
-
 	// shooting
-	if ((state == GUNSOLDIER_STATE_ACTIVE) && (GetTickCount64() - loop_start > GUNSOLDIER_SHOOTING_TIMEOUT))
+	else if (GetTickCount64() - loop_start > GUNSOLDIER_SHOOTING_LOOP_TIMEOUT)
 	{
 		isShooting = true;
 		if (gunLeft <= 0)
@@ -69,7 +63,7 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			gunLeft = 3;
 			isShooting = false;
 		}
-		else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_SHOOTING_LOOP_TIMEOUT){
+		else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_SHOOTING_TIMEOUT){
 			handleShooting();
 			gun_loop_start = GetTickCount64();
 			gunLeft -= 1;
@@ -80,12 +74,11 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 int CGunSoldier::getAniId(int flag) {
-	if (state == GUNSOLDIER_STATE_UNACTIVE) {
+	if (!isActive) {
 		if (flag <= 3) return ID_ANI_GUNSOLDIER_LEFTBOTTOM;
 		else return ID_ANI_GUNSOLDIER_RIGHTBOTTOM;
 	}
-	//DebugOut(L">>> Mario DIE >>> %d \n", flag);
-	switch (flag)
+	else switch (flag)
 	{
 	case 1:
 		if(isShooting)
@@ -169,7 +162,7 @@ void CGunSoldier::handleShooting()
 
 	if (nx == 0 || ny == 0)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, nx*GUNSOLDIER_GUN_SPEED, ny*GUNSOLDIER_GUN_SPEED, 0);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 0, nx * ENEMY_GUN_MAX_SPEED, ny * ENEMY_GUN_MAX_SPEED);
 		return;
 	}
 
@@ -200,13 +193,13 @@ void CGunSoldier::handleShooting()
 	else 
 		altShootingXSpeed = 0;
 
-	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, nx * altShootingXSpeed, altShootingYSpeed * ny, 0);
+	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 0, nx * altShootingXSpeed * ENEMY_GUN_MAX_SPEED, altShootingYSpeed * ny * ENEMY_GUN_MAX_SPEED);
 
 	//DebugOut(L">>> percent: %f >>> \n", percent);
 	//DebugOut(L">>> altShootingSpeed: %f >>> \n", altShootingSpeed);
 
 }
-int CGunSoldier::translateToPercent(float data, boolean isXAxis) {
+float CGunSoldier::translateToPercent(float data, boolean isXAxis) {
 	float px, py;
 	float result = 0;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
@@ -217,38 +210,29 @@ int CGunSoldier::translateToPercent(float data, boolean isXAxis) {
 
 	//DebugOut(L">>> result: %f >>> \n", result);
 
-	if (result >= 1) return 10;
-	else if (result >= 0.9f) return 9;
-	else if (result >= 0.8f) return 8;
-	else if (result >= 0.7f) return 7;
-	else if (result >= 0.6f) return 6;
-	else if (result >= 0.5f) return 5;
-	else if (result >= 0.4f) return 4;
-	else if (result >= 0.3f) return 3;
-	else if (result >= 0.2f) return 2;
-	else return 1;
+	if (result >= 1) return 10.0f;
+	else if (result >= 0.9f) return 9.0f;
+	else if (result >= 0.8f) return 8.0f;
+	else if (result >= 0.7f) return 7.0f;
+	else if (result >= 0.6f) return 6.0f;
+	else if (result >= 0.5f) return 5.0f;
+	else if (result >= 0.4f) return 4.0f;
+	else if (result >= 0.3f) return 3.0f;
+	else if (result >= 0.2f) return 2.0f;
+	else return 1.0f;
 }
 void CGunSoldier::SetState(int state)
 {
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case GUNSOLDIER_STATE_UNACTIVE:
-		loop_start = -1;
-		break;
-	case GUNSOLDIER_STATE_ACTIVE:
-		//loop_start = GetTickCount64();
-		break;
 	case GUNSOLDIER_STATE_BOTTOM:
-		//y -= GUNSOLDIER_BOTTOM_HEIGHT/2;
 		loop_start = GetTickCount64();
 		break;
 	case GUNSOLDIER_STATE_MID:
-		//y -= GUNSOLDIER_MID_HEIGHT - GUNSOLDIER_BOTTOM_HEIGHT/2;
 		loop_start = GetTickCount64();
 		break;
 	case GUNSOLDIER_STATE_TOP:
-		//y -= GUNSOLDIER_TOP_HEIGHT - GUNSOLDIER_MID_HEIGHT/2;
 		loop_start = GetTickCount64();
 		break;
 	case GUNSOLDIER_STATE_DIE:

@@ -4,7 +4,7 @@
 
 CBossStage1::CBossStage1(float x, float y) :CGameObject(x, y)
 {
-	life = 1;
+	life = 28	;
 }
 
 void CBossStage1::GetBoundingBox(float& left, float& top, float& right, float& bottom)
@@ -23,19 +23,27 @@ void CBossStage1::OnNoCollision(DWORD dt)
 void CBossStage1::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 }
-
+void CBossStage1::IsDeleteChildren() {
+	for (UINT i = 0; i < children.size(); i++) {
+		if (children[i] != NULL) {
+			children[i]->SetState(BOSS_STAGE_1_GUN_STATE_DIE);
+		}
+	}
+}
 void CBossStage1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (life <= 0)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 2);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
 		IsDeleteChildren();
 		isDeleted = true;
 		return;
 	}
 	for (UINT i = 0; i < children.size(); i++) {
 		if (children[i] != NULL && children[i]->isDie()) {
-			children[i]->IsDeleted();
+			children[i]->SetState(BOSS_STAGE_1_GUN_STATE_DIE);
+			children[i]=NULL;
+
 		}
 	}
 	CGameObject::Update(dt, coObjects);

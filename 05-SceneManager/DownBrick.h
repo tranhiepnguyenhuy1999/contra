@@ -6,7 +6,7 @@
 #include "debug.h"
 
 #define BRICK_BBOX_WIDTH 16
-#define BRICK_BBOX_HEIGHT 16
+#define BRICK_BBOX_HEIGHT 10
 
 class CDownBrick : public CGameObject {
 	float length;

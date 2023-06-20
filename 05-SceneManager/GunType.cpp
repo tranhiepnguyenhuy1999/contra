@@ -1,14 +1,14 @@
 #include "GunType.h"
 #include "debug.h"
 
-CGunType::CGunType(float x, float y, float nx, int gunType) :CGameObject(x, y)
+CGunType::CGunType(float x, float y, float nx, int type) :CGameObject(x, y)
 {
 	if (nx < 0)
 		vx = -GUNTYPE_SPEED;
 	else
 		vx = GUNTYPE_SPEED;
 	ay = GUNTYPE_GRAVITY;
-	type = (int)gunType;
+	id = (int)type;
 	SetState(GUNTYPE_STATE_ACTIVE);
 }
 void CGunType::Render()
@@ -33,21 +33,21 @@ void CGunType::OnCollisionWith(LPCOLLISIONEVENT e)
 }
 int CGunType::getAniID()
 {
-	switch (this->type)
+	switch (this->id)
 	{
-	case 1:
+	case GUNTYPE_M:
 		return ID_ANI_GUNTYPE_M;
-	case 2:
+	case GUNTYPE_F:
 		return ID_ANI_GUNTYPE_F;
-	case 3:
+	case GUNTYPE_L:
 		return ID_ANI_GUNTYPE_L;
-	case 4:
+	case GUNTYPE_S:
 		return ID_ANI_GUNTYPE_S;
-	case 5:
+	case GUNTYPE_R:
 		return ID_ANI_GUNTYPE_R;
-	case 6:
+	case GUNTYPE_UNTOUCHABLE:
 		return ID_ANI_GUNTYPE_UNDEAD;
-	case 7:
+	case GUNTYPE_B:
 		return ID_ANI_GUNTYPE_B;
 	default:
 		return -1;

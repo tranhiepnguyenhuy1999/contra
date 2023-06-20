@@ -24,7 +24,7 @@ class CGunBox : public CGameObject
 protected:
 	
 	bool isOpen;
-	float typeGun;
+	int typeGun;
 
 	ULONGLONG loop_start;
 

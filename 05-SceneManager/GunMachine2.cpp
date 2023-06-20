@@ -1,6 +1,6 @@
 #include "GunMachine2.h"
+#include "EnemyGun.h"
 #include "AssetIDs.h"
-#include "debug.h"
 
 CGunMachine2::CGunMachine2(float x, float y) :CGameObject(x, y)
 {
@@ -195,9 +195,9 @@ void CGunMachine2::handleShooting()
 	}
 	float perAxisXSpeed, perAxisYSpeed;
 	getPercentXYSpeed(perAxisXSpeed, perAxisYSpeed);
-	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y,nx* perAxisXSpeed, ny* perAxisYSpeed);
+	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 0, nx* perAxisXSpeed * ENEMY_GUN_MAX_SPEED, ny * perAxisYSpeed * ENEMY_GUN_MAX_SPEED);
 }
-int CGunMachine2::translateToPercent(float data, boolean isXAxis) {
+float CGunMachine2::translateToPercent(float data, boolean isXAxis) {
 	float px, py;
 	float result = 0;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
@@ -208,16 +208,16 @@ int CGunMachine2::translateToPercent(float data, boolean isXAxis) {
 
 	//DebugOut(L">>> result: %f >>> \n", result);
 
-	if (result >= 1) return 10;
-	else if (result >= 0.9f) return 9;
-	else if (result >= 0.8f) return 8;
-	else if (result >= 0.7f) return 7;
-	else if (result >= 0.6f) return 6;
-	else if (result >= 0.5f) return 5;
-	else if (result >= 0.4f) return 4;
-	else if (result >= 0.3f) return 3;
-	else if (result >= 0.2f) return 2;
-	else return 1;
+	if (result >= 1) return 10.0f;
+	else if (result >= 0.9f) return 9.0f;
+	else if (result >= 0.8f) return 8.0f;
+	else if (result >= 0.7f) return 7.0f;
+	else if (result >= 0.6f) return 6.0f;
+	else if (result >= 0.5f) return 5.0f;
+	else if (result >= 0.4f) return 4.0f;
+	else if (result >= 0.3f) return 3.0f;
+	else if (result >= 0.2f) return 2.0f;
+	else return 1.0f;
 }
 void CGunMachine2::getPercentXYSpeed(float & perAxisXSpeed, float & perAxisYSpeed)
 {

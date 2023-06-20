@@ -16,7 +16,6 @@ class CBossStage1 : public CGameObject
 {
 
 protected:
-	float activeRange;
 	int life;
 
 	vector<CBossStage1Gun*> children;
@@ -35,13 +34,7 @@ public:
 
 	virtual void SetState(int state);
 
-	void IsDeleteChildren(){
-		for (UINT i = 0; i < children.size(); i++) {
-			if (children[i] != NULL) {
-				children[i]->IsDeleted();
-			}
-		}
-	}
+	void IsDeleteChildren();
 	void addChild(CBossStage1Gun* e) {
 		children.push_back(e);
 	}

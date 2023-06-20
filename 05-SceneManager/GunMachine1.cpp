@@ -135,7 +135,7 @@ void CGunMachine1::handleShooting()
 	//DebugOut(L">>> altShootingSpeed: %f >>> \n", altShootingSpeed);
 
 }
-int CGunMachine1::translateToPercent(float data, boolean isXAxis) {
+float CGunMachine1::translateToPercent(float data, boolean isXAxis) {
 	float px, py;
 	float result = 0;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
@@ -146,16 +146,16 @@ int CGunMachine1::translateToPercent(float data, boolean isXAxis) {
 
 	//DebugOut(L">>> result: %f >>> \n", result);
 
-	if (result >= 1) return 10;
-	else if (result >= 0.9f) return 9;
-	else if (result >= 0.8f) return 8;
-	else if (result >= 0.7f) return 7;
-	else if (result >= 0.6f) return 6;
-	else if (result >= 0.5f) return 5;
-	else if (result >= 0.4f) return 4;
-	else if (result >= 0.3f) return 3;
-	else if (result >= 0.2f) return 2;
-	else return 1;
+	if (result >= 1) return 10.0f;
+	else if (result >= 0.9f) return 9.0f;
+	else if (result >= 0.8f) return 8.0f;
+	else if (result >= 0.7f) return 7.0f;
+	else if (result >= 0.6f) return 6.0f;
+	else if (result >= 0.5f) return 5.0f;
+	else if (result >= 0.4f) return 4.0f;
+	else if (result >= 0.3f) return 3.0f;
+	else if (result >= 0.2f) return 2.0f;
+	else return 1.0f;
 }
 float CGunMachine1::getPercent()
 {

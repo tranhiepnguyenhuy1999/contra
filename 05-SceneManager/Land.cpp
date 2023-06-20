@@ -25,7 +25,7 @@ void CLand::RenderBoundingBox()
 	float cx, cy;
 	Camera::GetInstance()->getCamPosition(cx, cy);
 
-	float xx = x - this->cellWidth / 2 + rect.right / 2;
+	float xx = x + rect.right / 2;
 
 	CGame::GetInstance()->Draw(xx - cx, y - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
 }
@@ -37,8 +37,7 @@ void CLand::Render()
 
 void CLand::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	float cellWidth_div_2 = this->cellWidth / 2;
-	l = x - cellWidth_div_2;
+	l = x;
 	t = y + this->cellHeight / 2;
 	r = l + this->cellWidth * this->length;
 	b = t - this->cellHeight;

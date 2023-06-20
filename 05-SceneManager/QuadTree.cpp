@@ -65,7 +65,6 @@ void Quadtree::Split()
 }
 void Quadtree::Insert(LPGAMEOBJECT entity)
 {
-
     // Insert entity into corresponding nodes
     if (m_nodes)
     {
@@ -111,11 +110,7 @@ void Quadtree::Insert(LPGAMEOBJECT entity)
     }
 }
 void Quadtree::Retrieve(vector<LPGAMEOBJECT> &coObjects, LPGAMEOBJECT entity)
-{
-    Camera* cam = Camera::GetInstance();
-
-    //if (!cam->isCamContain(ql, qt, qr, qb)) return;
-    
+{   
     if (m_nodes)
     {
         if (m_nodes[0]->IsContain(entity))

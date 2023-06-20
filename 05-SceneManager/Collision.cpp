@@ -3,6 +3,7 @@
 
 #include "DownBrick.h"
 #include "Gun.h"
+#include "EnemyGun.h"
 #include "FallRock.h"
 
 #include "debug.h"
@@ -238,7 +239,7 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 		Scan(objSrc, dt, coObjects, coEvents);
 	}
 	// gun is not detect collie with blocking obj
-	if (dynamic_cast<CGun*>(objSrc)) objSrc->OnNoCollision(dt);
+	if (dynamic_cast<CGun*>(objSrc) || dynamic_cast<CEnemyGun*>(objSrc)) objSrc->OnNoCollision(dt);
 	else if (dynamic_cast<CFallRock*>(objSrc))
 	{
 		CFallRock* fall_rock = dynamic_cast<CFallRock*>(objSrc);

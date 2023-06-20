@@ -25,7 +25,7 @@ void CDownBrick::RenderBoundingBox()
 	float cx, cy;
 	Camera::GetInstance()->getCamPosition(cx, cy);
 
-	float xx = x - BRICK_BBOX_WIDTH / 2 + rect.right / 2;
+	float xx = x + rect.right / 2;
 
 	CGame::GetInstance()->Draw(xx - cx, y - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
 }
@@ -37,7 +37,7 @@ void CDownBrick::Render()
 
 void CDownBrick::GetBoundingBox(float& l, float& t, float& r, float& b)
 {
-	l = x - BRICK_BBOX_WIDTH / 2;
+	l = x;
 	t = y + BRICK_BBOX_HEIGHT / 2;
 	r = l + length * BRICK_BBOX_WIDTH;
 	b = t - BRICK_BBOX_HEIGHT;

@@ -9,14 +9,17 @@
 //bbox
 #define	GUN_BBOX_WIDTH 2
 #define GUN_BBOX_HEIGHT 2
-
 #define	GUN_L_BBOX_WIDTH	16
 #define	GUN_L_BBOX_HEIGHT	6
-
 // state
 #define GUN_STATE_RELEASE 100
 #define GUN_STATE_DIE 200
-
+//id
+#define GUN_ID_M 1
+#define GUN_ID_F 2
+#define GUN_ID_L 3
+#define GUN_ID_S 4
+//ani
 #define ID_ANI_GUN_DEFAULT 3301
 #define ID_ANI_GUN_S_SMALL 3303
 #define ID_ANI_GUN_S 3304
@@ -32,10 +35,7 @@ protected:
 	int id;
 	int dmg;
 
-	float ax, ay;
-	float vxMax, vyMax;
-
-	int getAniId();
+	int getAniID();
 	int getDamage();
 
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
@@ -48,7 +48,7 @@ protected:
 
 
 public:
-	CGun(float x, float y, float nx, float ny, float vx, float vy, float type);
+	CGun(float x, float y, float nx, float ny, float vx, float vy, int type);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

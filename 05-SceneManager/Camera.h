@@ -5,8 +5,8 @@ using namespace std;
 
 #include "EndWall.h"
 
-#define MAX_MAP_WIDTH 2000
-#define MAX_MAP_HEIGHT 2000
+#define MAX_MAP_WIDTH 3328
+#define MAX_MAP_HEIGHT 3328
 
 class Camera
 {
@@ -49,7 +49,7 @@ public:
 				l = px - cWidth / 2;
 				r = l + cWidth;
 			}
-			b = 0;
+			b = -8;
 			t = b + cHeight;
 		}
 		else if (ny == 1)
@@ -69,7 +69,7 @@ public:
 		if (b < 0) { b = 0; t = b + cHeight; }
 		else if (t > MAX_MAP_HEIGHT) { t = MAX_MAP_HEIGHT; b = t - cHeight; }
 
-		CEndWall::GetInstance()->SetPosition(l + ENDWALL_BBOX_WIDTH / 2, cHeight / 2);
+		CEndWall::GetInstance()->SetPosition(l + ENDWALL_BBOX_WIDTH / 2, (float)cHeight / 2);
 
 	}
 	void getCamPosition(float &cx, float &cy) {
@@ -85,6 +85,11 @@ public:
 		{
 			float objx, objy;
 			objects[i]->GetPosition(objx, objy);
+			if (!objects[i]->IsActive() && (objy < t && ny == 1) || (objx < r && nx == 1))
+			{
+				objects[i]->setIsActiveTrue();
+			}
+
 			if (objx < l || objy < b) {
 				objects[i]->setIsCameraOverTrue();
 			}

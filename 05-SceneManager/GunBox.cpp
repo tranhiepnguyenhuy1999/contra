@@ -1,12 +1,11 @@
 #include "GunBox.h"
 #include "AssetIDs.h"
-#include "debug.h"
 
 CGunBox::CGunBox(float x, float y, float typeGun) :CGameObject(x, y)
 {
 	SetState(GUNBOX_STATE_UNACTIVE);
 	isOpen = false;
-	this->typeGun = typeGun;
+	this->typeGun = (int)typeGun;
 	loop_start = -1;
 }
 

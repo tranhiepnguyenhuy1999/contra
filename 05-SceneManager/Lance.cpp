@@ -11,7 +11,7 @@
 #include "EnemyGun.h"
 #include "Fire.h"
 #include "MovingRock.h"
-
+#include "Gun.h"
 
 #include "Water.h"
 #include "Land.h"
@@ -99,6 +99,7 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	else if (dynamic_cast<CWater*>(e->obj) && !isSwimming) {
 		isSwimming = true;
+		y -= LANCE_BIG_BBOX_HEIGHT / 2 - LANCE_BIG_SWIMMING_BBOX_HEIGHT/2;
 	}
 	else if (dynamic_cast<CMovingRock*>(e->obj)) {
 		float mrvx, mrvy;
@@ -106,12 +107,12 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 		movingObjVx = mrvx;
 
 	}
-	//else if (dynamic_cast<CSoldier*>(e->obj))
-	//	OnCollisionWithSoldier(e);
+	else if (dynamic_cast<CSoldier*>(e->obj))
+		OnCollisionWithSoldier(e);
 	else if (dynamic_cast<CFire*>(e->obj))
 	OnCollisionWithFire(e);
-	//else if (dynamic_cast<CGunSoldier*>(e->obj))
-	//	OnCollisionWithGunSoldier(e);
+	else if (dynamic_cast<CGunSoldier*>(e->obj))
+		OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunType*>(e->obj))
 		OnCollisionWithGunType(e);
 	//else if (dynamic_cast<CEnemyGun*>(e->obj))
@@ -123,7 +124,7 @@ void CLance::OnCollisionWithGunType(LPCOLLISIONEVENT e)
 {
 	DebugOut(L"Touched !!! \n");
 	CGunType* i = dynamic_cast<CGunType*>(e->obj);
-	gunType = i->type;
+	gunType = i->id;
 	i->SetState(GUNTYPE_STATE_DIE);
 }
 void CLance::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
@@ -147,7 +148,6 @@ void CLance::OnCollisionWithGunSoldier(LPCOLLISIONEVENT e)
 	{
 		if (i->GetState() != GUNSOLDIER_STATE_DIE)
 		{
-			DebugOut(L">>> Main touched gun soldier >>> \n");
 			SetState(LANCE_STATE_PRE_DIE);
 		}
 	}
@@ -186,20 +186,6 @@ int CLance::GetAniId()
 			aniId = ID_ANI_LANCE_PRE_DIE;
 
 	}
-	else if (!isOnPlatform && isJumping)
-	{
-			if (nx >= 0)
-				aniId = ID_ANI_LANCE_JUMP_RIGHT;
-			else
-				aniId = ID_ANI_LANCE_JUMP_LEFT;
-	}
-	else if (!isOnPlatform)
-	{
-		if (nx >= 0)
-			aniId = ID_ANI_LANCE_FALLING_RIGHT;
-		else
-			aniId = ID_ANI_LANCE_FALLING_LEFT;
-	}
 	else if (isSwimming && !isShooting)
 	{
 		if (isSitting)
@@ -209,6 +195,20 @@ int CLance::GetAniId()
 		else
 			aniId = ID_ANI_LANCE_SWIMMING_RIGHT;
 
+	}
+	else if (!isOnPlatform && isJumping)
+	{
+		if (nx >= 0)
+			aniId = ID_ANI_LANCE_JUMP_RIGHT;
+		else
+			aniId = ID_ANI_LANCE_JUMP_LEFT;
+	}
+	else if (!isOnPlatform)
+	{
+		if (nx >= 0)
+			aniId = ID_ANI_LANCE_FALLING_RIGHT;
+		else
+			aniId = ID_ANI_LANCE_FALLING_LEFT;
 	}
 	else if (isShooting)
 	{
@@ -411,7 +411,7 @@ void CLance::SetState(int state)
 			isOnDownBrick = false; // can't change in state LANCE_STATE_GO_DOWN bcs keydown after keystate
 			break;
 		}
-		if (isOnPlatform)
+		else if (isOnPlatform)
 		{
 			isJumping = true;
 			vy = LANCE_JUMP_SPEED_Y;
@@ -512,6 +512,12 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			right = left + LANCE_BIG_SWIMMING_BBOX_WIDTH;
 			bottom = top - LANCE_BIG_SWIMMING_BBOX_HEIGHT;
 		}
+		else if (!isOnPlatform && !isJumping) {
+			left = x - LANCE_BIG_BBOX_WIDTH / 2;
+			top = y + LANCE_BIG_BBOX_HEIGHT / 2;
+			right = left + LANCE_BIG_BBOX_WIDTH;
+			bottom = top - LANCE_BIG_BBOX_HEIGHT;
+		}
 		else if (isJumping)
 		{
 			left = x - LANCE_BIG_JUMPING_BBOX_WIDTH / 2;
@@ -554,23 +560,23 @@ void CLance::handleShooting() {
 	if (isSwimming && isSitting) return; // diving can't shoot
 	if (vx == 0){
 		if (isLookingUp)
-			if (isSwimming) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y + LANCE_BIG_SWIMMING_BBOX_HEIGHT / 2, 0, 1, 0, 0, gunType);
-			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 2, 0, 1, 0, 0, gunType);
+			if (isSwimming) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y + LANCE_BIG_SWIMMING_BBOX_HEIGHT / 2, 0, 0, 0, GUN_MAX_SPEED, gunType);
+			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 2, 0, 0, 0, GUN_MAX_SPEED, gunType);
 		else if (isSwimming)
-			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y - LANCE_BIG_SWIMMING_BBOX_HEIGHT/4, nx, 0, 0, 0, gunType);
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y - LANCE_BIG_SWIMMING_BBOX_HEIGHT/4, 0, 0, nx * GUN_MAX_SPEED, 0, gunType);
 		else if (isSitting)
-			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SITTING_BBOX_WIDTH / 2, y, nx, 0, 0, 0, gunType);
-		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 5, nx, 0, 0, 0, gunType);
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SITTING_BBOX_WIDTH / 2, y, 0, 0, nx * GUN_MAX_SPEED, 0, gunType);
+		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 5, 0, 0, nx * GUN_MAX_SPEED, 0, gunType);
 	}
 	else{
 		if (isLookingUp)
-			if(isSwimming) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y - LANCE_BIG_SWIMMING_BBOX_HEIGHT / 4, nx, 1, 0, 0, gunType);
-			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT/2, nx, 1, 0, 0, gunType);
+			if(isSwimming) CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y - LANCE_BIG_SWIMMING_BBOX_HEIGHT / 4, 0, 0, nx * GUN_MAX_SPEED, GUN_MAX_SPEED, gunType);
+			else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT/2, 0, 0, nx * GUN_MAX_SPEED, GUN_MAX_SPEED, gunType);
 		else if (isSwimming)
-			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y - LANCE_BIG_SWIMMING_BBOX_HEIGHT / 4, nx, 0, 0, 0, gunType);
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_SWIMMING_BBOX_WIDTH / 2, y - LANCE_BIG_SWIMMING_BBOX_HEIGHT / 4, 0, 0, nx * GUN_MAX_SPEED, 0, gunType);
 		else if (isSitting) 
-			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 5, nx, -1, 0, 0, gunType);
-		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4, nx, 0, 0, 0, gunType);
+			CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 5, 0, 0, nx * GUN_MAX_SPEED, -GUN_MAX_SPEED, gunType);
+		else CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUN, x + nx * LANCE_BIG_BBOX_WIDTH / 2, y + LANCE_BIG_BBOX_HEIGHT / 4, 0, 0, nx * GUN_MAX_SPEED, 0, gunType);
 	}
 	CSound::GetInstance()->playSound_Pause();
 }

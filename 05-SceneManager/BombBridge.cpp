@@ -37,11 +37,11 @@ void CBombBridge::RenderBoundingBox()
 	CGame::GetInstance()->Draw(xx - cx, y - cy, bbox, nullptr, BBOX_ALPHA, rect.right - 1, rect.bottom - 1);
 }
 
-CBombBridge::CBombBridge(float x, float y, float type=1) :CGameObject(x, y)
+CBombBridge::CBombBridge(float x, float y, float top1, float top2, float bot1, float bot2, float bot3) :CGameObject(x, y)
 {
-	isActive = false;
+	isDestroy = false;
 	this->type = type;
-	setupBombBridgeChild();
+	setupBombBridgeChild( top1, top2, bot1, bot2, bot3);
 	SetState(BOMB_BRIDGE_STATE_UNACTIVE);
 }
 
@@ -58,15 +58,15 @@ void CBombBridge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float px, py;
 	Camera::GetInstance()->getPlayerPosition(px, py);
-	if (!isActive)
+	if (!isDestroy)
 	{
 		if (px > x ) {
-			isActive = true;
+			isDestroy = true;
 			active_start = GetTickCount64();
 		}
 		return;
 	}
-	else if (isActive && (GetTickCount64() - active_start > BOMB_BRIDGE_EXPLODE_TIMEOUT))
+	else if (isDestroy && (GetTickCount64() - active_start > BOMB_BRIDGE_EXPLODE_TIMEOUT))
 	{
 		CBombBridgeChild* i = child.front();
 		child.erase(child.begin());
@@ -80,6 +80,7 @@ void CBombBridge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		delete i;
 
 		x = x + BOMB_BRIDGE_CHILD_BBOX_WIDTH;
+
 		if (child.empty())
 		{
 			this->Delete();
@@ -102,19 +103,14 @@ void CBombBridge::SetState(int state)
 {
 	CGameObject::SetState(state);
 }
-void CBombBridge::setupBombBridgeChild() {
-	float ani1 = 154, ani2 = 179;
-	if (type == 2) {
-		ani1 = 155;
-		ani2 = 180;
-	}
+void CBombBridge::setupBombBridgeChild(float top1, float top2, float bot1, float bot2, float bot3) {
 	float childX, childY;
 	childX = x - BOMB_BRIDGE_CHILD_PIECE_BBOX_WIDTH / 2;
 	childY = y + BOMB_BRIDGE_CHILD_PIECE_BBOX_HEIGHT / 2;
-	CBombBridgeChild*  start = new CBombBridgeChild( childX, childY, 152, 153, 176, 177);
-	CBombBridgeChild*  mid1 = new CBombBridgeChild(childX + BOMB_BRIDGE_CHILD_BBOX_WIDTH, childY, 152, 153, 177, 177);
-	CBombBridgeChild*  mid2 = new CBombBridgeChild(childX + BOMB_BRIDGE_CHILD_BBOX_WIDTH*2, childY, 152, 153, 177, 177);
-	CBombBridgeChild*  end = new CBombBridgeChild(childX + BOMB_BRIDGE_CHILD_BBOX_WIDTH*3, childY, 152, ani1, 178, ani2);
+	CBombBridgeChild*  start = new CBombBridgeChild( childX, childY, top1, top2, bot1, bot2);
+	CBombBridgeChild*  mid1 = new CBombBridgeChild(childX + BOMB_BRIDGE_CHILD_BBOX_WIDTH, childY, top1, top2, bot2, bot2);
+	CBombBridgeChild*  mid2 = new CBombBridgeChild(childX + BOMB_BRIDGE_CHILD_BBOX_WIDTH*2, childY, top1, top2, bot2, bot2);
+	CBombBridgeChild*  end = new CBombBridgeChild(childX + BOMB_BRIDGE_CHILD_BBOX_WIDTH*3, childY, top1, top2, bot2, bot3);
 
 	child.push_back(start);
 	child.push_back(mid1);

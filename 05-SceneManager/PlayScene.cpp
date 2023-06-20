@@ -138,9 +138,9 @@ void CPlayScene::_ParseSection_TILESET(string line)
 		return;
 	}
 
-	for (int i = 0; i < lengthTilesX+1; i++)
+	for (int i = 0; i < lengthTilesX + 1; i++)
 	{
-		for (int j = 0; j < lengthTilesY+1; j++)
+		for (int j = 0; j < lengthTilesY + 1; j++)
 		{
 			if (i * (lengthTilesY + 1) + j > maxTiles) continue;
 			// load sprite
@@ -200,8 +200,8 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_BOSS_STAGE_1:
 	{
 		CBossStage1* boss = new CBossStage1(x, y);
-		CBossStage1Gun* gun1= new CBossStage1Gun(x, y + 100);
-		CBossStage1Gun* gun2 = new CBossStage1Gun(x + 100, y + 100);
+		CBossStage1Gun* gun1= new CBossStage1Gun(x, y + 50);
+		CBossStage1Gun* gun2 = new CBossStage1Gun(x + 100, y + 50);
 
 		boss->addChild(gun1);
 		boss->addChild(gun2);
@@ -214,8 +214,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_BOMB_BRIDGE:
 	{
-		float type = (float)atof(tokens[3].c_str());
-		obj = new CBombBridge(x, y, type); break;
+		float top1 = (float)atof(tokens[3].c_str());
+		float top2 = (float)atof(tokens[4].c_str());
+		float bot1 = (float)atof(tokens[5].c_str());
+		float bot2 = (float)atof(tokens[6].c_str());
+		float bot3 = (float)atof(tokens[7].c_str());
+
+		obj = new CBombBridge(x, y, top1, top2, bot1, bot2, bot3); break;
 	}
 	case OBJECT_TYPE_GUNSHIP:
 	{
@@ -402,7 +407,7 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float n
 		break;
 	}
 	case OBJECT_TYPE_ENEMY_GUN: obj = new CEnemyGun(x, y, nx, ny, vx, vy, type); break;
-	case OBJECT_TYPE_EXPLODE: obj = new CExplode(x, y, nx); break;
+	case OBJECT_TYPE_EXPLODE: obj = new CExplode(x, y, type); break;
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", id);
 		return;
@@ -521,7 +526,7 @@ void CPlayScene::Load()
 Quadtree* CreateQuadTree(vector<LPGAMEOBJECT> objList)
 {
 	// Init base game region for detecting collision
-	Quadtree* quadtree = new Quadtree(0, 0, 2000, 2000);
+	Quadtree* quadtree = new Quadtree(0, 0, 3328, 3328);
 	// add objects to quadtree
 	for (size_t i = 1; i < objList.size(); i++)
 		quadtree->Insert(objList[i]);
@@ -547,11 +552,6 @@ void CPlayScene::Update(DWORD dt)
 	// We know that Mario is the first object in the list hence we won't add him into the colliable object list
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
-	//for (size_t i = 1; i < objects.size(); i++)
-	//{
-	//	coObjects.push_back(objects[i]);
-	//}
-
 	vector<LPGAMEOBJECT> coObjects;
 	coObjects.clear();
 
@@ -560,7 +560,8 @@ void CPlayScene::Update(DWORD dt)
 		coObjects.clear();
 		DetectCollision(coObjects);
 		//if (i == 0) coObjects.push_back(CEndWall::GetInstance());
-		objects[i]->Update(dt, &coObjects);
+
+		if(objects[i]->IsActive()) objects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
@@ -582,7 +583,7 @@ void CPlayScene::Render()
 	// obj render
 	for (int i = 0; i < objects.size(); i++)
 	{
-		if(!objects[i]->IsCameraOver()) objects[i]->Render();
+		if(!objects[i]->IsCameraOver() || objects[i]->IsActive()) objects[i]->Render();
 	}
 
 	CEndWall::GetInstance()->Render();

@@ -5,10 +5,19 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define GUNTYPE_GRAVITY	0.00075f
-#define GUNTYPE_SPEED	0.05f
-#define GUNTYPE_GRAVITY_MAX	0.2f
+#define GUNTYPE_GRAVITY	0.00045f
+#define GUNTYPE_SPEED	0.045f
+#define GUNTYPE_GRAVITY_MAX	0.175f
 
+//id
+#define GUNTYPE_M	1
+#define GUNTYPE_F	2
+#define GUNTYPE_L	3
+#define GUNTYPE_S	4
+#define GUNTYPE_R	5
+#define GUNTYPE_UNTOUCHABLE	6
+#define GUNTYPE_B	7
+//ani
 #define ID_ANI_GUNTYPE_M	3201
 #define ID_ANI_GUNTYPE_B	3202
 #define ID_ANI_GUNTYPE_F	3203
@@ -28,7 +37,7 @@ class CGunType : public CGameObject {
 	float ay;
 
 public:
-	int type;
+	int id;
 	CGunType(float x, float y, float nx, int gunType);
 
 	int getAniID();

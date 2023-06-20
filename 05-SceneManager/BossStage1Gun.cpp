@@ -5,7 +5,7 @@
 CBossStage1Gun::CBossStage1Gun(float x, float y) :CGameObject(x, y)
 {
 	loop_start = -1;
-	life = 1;
+	life = 12;
 	SetState(BOSS_STAGE_1_GUN_STATE_ACTIVE);
 }
 
@@ -30,18 +30,18 @@ void CBossStage1Gun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (state == BOSS_STAGE_1_GUN_STATE_DIE)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 2);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, 1);
 		isDeleted = true;
 		return;
 	}
-
 	// shooting
 	else if (state == BOSS_STAGE_1_GUN_STATE_ACTIVE && (GetTickCount64() - loop_start > BOSS_STAGE_1_GUN_SHOOTING_LOOP_TIMEOUT))
 	{
-		float r = ((double)rand() / (RAND_MAX));
+		float r = (float)((double)rand() / (RAND_MAX));
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, -r, -1, 0, ENEMY_GUN_MAX_SPEED/2, 2);
 		loop_start = GetTickCount64();
 	}
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }

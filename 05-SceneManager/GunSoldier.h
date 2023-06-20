@@ -2,6 +2,9 @@
 #include "GameObject.h"
 
 #define GUNSOLDIER_SPEED 0.03
+
+#define GUNSOLDIER_POINT 500
+
 #define GUNSOLDIER_BBOX_WIDTH 16
 #define GUNSOLDIER_BBOX_HEIGHT 32
 
@@ -10,8 +13,8 @@
 #define GUNSOLDIER_GRAVITY 0.002f
 #define GUNSOLDIER_DIE_DEFLECT 0.25f
 
-#define GUNSOLDIER_SHOOTING_LOOP_TIMEOUT 250
-#define GUNSOLDIER_SHOOTING_TIMEOUT 3000
+#define GUNSOLDIER_SHOOTING_LOOP_TIMEOUT 3000
+#define GUNSOLDIER_SHOOTING_TIMEOUT 250
 
 #define GUNSOLDIER_STATE_UNACTIVE 100
 #define GUNSOLDIER_STATE_BOTTOM 200
@@ -51,7 +54,7 @@ protected:
 	int getPlayerPosition();
 	int getAniId(int flag);
 	void handleShooting();
-	int translateToPercent(float data, boolean isXAxis);
+	float translateToPercent(float data, boolean isXAxis);
 
 public:
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
