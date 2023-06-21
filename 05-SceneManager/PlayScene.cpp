@@ -23,6 +23,7 @@
 #include "EnemyGun.h"
 #include "Explode.h"
 #include "Water.h"
+#include "DeadLand.h"
 #include "Land.h"
 #include "FallObject.h"
 #include "BombBridge.h"
@@ -284,6 +285,20 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		int length = atoi(tokens[5].c_str());
 
 		obj = new CWater(
+			x, y,
+			cell_width, cell_height, length
+		);
+
+		break;
+	}
+	case OBJECT_TYPE_DEADLAND_PLATFORM:
+	{
+
+		float cell_width = (float)atof(tokens[3].c_str());
+		float cell_height = (float)atof(tokens[4].c_str());
+		int length = atoi(tokens[5].c_str());
+
+		obj = new CDeadLand(
 			x, y,
 			cell_width, cell_height, length
 		);
@@ -561,9 +576,10 @@ void CPlayScene::Update(DWORD dt)
 	coObjects.clear();
 
 	activeObjects.clear();
+
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->IsActive()) activeObjects.push_back(objects[i]);
+		if (objects[i]->IsActive() && !objects[i]->IsCameraOver()) activeObjects.push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < activeObjects.size(); i++)
@@ -590,10 +606,10 @@ void CPlayScene::Render()
 	// render tilemap first
 	tiledMapObject[0]->Render();
 
-	// obj render
+	// general render
 	for (int i = 0; i < objects.size(); i++)
 	{
-		if(!objects[i]->IsCameraOver() || objects[i]->IsActive()) objects[i]->Render();
+		if(objects[i]->IsActive()) objects[i]->Render();
 	}
 
 	CEndWall::GetInstance()->Render();

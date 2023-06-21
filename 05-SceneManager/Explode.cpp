@@ -6,7 +6,7 @@ CExplode::CExplode(float x, float y, float type) :CGameObject(x, y)
 	vy = 0;
 	id = type;
 	timeout = getTimeout();
-	SetState(GUN_STATE_RELASE);
+	count_start = GetTickCount64();
 }
 void CExplode::Render()
 {
@@ -25,7 +25,7 @@ void CExplode::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CExplode::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if ((state == GUN_STATE_RELASE) && (GetTickCount64() - count_start > timeout))
+	if (GetTickCount64() - count_start > timeout)
 	{
 		count_start = -1;
 		isDeleted = true;
@@ -57,16 +57,10 @@ int CExplode::getTimeout() {
 	case EXPLODE_TYPE_HUMAN:
 		return HUMAN_EXPLODE_TIMEOUT;
 	default:
-		return INFRASTRUCTURE_EXPLODE_TIMEOUT;
+		return HUMAN_EXPLODE_TIMEOUT;
 	}
 }
 void CExplode::SetState(int state)
 {
 	CGameObject::SetState(state);
-	switch (state)
-	{
-	case GUN_STATE_RELASE:
-		count_start = GetTickCount64();
-		break;
-	}
 }

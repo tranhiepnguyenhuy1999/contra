@@ -9,19 +9,12 @@ CGunMachine2::CGunMachine2(float x, float y) :CGameObject(x, y)
 	this->loop_start = -1;
 	shooting_loop_start = -1;
 	this->life = 8;
-	SetState(GUNMACHINE2_STATE_UNACTIVE);
+	SetState(GUNMACHINE2_STATE_PRE_ACTIVE);
 }
 void CGunMachine2::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GUNMACHINE2_STATE_UNACTIVE)
-	{
-		left = 0;
-		top = 0;
-		right = 0;
-		bottom = 0;
-	}
+	if (!isActive) return;
 	else {
-
 		left = x - GUNMACHINE2_BBOX_WIDTH / 2;
 		top = y + (GUNMACHINE2_BBOX_HEIGHT / 2);
 		right = left + GUNMACHINE2_BBOX_WIDTH;
@@ -42,24 +35,21 @@ void CGunMachine2::handleGetAttack(int dmg)
 }
 void CGunMachine2::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (isCameraOver) return;
-	float px, py;
-	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
 	int new_position;
 	new_position = getPlayerPosition();
+
 	if (state == GUNMACHINE2_STATE_DIE)
 	{
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
 		isDeleted = true;
 		return;
 	}
-	else if (state == GUNMACHINE2_STATE_UNACTIVE && px > x - activeRange)
-		return	SetState(GUNMACHINE2_STATE_PRE_ACTIVE);
-	else if ((state == GUNMACHINE2_STATE_PRE_ACTIVE) && (GetTickCount64() - loop_start > GUNMACHINE2_LOOP_TIMEOUT))
+	else if (state == GUNMACHINE2_STATE_PRE_ACTIVE && (GetTickCount64() - loop_start > GUNMACHINE2_LOOP_TIMEOUT))
 	{
-		return	SetState(GUNMACHINE2_STATE_ACTIVE);
+		SetState(GUNMACHINE2_STATE_ACTIVE);
 	}
 	else if (position != new_position) {
+
 		if (GetTickCount64() - loop_start > GUNMACHINE2_CHANGE_ANGLE_TIMEOUT) {
 			int extra=1;
 			if (position > new_position)

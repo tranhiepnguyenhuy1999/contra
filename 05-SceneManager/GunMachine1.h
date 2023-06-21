@@ -29,11 +29,8 @@ class CGunMachine1 : public CGameObject
 {
 
 protected:
-	float yLimit;
 	float activeRange;
-	float ax;
-	float ay;
-	float ani_pow_id;
+	bool isWorking;
 
 	float life;
 	BOOLEAN isShooting;

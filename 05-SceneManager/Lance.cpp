@@ -14,6 +14,7 @@
 #include "Gun.h"
 
 #include "Water.h"
+#include "DeadLand.h"
 #include "Land.h"
 #include "DownBrick.h"
 #include "EndWall.h"
@@ -76,9 +77,9 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
+		isOnPlatform = true;
 		if (e->ny > 0)
 		{
-			isOnPlatform = true;
 			if (dynamic_cast<CDownBrick*>(e->obj)) {
 				//DebugOut(L">>> Touched >>> \n");
 				isOnDownBrick = true;
@@ -91,7 +92,10 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 
 	// others
-	if (dynamic_cast<CLand*>(e->obj) && isSwimming) {
+	if (dynamic_cast<CDeadLand*>(e->obj)) {
+		SetState(LANCE_STATE_PRE_DIE);
+	}
+	else if (dynamic_cast<CLand*>(e->obj) && isSwimming) {
 		isSwimming = false;
 		isClimb = true;
 		ay = 0;
@@ -107,12 +111,12 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 		movingObjVx = mrvx;
 
 	}
-	else if (dynamic_cast<CSoldier*>(e->obj))
-		OnCollisionWithSoldier(e);
+	//else if (dynamic_cast<CSoldier*>(e->obj))
+	//	OnCollisionWithSoldier(e);
 	else if (dynamic_cast<CFire*>(e->obj))
 	OnCollisionWithFire(e);
-	else if (dynamic_cast<CGunSoldier*>(e->obj))
-		OnCollisionWithGunSoldier(e);
+	//else if (dynamic_cast<CGunSoldier*>(e->obj))
+	//	OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunType*>(e->obj))
 		OnCollisionWithGunType(e);
 	//else if (dynamic_cast<CEnemyGun*>(e->obj))
@@ -490,7 +494,7 @@ void CLance::SetState(int state)
 	case LANCE_STATE_PRE_DIE:
 		isPreDied = true;
 		count_start = GetTickCount64();
-		vy = 2*LANCE_DIE_DEFLECT_SPEED;
+		vy = LANCE_DIE_DEFLECT_SPEED;
 		if (nx) nx = 1;
 		ax = -nx* LANCE_ACCEL_WALK_X;
 		if(maxVx==0) maxVx = LANCE_PRE_DIE_SPEED;
@@ -511,12 +515,6 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			top = y + LANCE_BIG_SWIMMING_BBOX_HEIGHT / 2;
 			right = left + LANCE_BIG_SWIMMING_BBOX_WIDTH;
 			bottom = top - LANCE_BIG_SWIMMING_BBOX_HEIGHT;
-		}
-		else if (!isOnPlatform && !isJumping) {
-			left = x - LANCE_BIG_BBOX_WIDTH / 2;
-			top = y + LANCE_BIG_BBOX_HEIGHT / 2;
-			right = left + LANCE_BIG_BBOX_WIDTH;
-			bottom = top - LANCE_BIG_BBOX_HEIGHT;
 		}
 		else if (isJumping)
 		{
@@ -541,7 +539,20 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 				bottom = top - LANCE_BIG_LOOKUP_BBOX_HEIGHT;
 			}
 		}
-		else if ((isSitting || isPreDied) && vx==0)
+		else if (isPreDied)
+		{
+			left = x - LANCE_BIG_SITTING_BBOX_WIDTH / 2;
+			top = y + LANCE_BIG_SITTING_BBOX_HEIGHT / 2;
+			right = left + LANCE_BIG_SITTING_BBOX_WIDTH;
+			bottom = top - LANCE_BIG_SITTING_BBOX_HEIGHT;
+		}
+		else if (!isOnPlatform) {
+			left = x - LANCE_BIG_BBOX_WIDTH / 2;
+			top = y + LANCE_BIG_BBOX_HEIGHT / 2;
+			right = left + LANCE_BIG_BBOX_WIDTH;
+			bottom = top - LANCE_BIG_BBOX_HEIGHT;
+		}
+		else if (isSitting && vx == 0)
 		{
 			left = x - LANCE_BIG_SITTING_BBOX_WIDTH / 2;
 			top = y + LANCE_BIG_SITTING_BBOX_HEIGHT / 2;

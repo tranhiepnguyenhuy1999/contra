@@ -7,16 +7,15 @@
 #include "debug.h"
 
 #define LANCE_WALKING_SPEED		0.075f
-#define LANCE_PRE_DIE_SPEED		0.035f
+#define LANCE_PRE_DIE_SPEED		0.075f
 
 #define LANCE_ACCEL_WALK_X	0.0005f
-#define LANCE_ACCEL_RUN_X	0.008f
 
 #define LANCE_JUMP_SPEED_Y		0.2f
 
 #define LANCE_GRAVITY	0.00035f
 
-#define LANCE_DIE_DEFLECT_SPEED  0.3f
+#define LANCE_DIE_DEFLECT_SPEED  0.2f
 
 #define LANCE_STATE_DIE				-10
 #define LANCE_STATE_IDLE			0

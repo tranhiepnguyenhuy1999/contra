@@ -1,38 +1,28 @@
 
 #include "GunMachine1.h"
 #include "AssetIDs.h"
+#include "Camera.h"
+#include "EnemyGun.h"
+
 CGunMachine1::CGunMachine1(float x, float y) :CGameObject(x, y)
 {
-	this->ax = 0;
-	this->ay = 0;
-	this->isShooting = true;
-	this->gunLeft = 3;
-	this->activeRange = 200;
-	this->loop_start = -1;
-	this->gun_loop_start = -1;
-	this->life = 8;
-	SetState(GUNMACHINE1_STATE_UNACTIVE);
+	isShooting = true;
+	isWorking = false;
+	gunLeft = 3;
+	activeRange = 200;
+	loop_start = -1;
+	gun_loop_start = -1;
+	life = 8;
 }
 void CGunMachine1::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GUNMACHINE1_STATE_UNACTIVE)
-	{
-		left = 0;
-		top = 0;
-		right = 0;
-		bottom = 0;
-	}
-	else {
-
-		left = x - GUNMACHINE1_BBOX_WIDTH / 2;
-		top = y + (GUNMACHINE1_BBOX_HEIGHT / 2);
-		right = left + GUNMACHINE1_BBOX_WIDTH;
-		bottom = top - GUNMACHINE1_BBOX_HEIGHT;
-	}
+	left = x - GUNMACHINE1_BBOX_WIDTH / 2;
+	top = y + (GUNMACHINE1_BBOX_HEIGHT / 2);
+	right = left + GUNMACHINE1_BBOX_WIDTH;
+	bottom = top - GUNMACHINE1_BBOX_HEIGHT;
 }
 void CGunMachine1::OnNoCollision(DWORD dt)
 {
-	y += vy * dt;
 };
 void CGunMachine1::OnCollisionWith(LPCOLLISIONEVENT e)
 {
@@ -50,25 +40,28 @@ void CGunMachine1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isDeleted = true;
 		return;
 	}
-
 	float px, py;
-	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
+	Camera::GetInstance()->getPlayerPosition(px, py);
 
-	if (state == GUNMACHINE1_STATE_UNACTIVE && px > x-activeRange)
-		return	SetState(GUNMACHINE1_STATE_BOTTOM);
-
-	if ((state == GUNMACHINE1_STATE_BOTTOM) && (GetTickCount64() - loop_start > GUNMACHINE1_LOOP_TIMEOUT))
+	if (!isWorking)
+	{
+		if (px > x - activeRange)
+		{
+			isWorking = true;
+			SetState(GUNMACHINE1_STATE_BOTTOM);
+		}
+		return;
+	}
+	if (state == GUNMACHINE1_STATE_BOTTOM && (GetTickCount64() - loop_start > GUNMACHINE1_LOOP_TIMEOUT))
 	{
 		return	SetState(GUNMACHINE1_STATE_MID);
 	}
-
-	if ((state == GUNMACHINE1_STATE_MID) && (GetTickCount64() - loop_start > GUNMACHINE1_LOOP_TIMEOUT))
+	else if (state == GUNMACHINE1_STATE_MID && (GetTickCount64() - loop_start > GUNMACHINE1_LOOP_TIMEOUT))
 	{
 		return	SetState(GUNMACHINE1_STATE_TOP);
 	}
-
 	// shooting
-	if ((state == GUNMACHINE1_STATE_TOP) && (GetTickCount64() - loop_start > GUNMACHINE1_SHOOTING_TIMEOUT))
+	else if (state == GUNMACHINE1_STATE_TOP && (GetTickCount64() - loop_start > GUNMACHINE1_SHOOTING_TIMEOUT))
 	{
 		isShooting = true;
 		if (gunLeft <= 0)
@@ -86,12 +79,11 @@ void CGunMachine1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	}
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 int CGunMachine1::getAniId(int flag) {
-	if (this->state == GUNMACHINE1_STATE_BOTTOM) return ID_ANI_GUNMACHINE1_BOTTOM;
-	else if (this->state == GUNMACHINE1_STATE_MID) return ID_ANI_GUNMACHINE1_MID;
-	else if (this->state == GUNMACHINE1_STATE_TOP) {
+	if (state == GUNMACHINE1_STATE_BOTTOM) return ID_ANI_GUNMACHINE1_BOTTOM;
+	else if (state == GUNMACHINE1_STATE_MID) return ID_ANI_GUNMACHINE1_MID;
+	else if (state == GUNMACHINE1_STATE_TOP) {
 		switch (flag)
 		{
 		case 1:
@@ -125,11 +117,11 @@ void CGunMachine1::handleShooting()
 
 	if (flag==2)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, -1, 0);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 0, ENEMY_GUN_MAX_SPEED);
 		return;
 	}
 	float altShootingSpeed = getPercent();
-	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, altShootingSpeed , 1);
+	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 0, -altShootingSpeed*ENEMY_GUN_MAX_SPEED , ENEMY_GUN_MAX_SPEED);
 
 	//DebugOut(L">>> percent: %f >>> \n", percent);
 	//DebugOut(L">>> altShootingSpeed: %f >>> \n", altShootingSpeed);
@@ -165,8 +157,6 @@ float CGunMachine1::getPercent()
 
 	float percentX = translateToPercent(x, true);
 	float percentY = translateToPercent(y, false);
-	//DebugOut(L">>> x: %f >>> \n", percentX);
-	//DebugOut(L">>> y: %f >>> \n", percentY);
 	float percent = percentX / percentY;
 	float altShootingSpeed = 0;
 
@@ -197,20 +187,15 @@ void CGunMachine1::SetState(int state)
 	CGameObject::SetState(state);
 	switch (state)
 	{
-	case GUNMACHINE1_STATE_UNACTIVE:
-		break;
 	case GUNMACHINE1_STATE_DIE:
 		break;
 	case GUNMACHINE1_STATE_BOTTOM:
-		//y -= GUNMACHINE1_BOTTOM_HEIGHT/2;
 		loop_start = GetTickCount64();
 		break;
 	case GUNMACHINE1_STATE_MID:
-		//y -= GUNMACHINE1_MID_HEIGHT - GUNMACHINE1_BOTTOM_HEIGHT/2;
 		loop_start = GetTickCount64();
 		break;
 	case GUNMACHINE1_STATE_TOP:
-		//y -= GUNMACHINE1_TOP_HEIGHT - GUNMACHINE1_MID_HEIGHT/2;
 		loop_start = GetTickCount64();
 		break;
 	}
