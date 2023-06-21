@@ -37,7 +37,7 @@ void Quadtree::Clear()
         delete[] m_nodes;
     }
     // Clear current Quadtree
-    for (UINT i = 0; i < m_objects_list.size(); i++) delete m_objects_list[i];
+    m_objects_list.clear();
 }
 
 bool Quadtree::IsContain(LPGAMEOBJECT objSrc)

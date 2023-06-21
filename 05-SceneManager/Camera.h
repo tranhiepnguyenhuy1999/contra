@@ -83,14 +83,13 @@ public:
 	void checkIsCameraOver(vector<LPGAMEOBJECT> &objects) {
 		for (size_t i = 0; i < objects.size(); i++)
 		{
-			float objx, objy;
-			objects[i]->GetPosition(objx, objy);
-			if (!objects[i]->IsActive() && (objy < t && ny == 1) || (objx < r && nx == 1))
+			float objl, objt, objr, objb;
+			objects[i]->GetBoundingBox(objl, objt, objr, objb);
+			if (isCamContain(objl, objt, objr, objb))
 			{
 				objects[i]->setIsActiveTrue();
 			}
-
-			if (objx < l || objy < b) {
+			if (objr  < l || objt < b) {
 				objects[i]->setIsCameraOverTrue();
 			}
 		}

@@ -180,6 +180,9 @@
     <ClCompile Include="EnemyGun_HideSoldier_Piece.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BossStage3_HandPiece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -357,6 +360,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EnemyGun_HideSoldier_Piece.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BossStage3_HandPiece.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

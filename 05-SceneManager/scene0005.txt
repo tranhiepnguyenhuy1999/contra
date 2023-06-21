@@ -20,7 +20,7 @@ map1_map.csv
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	700	200
+0	100	200
 
 #fire
 #40	150	50	1	75
@@ -31,6 +31,8 @@ map1_map.csv
 #42	150	200
 #hide-soldier
 #43	150	50	
+#boss
+#49	150	50
 
 #boss
 #31	50	100
@@ -40,7 +42,7 @@ bomb-bridge
 21	784	104	103	104	116	117	118
 21	1072	104		103	104	116	117	118
 #gun-machine2
-25	1264	72
+#25	1264	72
 25	1648	104
 25	1840	104
 25	2992	40
@@ -54,8 +56,8 @@ bomb-bridge
 10	1584	72	2
 10	2288	40	4
 #gun-soldier
-#24	320	24
-#24	640	24
+24	320	24
+24	640	24
 #gunship
 #11	0	20	1
 #brick

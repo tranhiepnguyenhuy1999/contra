@@ -19,6 +19,7 @@ protected:
 	LPGAMEOBJECT player;					
 
 	vector<LPGAMEOBJECT> objects;
+	vector<LPGAMEOBJECT> activeObjects;
 	vector<LPGAMEOBJECT> tiledMapObject;
 
 	void _ParseSection_SPRITES(string line);

@@ -12,7 +12,7 @@
 #define LANCE_ACCEL_WALK_X	0.0005f
 #define LANCE_ACCEL_RUN_X	0.008f
 
-#define LANCE_JUMP_SPEED_Y		0.215f
+#define LANCE_JUMP_SPEED_Y		0.2f
 
 #define LANCE_GRAVITY	0.00035f
 
@@ -171,7 +171,7 @@ public:
 		isRunning = false;
 		isSwimming = false;
 		isClimb = false;
-
+		isActive = true;
 		maxVx = 0.0f;
 		ax = 0.0f;
 		ay = -LANCE_GRAVITY;

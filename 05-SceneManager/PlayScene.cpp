@@ -32,7 +32,7 @@
 #include "HideSoldier.h"
 #include "BossStage1.h"
 #include "BossStage1Gun.h"
-
+#include "BossStage3_HandPiece.h"
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -196,6 +196,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		float typeGun = (float)atof(tokens[3].c_str());
 		obj = new CGunBox(x, y, typeGun); break;
+	}
+	case OBJECT_TYPE_BOSS_STAGE_3:
+	{
+		obj = new CBossStage3_HandPiece(x, y); break;
 	}
 	case OBJECT_TYPE_BOSS_STAGE_1:
 	{
@@ -535,17 +539,17 @@ Quadtree* CreateQuadTree(vector<LPGAMEOBJECT> objList)
 }
 void CPlayScene::DetectCollision(vector<LPGAMEOBJECT>& coObjects)
 {
-	Quadtree* quadtree = CreateQuadTree(objects);
+	Quadtree* quadtree = CreateQuadTree(activeObjects);
 
-	for (size_t i = 1; i < objects.size(); i++)
+	for (size_t i = 1; i < activeObjects.size(); i++)
 	{
 		//Get all objects that can collide with current entity
-		quadtree->Retrieve(coObjects, objects[i]);
+		quadtree->Retrieve(coObjects, activeObjects[i]);
 	}
 
-	//quadtree->Clear();
+	quadtree->Clear();
 
-	//delete quadtree;
+	delete quadtree;
 }
 void CPlayScene::Update(DWORD dt)
 {
@@ -553,15 +557,21 @@ void CPlayScene::Update(DWORD dt)
 	// TO-DO: This is a "dirty" way, need a more organized way 
 
 	vector<LPGAMEOBJECT> coObjects;
+
 	coObjects.clear();
 
+	activeObjects.clear();
 	for (size_t i = 0; i < objects.size(); i++)
+	{
+		if (objects[i]->IsActive()) activeObjects.push_back(objects[i]);
+	}
+
+	for (size_t i = 0; i < activeObjects.size(); i++)
 	{
 		coObjects.clear();
 		DetectCollision(coObjects);
 		//if (i == 0) coObjects.push_back(CEndWall::GetInstance());
-
-		if(objects[i]->IsActive()) objects[i]->Update(dt, &coObjects);
+		activeObjects[i]->Update(dt, &coObjects);
 	}
 
 	// skip the rest if scene was already unloaded (Mario::Update might trigger PlayScene::Unload)
