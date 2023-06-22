@@ -29,9 +29,7 @@ protected:
 	virtual int IsCollidable() { return 1; };
 	virtual int IsBlocking() { return 0; }
 
-	virtual void OnNoCollision(DWORD dt);
-	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 public:
-	CGunShip(float x, float y, float type);
+	CGunShip(float x, float y, float type, float ny=-1);
 	virtual void SetState(int state);
 };

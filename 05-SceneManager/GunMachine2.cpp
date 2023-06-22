@@ -1,11 +1,12 @@
 #include "GunMachine2.h"
 #include "EnemyGun.h"
+#include "Camera.h"
 #include "AssetIDs.h"
 
 CGunMachine2::CGunMachine2(float x, float y) :CGameObject(x, y)
 {
 	position = 2;
-	this->activeRange = 200;
+	range = 200;
 	this->loop_start = -1;
 	shooting_loop_start = -1;
 	this->life = 8;
@@ -35,6 +36,8 @@ void CGunMachine2::handleGetAttack(int dmg)
 }
 void CGunMachine2::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	float px, py;
+	Camera::GetInstance()->getPlayerPosition(px, py);
 	int new_position;
 	new_position = getPlayerPosition();
 
@@ -49,7 +52,6 @@ void CGunMachine2::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		SetState(GUNMACHINE2_STATE_ACTIVE);
 	}
 	else if (position != new_position) {
-
 		if (GetTickCount64() - loop_start > GUNMACHINE2_CHANGE_ANGLE_TIMEOUT) {
 			int extra=1;
 			if (position > new_position)
@@ -62,14 +64,17 @@ void CGunMachine2::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			
 			if (position <= 0) position = 12;
 			else if (position >= 13) position = 1;
-
 			loop_start = GetTickCount64();
 		}
+		shooting_loop_start = GetTickCount64();
 	}
 	// shooting
 	else if ((state == GUNMACHINE2_STATE_ACTIVE) && (GetTickCount64() - shooting_loop_start > GUNMACHINE2_SHOOTING_TIMEOUT))
 	{
-		handleShooting();
+		if (abs(x - px) < range)
+		{
+			handleShooting();
+		}
 		shooting_loop_start = GetTickCount64();
 	}
 	CGameObject::Update(dt, coObjects);
@@ -192,9 +197,9 @@ float CGunMachine2::translateToPercent(float data, boolean isXAxis) {
 	float result = 0;
 	CGame::GetInstance()->GetCurrentScene()->getPlayerPosition(px, py);
 	if (isXAxis)
-		result = abs(px - data) / activeRange;
+		result = abs(px - data) / range;
 	else
-		result = abs(py - data) / activeRange;
+		result = abs(py - data) / range;
 
 	//DebugOut(L">>> result: %f >>> \n", result);
 

@@ -102,7 +102,10 @@ void CGun::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 void CGun::OnCollisionWithGunSoldier(LPCOLLISIONEVENT e)
 {
 	CGunSoldier* i = dynamic_cast<CGunSoldier*>(e->obj);
-	i->SetState(GUNSOLDIER_STATE_DIE);
+	if (i->isCollie())
+	{
+		i->SetState(GUNSOLDIER_STATE_DIE);
+	}
 	SetState(GUN_STATE_DIE);
 }
 void CGun::OnCollisionWithHideSoldier(LPCOLLISIONEVENT e)

@@ -6,7 +6,7 @@
 #define GUNMACHINE2_BBOX_HEIGHT 32
 
 #define GUNMACHINE2_LOOP_TIMEOUT 300
-#define GUNMACHINE2_SHOOTING_TIMEOUT 3000
+#define GUNMACHINE2_SHOOTING_TIMEOUT 1500
 #define GUNMACHINE2_CHANGE_ANGLE_TIMEOUT 750
 
 #define GUNMACHINE2_STATE_UNACTIVE 100
@@ -44,7 +44,7 @@ class CGunMachine2 : public CGameObject
 {
 
 protected:
-	float activeRange;
+	float range;
 	float life;
 	int position;
 

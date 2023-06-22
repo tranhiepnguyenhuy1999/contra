@@ -3,13 +3,13 @@
 #include "Explode.h"
 #include "AssetIDs.h"
 
-CGunShip::CGunShip(float x, float y, float type) :CGameObject(x, y)
+CGunShip::CGunShip(float x, float y, float type, float ny) :CGameObject(x, y)
 {
 	int cdirection;
 	Camera::GetInstance()->getCamDirection(cdirection);
 	dirct = cdirection;
 	if (cdirection == 0) {	
-		ay = -GUNSHIP_GRAVITY;
+		ay = ny * GUNSHIP_GRAVITY;
 		ax = 0;
 	}
 	else if (cdirection == 1) {
@@ -18,29 +18,16 @@ CGunShip::CGunShip(float x, float y, float type) :CGameObject(x, y)
 	}
 	gunType = type;
 	isWorking = false;
+
 	SetState(GUNSHIP_STATE_ACTIVE);
 }
-
 void CGunShip::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-
 	left = x - GUNSHIP_BBOX_WIDTH / 2;
 	top = y + (GUNSHIP_BBOX_HEIGHT / 2);
 	right = left + GUNSHIP_BBOX_WIDTH;
 	bottom = top - GUNSHIP_BBOX_HEIGHT;
-	
 }
-
-void CGunShip::OnNoCollision(DWORD dt)
-{
-	x += vx * dt;
-	y += vy * dt;
-};
-
-void CGunShip::OnCollisionWith(LPCOLLISIONEVENT e)
-{
-}
-
 void CGunShip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float cl, ct, cr, cb;
@@ -62,6 +49,9 @@ void CGunShip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	vy += ay * dt;
 	vx += ax * dt;
+
+	x += vx * dt;
+	y += vy * dt;
 	
 	if (state == GUNSHIP_STATE_DIE)
 	{
@@ -81,7 +71,6 @@ void CGunShip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		ax = -ax;
 	}
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 
 

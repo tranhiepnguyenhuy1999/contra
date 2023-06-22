@@ -290,7 +290,10 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	case OBJECT_TYPE_GUNSHIP:
 	{
 		float typeGun = (float)atof(tokens[3].c_str());
-		obj = new CGunShip(x, y, typeGun); break;
+		if (tokens.size() > 4 )
+			obj = new CGunShip(x, y, typeGun, 1);
+		else obj = new CGunShip(x, y, typeGun);
+		break;
 	}
 	case OBJECT_TYPE_SOLDIER:
 	{	
@@ -298,7 +301,14 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float isHaveFallObj = (float)atof(tokens[4].c_str());
 		obj = new CSoldier(x, y, isShooting, isHaveFallObj); break;
 	}
-	case OBJECT_TYPE_GUN_SOLDIER: obj = new CGunSoldier(x, y); break;
+	case OBJECT_TYPE_GUN_SOLDIER:
+	{
+		if (tokens.size() < 4) obj = new CGunSoldier(x, y);
+		else {
+			obj = new CGunSoldier(x, y, true);
+		}
+		break;
+	}
 	case OBJECT_TYPE_GUNMACHINE1: obj = new CGunMachine1(x, y); break;
 	case OBJECT_TYPE_GUNMACHINE2: obj = new CGunMachine2(x, y); break;
 	case OBJECT_TYPE_FIRE:
@@ -682,7 +692,7 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (!objects[i]->IsCameraOver()) activeObjects.push_back(objects[i]);
+		if (!objects[i]->IsCameraOver() && objects[i]->IsActive()) activeObjects.push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < objects.size(); i++)

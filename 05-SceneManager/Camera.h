@@ -31,14 +31,20 @@ public:
 		px = 0; py = 0;
 	}
 	void transformCoordinates( float &ix, float &iy);
-	void setCamWidth(int width) { cWidth = width; };
+
+	void setCamWidth(int width) { cWidth = width; r = l + cWidth;};
+	void setCamHeight(int height) { cHeight = height; t = b + cHeight; };
+
 	void setCamDirection(int direction) { dirct = direction; };
 	void getCamDirection(int& direction) { direction = dirct; };
-	void setCamHeight(int height) { cHeight = height; t = b + cHeight; };
-	void getCamWidth(int& width) { width = cWidth; r = l + cWidth; };
+	
+	void getCamWidth(int& width) { width = cWidth;};
 	void getCamHeight(int &height) { height = cHeight; };
+	
 	void getPlayerPosition(float& x, float& y) { x = px; y = py; };
+	
 	void getCamBoundingBox(float& cl, float& ct, float& cr, float& cb) { cl = l; ct = t; cr = r; cb = b; };
+	
 	void setCamPosition(float px, float py) {
 		
 		this->px = px;
@@ -46,7 +52,7 @@ public:
 
 		if (dirct == 0)
 		{
-			b = -8;
+			b = 0;
 			t = b + cHeight;
 			
 			if (px < l + cWidth / 2) return;

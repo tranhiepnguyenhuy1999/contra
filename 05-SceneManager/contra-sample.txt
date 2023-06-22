@@ -1,5 +1,5 @@
 [SETTINGS]
-start	2
+start	1
 width	288
 height	256
 
@@ -7,9 +7,8 @@ height	256
 # type: 0: intro, 1: play scene 
 [SCENES]
 0	intro.txt
-1	scene01.txt
+1	scene0005.txt
 2	scene03.txt
-5	scene0005.txt
 
 # id	file 
 [TEXTURES]
@@ -27,3 +26,4 @@ height	256
 # extra tile
 500	textures\hole.png
 510	textures\fire-bridge.png
+520	textures\gun-soldier-hide.png

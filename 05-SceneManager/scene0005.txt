@@ -16,7 +16,7 @@ map1_map.csv
 
 [CAMERA]
 # 0: stage1 1: stage:3
-1
+0
 
 [OBJECTS]
 # type	x	y	extra_settings per object type
@@ -24,31 +24,23 @@ map1_map.csv
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	300	200
+0	1130	200
 
-#fire
-#40	150	50	1	75
-#40	150	50	-1	75
-#moving-rock
-#41	150	50
-#fall-rock
-#42	150	200
-#hide-soldier
-#43	150	50	
-#boss
-49	150	75	10	4
-49	150	75	20	4
-49	150	75	30	4
-49	150	75	40	4
 #boss
 31	3235	56	3226	99	3248	101
 
 #soldier
 #20	100	150	1	0
 
+#gun-soldier
+24	320	24
+24	640	24
+
+24	150	200	1
+
 #bomb-bridge
 21	784	104	103	104	116	117	118
-21	1072	104		103	104	116	117	118
+21	1072	104	103	104	116	117	118
 
 #gun-machine2
 25	1264	72
@@ -67,14 +59,11 @@ map1_map.csv
 10	1584	72	2
 10	2288	40	4
 
-#gun-soldier
-24	320	24
-24	640	24
-
 #gunship
 11	258	169	1
-11	2338	25	3
-11	1338	137	5
+11	1138	137	4	1
+11	2338	25	3	1
+11	2338	137	5
 
 # downbrick & land
 4	32	109	46
@@ -124,8 +113,7 @@ map1_map.csv
 4	3040	61	6
 4	3136	77	2
 4	3168	45	2
-#hidden brick
-#1	2224	576
+
 #deadland
 9	1776	0	16	15	92
 #water

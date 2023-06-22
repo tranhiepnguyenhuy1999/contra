@@ -6,7 +6,6 @@
 
 CGunMachine1::CGunMachine1(float x, float y) :CGameObject(x, y)
 {
-	isShooting = true;
 	isWorking = false;
 	gunLeft = 3;
 	activeRange = 200;
@@ -63,13 +62,11 @@ void CGunMachine1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// shooting
 	else if (state == GUNMACHINE1_STATE_TOP && (GetTickCount64() - loop_start > GUNMACHINE1_SHOOTING_TIMEOUT))
 	{
-		isShooting = true;
 		if (gunLeft <= 0)
 		{
 			loop_start = GetTickCount64();
 			gun_loop_start = -1;
 			gunLeft = 3;
-			isShooting = false;
 		}
 		else if (GetTickCount64() - gun_loop_start > GUNMACHINE1_SHOOTING_LOOP_TIMEOUT) {
 			handleShooting();

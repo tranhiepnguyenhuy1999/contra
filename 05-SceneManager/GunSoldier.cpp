@@ -3,8 +3,9 @@
 #include "Explode.h"
 #include "AssetIDs.h"
 
-CGunSoldier::CGunSoldier(float x, float y) :CGameObject(x, y)
+CGunSoldier::CGunSoldier(float x, float y, bool isHide) :CGameObject(x, y)
 {
+	this->isHide = isHide;
 	this->ay = 0;
 	activeRange = 200;
 	loop_start = -1;
@@ -55,18 +56,31 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// shooting
 	else if (GetTickCount64() - loop_start > GUNSOLDIER_SHOOTING_LOOP_TIMEOUT)
 	{
-		isShooting = true;
-		if (gunLeft <= 0)
+		if (!isShooting)
 		{
-			loop_start = GetTickCount64();
-			gun_loop_start = -1;
-			gunLeft = 3;
-			isShooting = false;
+			isShooting = true;
+			ready_shooting_start = GetTickCount64();
 		}
-		else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_SHOOTING_TIMEOUT){
-			handleShooting();
-			gun_loop_start = GetTickCount64();
-			gunLeft -= 1;
+
+		if (GetTickCount64() - ready_shooting_start > 1000)
+		{
+			if (isHide) {
+				CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 0, nx * ENEMY_GUN_MAX_SPEED, 0);
+				loop_start = GetTickCount64();
+				isShooting = false;
+			}
+			else if (gunLeft <= 0)
+			{
+				loop_start = GetTickCount64();
+				gun_loop_start = -1;
+				gunLeft = 3;
+				isShooting = false;
+			}
+			else if(GetTickCount64() - gun_loop_start > GUNSOLDIER_SHOOTING_TIMEOUT){
+				handleShooting();
+				gun_loop_start = GetTickCount64();
+				gunLeft -= 1;
+			}
 		}
 		return;
 	}
@@ -74,9 +88,21 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 int CGunSoldier::getAniId(int flag) {
-	if (!isActive) {
-		if (flag <= 3) return ID_ANI_GUNSOLDIER_LEFTBOTTOM;
-		else return ID_ANI_GUNSOLDIER_RIGHTBOTTOM;
+
+	//if (!isActive) {
+	//	if (flag <= 3) return ID_ANI_GUNSOLDIER_LEFTBOTTOM;
+	//	else return ID_ANI_GUNSOLDIER_RIGHTBOTTOM;
+	//}
+	if (isHide) {
+		if (isShooting)
+		{
+			if (nx > 0)
+				return ID_ANI_GUNSOLDIER_SHOOTING_HIDE_RIGHT;
+			else
+				return ID_ANI_GUNSOLDIER_SHOOTING_HIDE_LEFT;
+
+		}
+		else return ID_ANI_GUNSOLDIER_SHOOTING_HIDE;
 	}
 	else switch (flag)
 	{

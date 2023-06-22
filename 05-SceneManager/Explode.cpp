@@ -13,16 +13,14 @@ void CExplode::Render()
 	int aniID = getAniId();
 	CAnimations::GetInstance()->Get(aniID)->Render(x, y);
 }
-void CExplode::OnNoCollision(DWORD dt)
-{
-	x += vx * dt;
-	y += vy * dt;
-};
 
-void CExplode::OnCollisionWith(LPCOLLISIONEVENT e)
+void CExplode::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
+	left = x - EXPLODE_BBOX_WIDTH / 2;
+	top = y + (EXPLODE_BBOX_HEIGHT / 2);
+	right = left + EXPLODE_BBOX_WIDTH;
+	bottom = top - EXPLODE_BBOX_HEIGHT;
 }
-
 void CExplode::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (GetTickCount64() - count_start > timeout)
@@ -32,10 +30,6 @@ void CExplode::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		return;
 	}
 	CGameObject::Update(dt, coObjects);
-}
-
-void CExplode::GetBoundingBox(float& l, float& t, float& r, float& b)
-{
 }
 
 int CExplode::getAniId() {

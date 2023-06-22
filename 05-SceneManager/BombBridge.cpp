@@ -1,7 +1,7 @@
 #include "BombBridge.h"
-
 #include "BombBridgeChild.h"
 #include "Lance.h"
+#include "Explode.h"
 
 #include "AssetIDs.h"
 #include "PlayerData.h"
@@ -73,9 +73,9 @@ void CBombBridge::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		active_start= GetTickCount64();
 		
 		// create explode
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y + BOMB_BRIDGE_CHILD_PIECE_BBOX_HEIGHT / 2, 1);
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x + BOMB_BRIDGE_CHILD_PIECE_BBOX_WIDTH, y, 1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_INFRASTRUCTURE);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y + BOMB_BRIDGE_CHILD_PIECE_BBOX_HEIGHT / 2, 0, 0, 0, 0, EXPLODE_TYPE_INFRASTRUCTURE);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x + BOMB_BRIDGE_CHILD_PIECE_BBOX_WIDTH, y, 0, 0, 0, 0, EXPLODE_TYPE_INFRASTRUCTURE);
 
 		delete i;
 
