@@ -5,7 +5,17 @@
 
 CGunShip::CGunShip(float x, float y, float type) :CGameObject(x, y)
 {
-	this->ay = -GUNSHIP_GRAVITY;
+	int cdirection;
+	Camera::GetInstance()->getCamDirection(cdirection);
+	dirct = cdirection;
+	if (cdirection == 0) {	
+		ay = -GUNSHIP_GRAVITY;
+		ax = 0;
+	}
+	else if (cdirection == 1) {
+		ax = -GUNSHIP_GRAVITY;
+		ay = 0;
+	}
 	gunType = type;
 	isWorking = false;
 	SetState(GUNSHIP_STATE_ACTIVE);
@@ -35,17 +45,23 @@ void CGunShip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	float cl, ct, cr, cb;
 	Camera::GetInstance()->getCamBoundingBox(cl, ct, cr, cb);
-	
+
 	if (!isWorking)
 	{
-		if (x < cl)
+		if (x < cl && dirct==0)
 		{
 			isWorking = true;
+		}
+		else if (y < cb && dirct == 1)
+		{
+			isWorking = true;
+
 		}
 		return;
 	}
 
 	vy += ay * dt;
+	vx += ax * dt;
 	
 	if (state == GUNSHIP_STATE_DIE)
 	{
@@ -54,12 +70,16 @@ void CGunShip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		this->isDeleted = true;
 		return;
 	}
-	else if (state == GUNSHIP_STATE_ACTIVE && abs(vy)>GUNSHIP_GRAVITY_MAX)
+	else if (state == GUNSHIP_STATE_ACTIVE && abs(vy)>GUNSHIP_GRAVITY_MAX && ay!=0)
 	{
 		vy = 0;
 		ay = -ay;
 	}
-
+	else if (state == GUNSHIP_STATE_ACTIVE && abs(vx) > GUNSHIP_GRAVITY_MAX && ax != 0)
+	{
+		vx = 0;
+		ax = -ax;
+	}
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
@@ -78,12 +98,16 @@ void CGunShip::SetState(int state)
 	switch (state)
 	{
 	case GUNSHIP_STATE_ACTIVE:
-		vx = GUNSHIP_SPEED;
+		if (ay != 0)
+			vx = GUNSHIP_SPEED;
+		else
+			vy = GUNSHIP_SPEED;
 		break;
 	case GUNSHIP_STATE_DIE:
 		vx = 0;
 		vy = 0;
 		ay = 0;
+		ax = 0;
 		break;
 	}
 }

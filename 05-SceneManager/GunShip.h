@@ -15,8 +15,9 @@
 class CGunShip : public CGameObject
 {
 protected:
-	float ay;
+	float ay,ax;
 	float gunType;
+	int dirct;
 	bool isWorking;
 
 	ULONGLONG count_start;
@@ -27,6 +28,7 @@ protected:
 
 	virtual int IsCollidable() { return 1; };
 	virtual int IsBlocking() { return 0; }
+
 	virtual void OnNoCollision(DWORD dt);
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 public:
