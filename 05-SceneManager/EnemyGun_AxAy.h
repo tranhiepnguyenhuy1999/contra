@@ -1,13 +1,7 @@
 #pragma once
 #include "EnemyGun.h"
 
-#define	ENEMY_GUN_HIDE_SOLDIER_BBOX_WIDTH 8
-#define ENEMY_GUN_HIDE_SOLDIER_BBOX_HEIGHT 8
-
-#define ENEMY_GUN_HIDE_SOLDIER_STATE_RELASE 100
-#define ENEMY_GUN_HIDE_SOLDIER_STATE_DIE 100
-
-#define ID_ANI_ENEMY_GUN__HIDE_SOLIDER 3309
+#define ENEMY_GUN_AXAY_MAX_SPEED	1.25f	
 
 class  CEnemyGun_AxAy : public  CEnemyGun {
 	float ay, ax;

@@ -21,9 +21,10 @@ void CEnemyGun::Render()
 int CEnemyGun::getAniID() {
 	switch (id)
 	{
-	case 1:
+	case ENEMY_GUN_HIDESOLDIER:
+	case ENEMY_GUN_HIDESOLDIER_PIECE:
 		return ID_ANI_ENEMY_GUN_HIDE_SOLIDER;
-	case 2:
+	case ENEMY_GUN_BOSS_STAGE_1:
 		return ID_ANI_ENEMY_GUN_BOSS_STAGE_1;
 	default:
 		return ID_ANI_ENEMY_GUN_DEFAULT;
@@ -32,10 +33,11 @@ int CEnemyGun::getAniID() {
 int CEnemyGun::getExplodeID() {
 	switch (id)
 	{
-	case 1:
+	case ENEMY_GUN_HIDESOLDIER:
+	case ENEMY_GUN_BOSS_STAGE_1:
 		return EXPLODE_TYPE_INFRASTRUCTURE;
-	case 2:
-		return EXPLODE_TYPE_INFRASTRUCTURE;
+	case ENEMY_GUN_HIDESOLDIER_PIECE:
+		return EXPLODE_TYPE_HUMAN;
 	default:
 		return ID_ANI_ENEMY_GUN_DEFAULT;
 	}

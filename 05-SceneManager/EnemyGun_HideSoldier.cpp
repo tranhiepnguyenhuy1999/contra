@@ -6,11 +6,13 @@
 
  CEnenyGun_HideSoldier:: CEnenyGun_HideSoldier(float x, float y, float nx, float ny, float vx, float vy, int type) : CEnemyGun(x, y, nx, ny, vx, vy, type)
 {
-	 if (ny > 0) ay = ENEMY_GUN_ACCEL; else ay = -ENEMY_GUN_ACCEL;
-	 if (nx > 0) ax = ENEMY_GUN_ACCEL; else ax = -ENEMY_GUN_ACCEL;
+	 ay = ny*ENEMY_GUN_ACCEL;
+	 ax = nx*ENEMY_GUN_ACCEL;
 
 	 vxMax = ny * ENEMY_GUN_MAX_SPEED;
 	 vyMax = ny * ENEMY_GUN_MAX_SPEED;
+
+	 count_start = GetTickCount64();
 }
 void  CEnenyGun_HideSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
@@ -20,14 +22,14 @@ void  CEnenyGun_HideSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (abs(vx) > abs(vxMax)) vx = vxMax;
 	if (abs(vy) > abs(vyMax)) vy = vyMax;
 
-	if (state == ENEMY_GUN_STATE_RELASE && (GetTickCount64() - count_start > 3000))
+	if ((GetTickCount64() - count_start > 1500))
 	{
 		//explode
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_INFRASTRUCTURE);
 		//separate into 3 pieces
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, -0.25f, -1, 0.1f, 0.05f);
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, -1, 0, 0.1f);
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0.25f, -1, -0.1f, 0.05f);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, -0.25f, -1, 0.1f, 0.075f, ENEMY_GUN_HIDESOLDIER_PIECE);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, -1, 0, 0.115f, ENEMY_GUN_HIDESOLDIER_PIECE);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0.25f, -1, -0.1f, 0.075f, ENEMY_GUN_HIDESOLDIER_PIECE);
 
 		isDeleted = true;
 		count_start = -1;

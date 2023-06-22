@@ -11,16 +11,16 @@
 #define HIDE_SOLDIER_STATE_SHOOTING 300
 #define HIDE_SOLDIER_STATE_ACTIVE 400
 
-#define ID_ANI_HIDE_SOLDIER_UNACTIVE_RIGHT 2201
-#define ID_ANI_HIDE_SOLDIER_UNACTIVE_LEFT	2202
+#define ID_ANI_HIDE_SOLDIER_UNACTIVE_RIGHT 2203
+#define ID_ANI_HIDE_SOLDIER_UNACTIVE_LEFT	2204
 
-#define ID_ANI_HIDE_SOLDIER_ACTIVE_RIGHT	2203
-#define ID_ANI_HIDE_SOLDIER_ACTIVE_LEFT		2204
+#define ID_ANI_HIDE_SOLDIER_ACTIVE_RIGHT	2201
+#define ID_ANI_HIDE_SOLDIER_ACTIVE_LEFT		2202
 
 class CHideSoldier : public CGameObject
 {
 protected:
-	bool isActive;
+	bool isWorking;
 	float activeRange;
 	ULONGLONG count_start;
 
@@ -31,6 +31,7 @@ protected:
 	virtual int IsCollidable() { return 1; };
 	virtual int IsBlocking() { return 0; }
 public:
+	bool IsWorking() { return isWorking; }
 	CHideSoldier(float x, float y);
 	virtual void SetState(int state);
 };

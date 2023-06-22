@@ -22,6 +22,7 @@
 #include "FGun.h"
 #include "EnemyGun.h"
 #include "EnemyGun_AxAy.h"
+#include "EnemyGun_HideSoldier.h"
 #include "Explode.h"
 #include "Water.h"
 #include "DeadLand.h"
@@ -498,11 +499,18 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float n
 		case 0:
 			obj = new CEnemyGun(x, y, nx, ny, vx, vy, type);
 			break;
-		case ENEMY_GUN_BOSS_STAGE_1: 
+		case ENEMY_GUN_BOSS_STAGE_1:
+		case ENEMY_GUN_HIDESOLDIER_PIECE:
+
 			{
 				obj = new CEnemyGun_AxAy(x, y, nx, ny, vx, vy, type);
 				break;
 			}
+		case ENEMY_GUN_HIDESOLDIER:
+		{
+			obj = new CEnenyGun_HideSoldier(x, y, nx, ny, vx, vy, type);
+			break;
+		}
 		default:
 				obj = new CEnemyGun(x, y, nx, ny, vx, vy, type);
 			break;

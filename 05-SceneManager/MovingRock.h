@@ -4,7 +4,7 @@
 #include "Animation.h"
 #include "Animations.h"
 
-#define MOVING_ROCK_SPEED 0.025f
+#define MOVING_ROCK_SPEED 0.05f
 
 #define	MOVING_ROCK_BBOX_WIDTH 32
 #define MOVING_ROCK_BBOX_HEIGHT 32

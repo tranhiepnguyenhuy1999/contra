@@ -1,13 +1,15 @@
 #include "HideSoldier.h"
 #include "AssetIDs.h"
-#include "PlayerData.h"
 #include "Camera.h"
-
+#include "PlayerData.h"
+#include "EnemyGun.h"
+#include "Explode.h"
 #include "debug.h"
+
 
 CHideSoldier::CHideSoldier(float x, float y) :CGameObject(x, y)
 {
-	isActive = true;
+	isWorking = false;
 	count_start = -1;
 	activeRange = 100;
 	SetState(HIDE_SOLDIER_STATE_UNACTIVE);
@@ -26,21 +28,24 @@ void CHideSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float px, py;
 	Camera::GetInstance()->getPlayerPosition(px, py);
 
-	//if (py > y + activeRange)
-	//{
-	//	isActive = true;
-	//	count_start = GetTickCount64();
-	//}
-	//else isActive = false;
+	if (!isWorking)
+	{
+		if (py > y + activeRange)
+		{
+			isWorking = true;
+			count_start = GetTickCount64();
+		}
+		return;
+	}
 
-	if (isActive && (GetTickCount64() - count_start) > HIDE_SOLDIER_WAITING_SHOOTING_TIMEOUT) {
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 1, 0, 0, 1);
+	if (GetTickCount64() - count_start > HIDE_SOLDIER_WAITING_SHOOTING_TIMEOUT) {
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 1, 0, 0, ENEMY_GUN_HIDESOLDIER);
 		count_start = GetTickCount64();
 	}
 	else if (state == HIDE_SOLDIER_STATE_DIE)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, 2);
-		CPlayerData::GetInstance()->updatePoint(100);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_HUMAN);
+		CPlayerData::GetInstance()->updatePoint(500);
 		isDeleted = true;
 		return;
 	}
@@ -53,7 +58,7 @@ void CHideSoldier::Render()
 {
 	int aniId = -1;
 	if (state == HIDE_SOLDIER_STATE_DIE) return;
-	else if (!isActive) {
+	else if (!isWorking) {
 		if (nx > 0)
 			aniId = ID_ANI_HIDE_SOLDIER_UNACTIVE_LEFT;
 		else

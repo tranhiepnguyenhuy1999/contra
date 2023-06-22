@@ -1,6 +1,7 @@
 #include "Gun.h"
 #include "Soldier.h"
 #include "GunSoldier.h"
+#include "HideSoldier.h"
 #include "GunBox.h"
 #include "GunShip.h"
 #include "GunMachine1.h"
@@ -77,6 +78,8 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithSoldier(e);
 	else if (dynamic_cast<CGunSoldier*>(e->obj))
 		OnCollisionWithGunSoldier(e);
+	else if (dynamic_cast<CHideSoldier*>(e->obj))
+		OnCollisionWithHideSoldier(e);
 	else if (dynamic_cast<CGunBox*>(e->obj))
 		OnCollisionWithGunBox(e);
 	else if (dynamic_cast<CGunMachine1*>(e->obj))
@@ -100,6 +103,15 @@ void CGun::OnCollisionWithGunSoldier(LPCOLLISIONEVENT e)
 {
 	CGunSoldier* i = dynamic_cast<CGunSoldier*>(e->obj);
 	i->SetState(GUNSOLDIER_STATE_DIE);
+	SetState(GUN_STATE_DIE);
+}
+void CGun::OnCollisionWithHideSoldier(LPCOLLISIONEVENT e)
+{
+	CHideSoldier* i = dynamic_cast<CHideSoldier*>(e->obj);
+	if (i->IsWorking())
+	{
+		i->SetState(HIDE_SOLDIER_STATE_DIE);
+	}
 	SetState(GUN_STATE_DIE);
 }
 void CGun::OnCollisionWithGunMachine1(LPCOLLISIONEVENT e)

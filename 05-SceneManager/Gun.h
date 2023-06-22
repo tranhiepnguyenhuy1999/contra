@@ -40,6 +40,7 @@ protected:
 
 	void OnCollisionWithSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunSoldier(LPCOLLISIONEVENT e);
+	void OnCollisionWithHideSoldier(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunMachine1(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunBox(LPCOLLISIONEVENT e);
 	void OnCollisionWithGunShip(LPCOLLISIONEVENT e);

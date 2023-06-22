@@ -10,8 +10,8 @@ CEnemyGun_AxAy::CEnemyGun_AxAy(float x, float y, float nx, float ny, float vx, f
 	ay = ny * ENEMY_GUN_ACCEL;
 
 
-	vxMax = ny * ENEMY_GUN_MAX_SPEED;
-	vyMax = ny * ENEMY_GUN_MAX_SPEED;
+	vxMax = ny * ENEMY_GUN_AXAY_MAX_SPEED;
+	vyMax = ny * ENEMY_GUN_AXAY_MAX_SPEED;
 
 	SetState(ENEMY_GUN_STATE_RELASE);
 }
@@ -25,7 +25,7 @@ void  CEnemyGun_AxAy::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (state == ENEMY_GUN_STATE_DIE)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_INFRASTRUCTURE);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, getExplodeID());
 		count_start = -1;
 		isDeleted = true;
 		return;
