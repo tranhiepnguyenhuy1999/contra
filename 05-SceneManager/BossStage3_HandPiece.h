@@ -1,15 +1,12 @@
 #pragma once
 #include "GameObject.h"
-#define BOSS_STAGE_1_GUN_BBOX_WIDTH 8
-#define BOSS_STAGE_1_GUN_BBOX_HEIGHT 8
+#define BOSS_STAGE_3_HANDPIECE_BBOX_WIDTH 8
+#define BOSS_STAGE_3_HANDPIECE_BBOX_HEIGHT 8
 
-#define BOSS_STAGE_1_GUN_SHOOTING_LOOP_TIMEOUT 750
+#define BOSS_STAGE_3_HANDPIECE_STATE_DIE 100
+#define BOSS_STAGE_3_HANDPIECE_STATE_DMG 200
 
-#define BOSS_STAGE_1_GUN_STATE_ACTIVE 100
-#define BOSS_STAGE_1_GUN_STATE_DIE 200
-#define BOSS_STAGE_1_GUN_STATE_DMG 300
-
-#define ID_ANI_BOSS_STAGE_1_GUN	3310
+#define ID_ANI_BOSS_STAGE_3_HANDPIECE	5100
 
 #define M_PI 3.14159f
 
@@ -17,15 +14,14 @@ class CBossStage3_HandPiece : public CGameObject
 {
 
 protected:
-	int life;
 	int angle;
 	int accel;
 	float r;
-	float initX, initY;
+	float centerX, centerY;
 	ULONGLONG loop_start;
 
 public:
-	CBossStage3_HandPiece(float x, float y, float r, float accel);
+	CBossStage3_HandPiece(float x, float y, float r, float accel, float initAngle);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
@@ -36,7 +32,9 @@ public:
 
 	virtual void SetState(int state);
 
-	bool isDie() { return (life <= 0); }
+	void setAngle(int value) {
+		angle = value;
+	}
 };
 
 

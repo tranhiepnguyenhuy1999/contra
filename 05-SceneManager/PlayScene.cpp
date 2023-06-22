@@ -35,6 +35,8 @@
 #include "BossStage1.h"
 #include "BossStage1Gun.h"
 #include "BossStage3_HandPiece.h"
+#include "BossStage3_ShootingHandPiece.h"
+#include "BossStage3_Hand.h"
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -205,8 +207,44 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	{
 		float r = (float)atof(tokens[3].c_str());
 		float accel = (float)atof(tokens[4].c_str());
+		float init = (float)atof(tokens[5].c_str());
 
-		obj = new CBossStage3_HandPiece(x, y, r, accel); break;
+		obj = new CBossStage3_HandPiece(x, y, r, accel, init); break;
+	}
+	case OBJECT_TYPE_BOSS_STAGE_3_SHOOTING_HANDPIECE:
+	{
+		float r = (float)atof(tokens[3].c_str());
+		float accel = (float)atof(tokens[4].c_str());
+		float init = (float)atof(tokens[5].c_str());
+
+		obj = new CBossStage3_ShootingHandPiece(x, y, r, accel, init); break;
+	}
+	case OBJECT_TYPE_BOSS_STAGE_3_HAND:
+	{
+		CBossStage3_HandPiece* extra = NULL;
+		
+		obj = new CBossStage3_Hand(x, y);
+
+		CBossStage3_Hand* item = dynamic_cast<CBossStage3_Hand*>(obj);
+
+		
+		float r, accel, init;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 1; j < 4; j++)
+			{
+				if (j == 1) r = (float)atof(tokens[2 + i*3 + j].c_str());
+				if (j == 2) accel = (float)atof(tokens[2 + i*3 + j].c_str());
+				if (j == 3) init = (float)atof(tokens[2 + i*3 + j].c_str());
+			}
+			extra= new CBossStage3_HandPiece(x, y, r, accel, init);
+
+			item->addNewChild(extra);
+			// setup objects
+			extra->SetPosition(x, y);
+			objects.push_back(extra);
+		}
+
+		break;
 	}
 	case OBJECT_TYPE_BOSS_STAGE_1:
 	{
