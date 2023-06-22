@@ -1,7 +1,9 @@
 #include "MovingRock.h"
 
-CMovingRock::CMovingRock(float x, float y) :CGameObject(x, y)
+CMovingRock::CMovingRock(float x, float y, float range) :CGameObject(x, y)
 {
+	this->range = range;
+	center = x;
 	vx = MOVING_ROCK_SPEED;
 }
 void CMovingRock::Render()
@@ -9,23 +11,23 @@ void CMovingRock::Render()
 	CAnimations::GetInstance()->Get(ID_ANI_MOVING_ROCK_DEFAULT)->Render(x, y);
 	RenderBoundingBox();
 }
-void CMovingRock::OnNoCollision(DWORD dt)
+void CMovingRock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	x += vx * dt;
 	y += vy * dt;
-};
 
-void CMovingRock::OnCollisionWith(LPCOLLISIONEVENT e)
-{
-	if (e->nx != 0 && e->obj->IsBlocking())
+	if (abs(x - center) > range)
 	{
+		if (vx > 0) {
+			x = center + range;
+		}
+		else
+		{
+			x = center - range;
+		}
 		vx = -vx;
 	}
-}
-void CMovingRock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
-{
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 void CMovingRock::GetBoundingBox(float& l, float& t, float& r, float& b)
 {

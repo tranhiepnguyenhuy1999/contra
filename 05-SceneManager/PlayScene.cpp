@@ -305,7 +305,13 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float movingRange = (float)atof(tokens[4].c_str());
 		obj = new CFire(x, y, nx, movingRange); break;
 	}
-	case OBJECT_TYPE_MOVING_ROCK: obj = new CMovingRock(x, y); break;
+	case OBJECT_TYPE_MOVING_ROCK:
+	{
+		float movingRange = (float)atof(tokens[3].c_str());
+
+		obj = new CMovingRock(x, y, movingRange);
+		break;
+	}
 	case OBJECT_TYPE_FALL_ROCK: obj = new CFallRock(x, y); break;
 	case OBJECT_TYPE_HIDESOLDIER: obj = new CHideSoldier(x, y); break;
 

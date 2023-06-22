@@ -113,8 +113,8 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 	}
 	//else if (dynamic_cast<CSoldier*>(e->obj))
 	//	OnCollisionWithSoldier(e);
-	else if (dynamic_cast<CFire*>(e->obj))
-	OnCollisionWithFire(e);
+	//else if (dynamic_cast<CFire*>(e->obj))
+	//OnCollisionWithFire(e);
 	//else if (dynamic_cast<CGunSoldier*>(e->obj))
 	//	OnCollisionWithGunSoldier(e);
 	else if (dynamic_cast<CGunType*>(e->obj))

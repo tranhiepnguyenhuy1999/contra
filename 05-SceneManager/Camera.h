@@ -61,7 +61,7 @@ public:
 
 			if (py < t - cHeight / 4) return;
 			else {
-				t = py - cHeight / 4;
+				t = py + cHeight / 4;
 				b = t - cHeight;
 			}
 
