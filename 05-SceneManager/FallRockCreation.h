@@ -6,6 +6,8 @@
 
 #define FALL_ROCK_CREATION_CREATE_TIMEOUT 4500
 
+
+
 class CFallRockCreation : public CGameObject
 {
 protected:

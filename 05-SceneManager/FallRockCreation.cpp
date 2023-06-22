@@ -32,7 +32,8 @@ void CFallRockCreation::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CFallRockCreation::Render()
 {
-	RenderBoundingBox();
+	CAnimations::GetInstance()->Get(5003)->Render(x, y);
+	//RenderBoundingBox();
 }
 
 void CFallRockCreation::SetState(int state)

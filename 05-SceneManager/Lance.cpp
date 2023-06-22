@@ -290,7 +290,7 @@ int CLance::GetAniId()
 			aniId = ID_ANI_LANCE_RUNNING_DOWN_RIGHT;
 		else if (isLookingUp)
 			aniId = ID_ANI_LANCE_RUNNING_UP_RIGHT;
-		else if(movingObjVx == 0) aniId = ID_ANI_LANCE_IDLE_RIGHT;
+		else if(movingObjVx == 0) aniId = ID_ANI_LANCE_WALKING_RIGHT;
 	}
 	else // vx < 0
 	{

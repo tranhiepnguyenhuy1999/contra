@@ -243,7 +243,6 @@ void CCollision::Process(LPGAMEOBJECT objSrc, DWORD dt, vector<LPGAMEOBJECT>* co
 	{
 		objSrc->OnNoCollision(dt);
 	}
-	
 	else if (dynamic_cast<CFallRock*>(objSrc))
 	{
 		CFallRock* fall_rock = dynamic_cast<CFallRock*>(objSrc);

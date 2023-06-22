@@ -40,6 +40,12 @@ void CFallRock::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	{
 		SetState(FALL_ROCK_STATE_ACTIVE);
 	}
+	else if (state == FALL_ROCK_STATE_ACTIVE && GetTickCount64() - count_start > 5000)
+	{
+		count_start = -1;
+		isDeleted = true;
+		return;
+	}
 
 	vy += ay * dt;
 
@@ -68,10 +74,9 @@ void CFallRock::SetState(int state)
 		break;
 	case FALL_ROCK_STATE_ACTIVE:
 		ay = -FALL_ROCK_GRAVITY;
-		count_start = -1;
+		count_start = GetTickCount64();
 		break;
 	case FALL_ROCK_STATE_BOUNCE:
-		DebugOut(L"touch \n");
 		vy += FALL_ROCK_BOUNCE_DEFECT;
 		break;
 	}

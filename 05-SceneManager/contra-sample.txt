@@ -23,3 +23,7 @@ height	256
 # tilemap
 200	textures\map1_bank.png
 210	textures\map3_bank.png
+
+# extra tile
+500	textures\hole.png
+510	textures\fire-bridge.png
