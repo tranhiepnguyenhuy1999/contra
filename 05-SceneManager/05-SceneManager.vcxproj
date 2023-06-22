@@ -167,6 +167,7 @@
     <ClCompile Include="Explode.cpp" />
     <ClCompile Include="FallObject.cpp" />
     <ClCompile Include="FallRock.cpp" />
+    <ClCompile Include="FallRockCreation.cpp" />
     <ClCompile Include="FGun.cpp" />
     <ClCompile Include="Fire.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="Explode.h" />
     <ClInclude Include="FallObject.h" />
     <ClInclude Include="FallRock.h" />
+    <ClInclude Include="FallRockCreation.h" />
     <ClInclude Include="FGun.h" />
     <ClInclude Include="Fire.h" />
     <ClInclude Include="Game.h" />

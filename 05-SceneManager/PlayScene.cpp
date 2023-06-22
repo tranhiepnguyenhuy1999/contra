@@ -32,6 +32,7 @@
 #include "Fire.h"
 #include "MovingRock.h"
 #include "FallRock.h"
+#include "FallRockCreation.h"
 #include "HideSoldier.h"
 #include "BossStage1.h"
 #include "BossStage1Gun.h"
@@ -313,7 +314,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMovingRock(x, y, movingRange);
 		break;
 	}
-	case OBJECT_TYPE_FALL_ROCK: obj = new CFallRock(x, y); break;
+	case OBJECT_TYPE_FALL_ROCK_CREATION: obj = new CFallRockCreation(x, y); break;
 	case OBJECT_TYPE_HIDESOLDIER: obj = new CHideSoldier(x, y); break;
 
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x,y); break;
@@ -421,6 +422,7 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float n
 		break;
 		
 	}
+	case OBJECT_TYPE_FALL_ROCK: obj = new CFallRock(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;
 	case OBJECT_TYPE_GUNTYPE: obj = new CGunType(x, y, 1, type); break;
 	case OBJECT_TYPE_GUN:
@@ -501,11 +503,10 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float n
 			break;
 		case ENEMY_GUN_BOSS_STAGE_1:
 		case ENEMY_GUN_HIDESOLDIER_PIECE:
-
-			{
-				obj = new CEnemyGun_AxAy(x, y, nx, ny, vx, vy, type);
-				break;
-			}
+		{
+			obj = new CEnemyGun_AxAy(x, y, nx, ny, vx, vy, type);
+			break;
+		}
 		case ENEMY_GUN_HIDESOLDIER:
 		{
 			obj = new CEnenyGun_HideSoldier(x, y, nx, ny, vx, vy, type);

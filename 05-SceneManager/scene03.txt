@@ -21,7 +21,7 @@ map3_map.csv
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	50	1180
+0	50	260
 
 #fire
 40	128	824	1	55
@@ -32,8 +32,8 @@ map3_map.csv
 41	172	1088	50
 41	172	1560	50
 
-#fall-rock
-#42	150	200
+#fall-rock-creation
+44	48	256
 
 #hide-soldier
 43	160	578
