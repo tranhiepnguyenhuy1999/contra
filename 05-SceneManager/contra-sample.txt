@@ -1,14 +1,14 @@
 [SETTINGS]
-start	5
-width	320
-height	240
+start	2
+width	288
+height	256
 
 #id	type	file
 # type: 0: intro, 1: play scene 
 [SCENES]
 0	intro.txt
 1	scene01.txt
-2	scene02.txt
+2	scene03.txt
 5	scene0005.txt
 
 # id	file 

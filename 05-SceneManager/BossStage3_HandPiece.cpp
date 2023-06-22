@@ -2,8 +2,10 @@
 #include "AssetIDs.h"
 #include "EnemyGun.h"
 
-CBossStage3_HandPiece::CBossStage3_HandPiece(float x, float y) :CGameObject(x, y)
+CBossStage3_HandPiece::CBossStage3_HandPiece(float x, float y, float r, float accel) :CGameObject(x, y)
 {
+	this->r = r;
+	this->accel = accel;
 	angle = 360;
 	initX = x;
 	initY = y;
@@ -30,12 +32,11 @@ void CBossStage3_HandPiece::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CBossStage3_HandPiece::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (angle >= 360) angle = 10;
-	else angle += 10;
+	if (angle >= 360) angle = accel;
+	else angle += accel;
 	float percent = (float)angle / 180.0f;
-	DebugOut(L"percent %f", percent);
-	x = 30.0f*sin(percent * M_PI) + initX;
-	y = 30.0f*cos(percent * M_PI) + initY;
+	x = r*sin(percent * M_PI) + initX;
+	y = r*cos(percent * M_PI) + initY;
 
 	if (state == BOSS_STAGE_1_GUN_STATE_DIE)
 	{

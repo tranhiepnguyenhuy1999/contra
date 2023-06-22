@@ -2,8 +2,8 @@
 
 using namespace std;
 #include <Windows.h>
-
 #include "EndWall.h"
+#include "GunShip.h"
 
 #define MAX_MAP_WIDTH 3328
 #define MAX_MAP_HEIGHT 3328
@@ -20,18 +20,19 @@ class Camera
 	float px; // player x
 	float py; // player y
 
-	float nx, ny;
+	int dirct;
 
 public:
 	Camera() {
 		l = 0; t = 0; r = 0; b = 0;
 		cWidth = 0;
 		cHeight = 0;
-		nx = 1; ny = 0;
+		dirct = 0;
 		px = 0; py = 0;
 	}
 	void transformCoordinates( float &ix, float &iy);
 	void setCamWidth(int width) { cWidth = width; };
+	void setCamDirection(int direction) { dirct = direction; };
 	void setCamHeight(int height) { cHeight = height; t = b + cHeight; };
 	void getCamWidth(int& width) { width = cWidth; r = l + cWidth; };
 	void getCamHeight(int &height) { height = cHeight; };
@@ -42,25 +43,28 @@ public:
 		this->px = px;
 		this->py = py;
 
-		if (nx == 1)
+		if (dirct == 0)
 		{
+			b = -8;
+			t = b + cHeight;
+			
 			if (px < l + cWidth / 2) return;
 			else {
 				l = px - cWidth / 2;
 				r = l + cWidth;
 			}
-			b = -8;
-			t = b + cHeight;
 		}
-		else if (ny == 1)
+		else if (dirct == 1)
 		{
-			if (py < t - cHeight / 4) return;
-			else {
-				b = py - 0.75f * cHeight;
-				t = b + cHeight;
-			}
 			l = 0;
 			r = l + cWidth;
+
+			if (py < t - cHeight / 4) return;
+			else {
+				b = py - cHeight / 4;
+				t = b + cHeight;
+			}
+
 		};
 
 		if (l < 0) { l = 0; r = l + cWidth; }
@@ -89,7 +93,8 @@ public:
 			{
 				objects[i]->setIsActiveTrue();
 			}
-			if (objr  < l || objt < b) {
+			if (dynamic_cast<CGunShip*>(objects[i])) continue;
+			else if (objr  < l || objt < b) {
 				objects[i]->setIsCameraOverTrue();
 			}
 		}

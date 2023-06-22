@@ -57,7 +57,7 @@ int CExplode::getTimeout() {
 	case EXPLODE_TYPE_HUMAN:
 		return HUMAN_EXPLODE_TIMEOUT;
 	default:
-		return HUMAN_EXPLODE_TIMEOUT;
+		return 100;
 	}
 }
 void CExplode::SetState(int state)

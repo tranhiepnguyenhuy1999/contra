@@ -9,7 +9,7 @@
 #define BOSS_STAGE_1_GUN_STATE_DIE 200
 #define BOSS_STAGE_1_GUN_STATE_DMG 300
 
-#define ID_ANI_BOSS_STAGE_1_GUN	4201
+#define ID_ANI_BOSS_STAGE_1_GUN	3310
 
 #define M_PI 3.14159f
 
@@ -19,11 +19,13 @@ class CBossStage3_HandPiece : public CGameObject
 protected:
 	int life;
 	int angle;
+	int accel;
+	float r;
 	float initX, initY;
 	ULONGLONG loop_start;
 
 public:
-	CBossStage3_HandPiece(float x, float y);
+	CBossStage3_HandPiece(float x, float y, float r, float accel);
 
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);

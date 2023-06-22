@@ -30,6 +30,8 @@ protected:
 
 	void _ParseSection_TILEDMAP(string line);
 	void _ParseSection_TILESET(string line);
+
+	void _ParseSection_CAMERA(string line);
 	
 	void LoadAssets(LPCWSTR assetFile);
 	

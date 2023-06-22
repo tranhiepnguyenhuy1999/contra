@@ -161,7 +161,7 @@
     <ClCompile Include="EndWall.cpp" />
     <ClCompile Include="EnemyGun.cpp" />
     <ClCompile Include="EnemyGun_HideSoldier.cpp" />
-    <ClCompile Include="EnemyGun_HideSoldier_Piece.cpp" />
+    <ClCompile Include="EnemyGun_AxAy.cpp" />
     <ClCompile Include="Explode.cpp" />
     <ClCompile Include="FallObject.cpp" />
     <ClCompile Include="FallRock.cpp" />
@@ -221,7 +221,7 @@
     <ClInclude Include="EndWall.h" />
     <ClInclude Include="EnemyGun.h" />
     <ClInclude Include="EnemyGun_HideSoldier.h" />
-    <ClInclude Include="EnemyGun_HideSoldier_Piece.h" />
+    <ClInclude Include="EnemyGun_AxAy.h" />
     <ClInclude Include="Explode.h" />
     <ClInclude Include="FallObject.h" />
     <ClInclude Include="FallRock.h" />

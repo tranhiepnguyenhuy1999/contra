@@ -177,7 +177,7 @@
     <ClCompile Include="EnemyGun_HideSoldier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyGun_HideSoldier_Piece.cpp">
+    <ClCompile Include="EnemyGun_AxAy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BossStage3_HandPiece.cpp">
@@ -362,7 +362,7 @@
     <ClInclude Include="EnemyGun_HideSoldier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyGun_HideSoldier_Piece.h">
+    <ClInclude Include="EnemyGun_AxAy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BossStage3_HandPiece.h">

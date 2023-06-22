@@ -38,7 +38,7 @@ void CBossStage1Gun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	else if (state == BOSS_STAGE_1_GUN_STATE_ACTIVE && (GetTickCount64() - loop_start > BOSS_STAGE_1_GUN_SHOOTING_LOOP_TIMEOUT))
 	{
 		float r = (float)((double)rand() / (RAND_MAX));
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, -r, -1, 0, ENEMY_GUN_MAX_SPEED/2, 2);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, -r, -1, 0, ENEMY_GUN_MAX_SPEED, ENEMY_GUN_BOSS_STAGE_1);
 		loop_start = GetTickCount64();
 	}
 

@@ -8,14 +8,14 @@ CEnemyGun::CEnemyGun(float x, float y, float nx, float ny, float vx, float vy, i
 {
 	this->vx = vx;
 	this->vy = vy;
+
 	id = type;
-	count_start = -1;
+	count_start = GetTickCount64();
 }
 void CEnemyGun::Render()
 {
-	int aniId = -1;
-	aniId = getAniID();
-	if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	int aniId = getAniID();
+	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
 }
 int CEnemyGun::getAniID() {
@@ -50,6 +50,7 @@ void CEnemyGun::OnCollisionWith(LPCOLLISIONEVENT e)
 {
 	if (id == 0) return;
 	if (e->obj->IsBlocking()) SetState(ENEMY_GUN_STATE_DIE);
+	
 	if (e->ny != 0 && e->obj->IsBlocking())
 	{
 		vy = 0;
@@ -61,6 +62,9 @@ void CEnemyGun::OnCollisionWith(LPCOLLISIONEVENT e)
 }
 void CEnemyGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
+	x += vx * dt;
+	y += vy * dt;
+
 	if (state == ENEMY_GUN_STATE_DIE)
 	{
 		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, getExplodeID());
@@ -68,9 +72,13 @@ void CEnemyGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isDeleted = true;
 		return;
 	}
+	else if (GetTickCount64() - count_start > 15000) {
+		count_start = -1;
+		isDeleted = true;
+		return;
+	}
 
 	CGameObject::Update(dt, coObjects);
-	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
 void CEnemyGun::GetBoundingBox(float& l, float& t, float& r, float& b)
 {

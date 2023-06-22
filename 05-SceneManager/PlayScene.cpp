@@ -21,6 +21,7 @@
 #include "Gun.h"
 #include "FGun.h"
 #include "EnemyGun.h"
+#include "EnemyGun_AxAy.h"
 #include "Explode.h"
 #include "Water.h"
 #include "DeadLand.h"
@@ -57,6 +58,8 @@ CPlayScene::CPlayScene(int id, LPCWSTR filePath):
 #define SCENE_SECTION_OBJECTS	2
 #define SCENE_SECTION_TILEDMAP	3
 #define SCENE_SECTION_TILESET	4
+#define SCENE_SECTION_CAMERA	5
+
 
 #define ASSETS_SECTION_UNKNOWN -1
 #define ASSETS_SECTION_SPRITES 1
@@ -200,13 +203,21 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 	}
 	case OBJECT_TYPE_BOSS_STAGE_3:
 	{
-		obj = new CBossStage3_HandPiece(x, y); break;
+		float r = (float)atof(tokens[3].c_str());
+		float accel = (float)atof(tokens[4].c_str());
+
+		obj = new CBossStage3_HandPiece(x, y, r, accel); break;
 	}
 	case OBJECT_TYPE_BOSS_STAGE_1:
 	{
+		float gun1X = (float)atof(tokens[3].c_str());
+		float gun1Y = (float)atof(tokens[4].c_str());
+		float gun2X = (float)atof(tokens[5].c_str());
+		float gun2Y = (float)atof(tokens[6].c_str());
+
 		CBossStage1* boss = new CBossStage1(x, y);
-		CBossStage1Gun* gun1= new CBossStage1Gun(x, y + 50);
-		CBossStage1Gun* gun2 = new CBossStage1Gun(x + 100, y + 50);
+		CBossStage1Gun* gun1= new CBossStage1Gun(gun1X, gun1Y);
+		CBossStage1Gun* gun2 = new CBossStage1Gun(gun2X, gun2Y);
 
 		boss->addChild(gun1);
 		boss->addChild(gun2);
@@ -342,6 +353,7 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float n
 {
 	CGameObject* obj = NULL;
 	vector<CGameObject*> gunlist;
+
 	switch (id)
 	{
 	case OBJECT_TYPE_FALL_OBJECT:
@@ -425,7 +437,26 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float n
 		}
 		break;
 	}
-	case OBJECT_TYPE_ENEMY_GUN: obj = new CEnemyGun(x, y, nx, ny, vx, vy, type); break;
+	case OBJECT_TYPE_ENEMY_GUN: 
+	{
+
+		switch (type)
+		{
+		case 0:
+			obj = new CEnemyGun(x, y, nx, ny, vx, vy, type);
+			break;
+		case ENEMY_GUN_BOSS_STAGE_1: 
+			{
+				obj = new CEnemyGun_AxAy(x, y, nx, ny, vx, vy, type);
+				break;
+			}
+		default:
+				obj = new CEnemyGun(x, y, nx, ny, vx, vy, type);
+			break;
+		}
+
+		break;
+	}
 	case OBJECT_TYPE_EXPLODE: obj = new CExplode(x, y, type); break;
 	default:
 		DebugOut(L"[ERROR] Invalid object type: %d\n", id);
@@ -469,6 +500,14 @@ void CPlayScene::_ParseSection_TILEDMAP(string line)
 
 	obj = new CTileMap(0, 0, content);
 	tiledMapObject.push_back(obj);
+}
+void CPlayScene::_ParseSection_CAMERA(string line)
+{
+	vector<string> tokens = split(line);
+
+	if (tokens.size() < 1) return;
+	int direction = (int)atoi(tokens[0].c_str());
+	Camera::GetInstance()->setCamDirection(direction);
 }
 void CPlayScene::LoadAssets(LPCWSTR assetFile)
 {
@@ -523,6 +562,7 @@ void CPlayScene::Load()
 		if (line == "[ASSETS]") { section = SCENE_SECTION_ASSETS; continue; };
 		if (line == "[TILESET]") { section = SCENE_SECTION_TILESET; continue; };
 		if (line == "[TILEDMAP]") { section = SCENE_SECTION_TILEDMAP; continue; };
+		if (line == "[CAMERA]") { section = SCENE_SECTION_CAMERA; continue; };
 		if (line == "[OBJECTS]") { section = SCENE_SECTION_OBJECTS; continue; };
 		if (line[0] == '[') { section = SCENE_SECTION_UNKNOWN; continue; }	
 
@@ -534,6 +574,7 @@ void CPlayScene::Load()
 			case SCENE_SECTION_ASSETS: _ParseSection_ASSETS(line); break;
 			case SCENE_SECTION_TILESET: _ParseSection_TILESET(line); break;
 			case SCENE_SECTION_TILEDMAP: _ParseSection_TILEDMAP(line); break;
+			case SCENE_SECTION_CAMERA: _ParseSection_CAMERA(line); break;
 			case SCENE_SECTION_OBJECTS: _ParseSection_OBJECTS(line); break;
 		}
 	}
@@ -579,13 +620,18 @@ void CPlayScene::Update(DWORD dt)
 
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		if (objects[i]->IsActive() && !objects[i]->IsCameraOver()) activeObjects.push_back(objects[i]);
+		if (!objects[i]->IsCameraOver()) activeObjects.push_back(objects[i]);
+	}
+
+	for (size_t i = 0; i < objects.size(); i++)
+	{
+		coObjects.push_back(objects[i]);
 	}
 
 	for (size_t i = 0; i < activeObjects.size(); i++)
 	{
-		coObjects.clear();
-		DetectCollision(coObjects);
+		//coObjects.clear();
+		//DetectCollision(coObjects);
 		//if (i == 0) coObjects.push_back(CEndWall::GetInstance());
 		activeObjects[i]->Update(dt, &coObjects);
 	}
@@ -597,7 +643,7 @@ void CPlayScene::Update(DWORD dt)
 	float px, py;
 	player->GetPosition(px, py);
 
-	Camera::GetInstance()->setCamPosition(px, 0);
+	Camera::GetInstance()->setCamPosition(px, py);
 	Camera::GetInstance()->checkIsCameraOver(objects);
 	PurgeDeletedObjects();
 }
@@ -609,7 +655,9 @@ void CPlayScene::Render()
 	// general render
 	for (int i = 0; i < objects.size(); i++)
 	{
-		if(objects[i]->IsActive()) objects[i]->Render();
+		//if(objects[i]->IsActive()) objects[i]->Render();
+		objects[i]->Render();
+
 	}
 
 	CEndWall::GetInstance()->Render();

@@ -1,0 +1,62 @@
+# list of object assets to load in this scene
+[ASSETS]
+lance.txt
+enemies-stage1.txt
+enemies-stage3.txt
+gun.txt
+soldier.txt
+
+[TILESET]
+# width|height|maxTiles|lengthTileX|lengthTileY|frame_time|textID
+16	16	250	22	10	10000	210
+[TILEDMAP]
+# load tile map
+map3_map.csv
+[CAMERA]
+# 0: stage1 1: stage:3
+1
+[OBJECTS]
+# type	x	y	extra_settings per object type
+# type: 0 = Mario , 1 = Brick, 2 = Goomba, 3 = Koopas
+# See OBJECT_TYPE constants in AssetIDs.h
+
+# MARIO
+0	50	150
+
+#fire
+#40	150	50	1	75
+#40	150	50	-1	75
+#moving-rock
+#41	150	50
+#fall-rock
+#42	150	200
+#hide-soldier
+#43	150	50	
+#boss
+49	150	75	10	4
+49	150	75	20	4
+49	150	75	30	4
+49	150	75	40	4
+
+#soldier
+#20	100	150	1	0
+
+#gun-machine2
+#25	1264	72
+
+#gun-machine1
+#23	2064	72
+
+#gunbox
+#10	336	72	1
+
+#gun-soldier
+#24	320	24
+
+#gunship
+#11	258	169	1
+
+# downbrick & land
+4	32	109	46
+#deadland
+9	1776	0	16	15	92

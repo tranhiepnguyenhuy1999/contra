@@ -2,8 +2,8 @@
 #include "GameObject.h"
 #include "BossStage1Gun.h"
 
-#define BOSS_STAGE_1_BBOX_WIDTH 32
-#define BOSS_STAGE_1_BBOX_HEIGHT 32
+#define BOSS_STAGE_1_BBOX_WIDTH 16
+#define BOSS_STAGE_1_BBOX_HEIGHT	16
 
 #define BOSS_STAGE_1_STATE_ACTIVE 100
 #define BOSS_STAGE_1_STATE_DIE 200

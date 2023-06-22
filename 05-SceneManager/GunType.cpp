@@ -3,10 +3,7 @@
 
 CGunType::CGunType(float x, float y, float nx, int type) :CGameObject(x, y)
 {
-	if (nx < 0)
-		vx = -GUNTYPE_SPEED;
-	else
-		vx = GUNTYPE_SPEED;
+	vx = nx*GUNTYPE_SPEED;
 	ay = GUNTYPE_GRAVITY;
 	id = (int)type;
 	SetState(GUNTYPE_STATE_ACTIVE);

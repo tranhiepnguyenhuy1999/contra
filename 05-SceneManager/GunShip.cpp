@@ -1,30 +1,24 @@
 #include "GunShip.h"
+#include "Camera.h"
+#include "Explode.h"
 #include "AssetIDs.h"
 
-CGunShip::CGunShip(float x, float y, float typeGun) :CGameObject(x, y)
+CGunShip::CGunShip(float x, float y, float type) :CGameObject(x, y)
 {
-	this->ax = 0;
-	this->ay = GUNSHIP_GRAVITY;
-	this->typeGun = typeGun;
+	this->ay = -GUNSHIP_GRAVITY;
+	gunType = type;
+	isWorking = false;
 	SetState(GUNSHIP_STATE_ACTIVE);
 }
 
 void CGunShip::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GUNSHIP_STATE_DIE)
-	{
-		left = x - GUNSHIP_BBOX_WIDTH / 2;
-		top = y + (GUNSHIP_BBOX_HEIGHT_DIE / 2);
-		right = left + GUNSHIP_BBOX_WIDTH;
-		bottom = top - GUNSHIP_BBOX_HEIGHT_DIE;
-	}
-	else
-	{
-		left = x - GUNSHIP_BBOX_WIDTH / 2;
-		top = y + (GUNSHIP_BBOX_HEIGHT / 2);
-		right = left + GUNSHIP_BBOX_WIDTH;
-		bottom = top - GUNSHIP_BBOX_HEIGHT;
-	}
+
+	left = x - GUNSHIP_BBOX_WIDTH / 2;
+	top = y + (GUNSHIP_BBOX_HEIGHT / 2);
+	right = left + GUNSHIP_BBOX_WIDTH;
+	bottom = top - GUNSHIP_BBOX_HEIGHT;
+	
 }
 
 void CGunShip::OnNoCollision(DWORD dt)
@@ -39,25 +33,33 @@ void CGunShip::OnCollisionWith(LPCOLLISIONEVENT e)
 
 void CGunShip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	float cx, cy;
-	CGame::GetInstance()->GetCamPos(cx, cy);
+	float cl, ct, cr, cb;
+	Camera::GetInstance()->getCamBoundingBox(cl, ct, cr, cb);
+	
+	if (!isWorking)
+	{
+		if (x < cl)
+		{
+			isWorking = true;
+		}
+		return;
+	}
 
 	vy += ay * dt;
-	vx += ax * dt;
-	//DebugOut(L"count %d", GetTickCount64() - count_start);
+	
 	if (state == GUNSHIP_STATE_DIE)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y);
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUNTYPE, x, y, 1, 1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_INFRASTRUCTURE);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_GUNTYPE, x, y, 0, 0, 0, 0, gunType);
 		this->isDeleted = true;
 		return;
 	}
-	if ((state == GUNSHIP_STATE_ACTIVE) && abs(vy)>GUNSHIP_GRAVITY_MAX)
+	else if (state == GUNSHIP_STATE_ACTIVE && abs(vy)>GUNSHIP_GRAVITY_MAX)
 	{
-		if (ay > 0) vy = GUNSHIP_GRAVITY_MAX;
-		else vy = -GUNSHIP_GRAVITY_MAX;
+		vy = 0;
 		ay = -ay;
 	}
+
 	CGameObject::Update(dt, coObjects);
 	CCollision::GetInstance()->Process(this, dt, coObjects);
 }
