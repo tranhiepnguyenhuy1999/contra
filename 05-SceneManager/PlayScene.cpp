@@ -208,16 +208,25 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		float r = (float)atof(tokens[3].c_str());
 		float accel = (float)atof(tokens[4].c_str());
 		float init = (float)atof(tokens[5].c_str());
+		float li1 = (float)atof(tokens[6].c_str());
+		float li2 = (float)atof(tokens[7].c_str());
+		float li3 = (float)atof(tokens[8].c_str());
+		float li4 = (float)atof(tokens[9].c_str());
 
-		obj = new CBossStage3_HandPiece(x, y, r, accel, init); break;
+
+		obj = new CBossStage3_HandPiece(x, y, r, accel, init, li1, li2, li3, li4); break;
 	}
 	case OBJECT_TYPE_BOSS_STAGE_3_SHOOTING_HANDPIECE:
 	{
 		float r = (float)atof(tokens[3].c_str());
 		float accel = (float)atof(tokens[4].c_str());
 		float init = (float)atof(tokens[5].c_str());
+		float li1 = (float)atof(tokens[6].c_str());
+		float li2 = (float)atof(tokens[7].c_str());
+		float li3 = (float)atof(tokens[8].c_str());
+		float li4 = (float)atof(tokens[9].c_str());
 
-		obj = new CBossStage3_ShootingHandPiece(x, y, r, accel, init); break;
+		obj = new CBossStage3_ShootingHandPiece(x, y, r, accel, init, li1, li2, li3, li4); break;
 	}
 	case OBJECT_TYPE_BOSS_STAGE_3_HAND:
 	{

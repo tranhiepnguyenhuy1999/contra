@@ -2,14 +2,34 @@
 #include "AssetIDs.h"
 #include "EnemyGun.h"
 
-CBossStage3_ShootingHandPiece::CBossStage3_ShootingHandPiece(float x, float y, float r, float accel, float initAngle) :CBossStage3_HandPiece(x, y, r, accel, initAngle)
+CBossStage3_ShootingHandPiece::CBossStage3_ShootingHandPiece(float x, float y, float r, float accel, float initAngle, int li1, int li2, int li3, int li4) :CBossStage3_HandPiece(x, y, r, accel, initAngle, li1, li2, li3, li4)
 {
 }
 void CBossStage3_ShootingHandPiece::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (angle >= 360) angle = accel;
-	else angle += accel;
+	if (state == BOSS_STAGE_3_HANDPIECE_STATE_MOVE_2)
+	{
+		if (angle >= 360) angle = accel;
+		else angle += accel;
+	}
+	else if (state == BOSS_STAGE_3_HANDPIECE_STATE_MOVE_1)
+	{
+		if (angle > limit1)
+		{
+			angle = limit1;
+			accel = -accel;
+		}
+		else if (angle < limit2)
+		{
+			angle = limit2;
+			accel = -accel;
+		}
+		else
+			angle += accel;
+	}
+
 	float percent = (float)angle / 180.0f;
+
 	x = r * sin(percent * M_PI) + centerX;
 	y = r * cos(percent * M_PI) + centerY;
 

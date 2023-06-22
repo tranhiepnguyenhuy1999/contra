@@ -10,7 +10,13 @@ class CBossStage3_ShootingHandPiece : public CBossStage3_HandPiece
 {
 
 public:
-	CBossStage3_ShootingHandPiece(float x, float y, float r, float accel, float initAngle);
+	CBossStage3_ShootingHandPiece(float x, float y, float r, float accel, float initAngle, int li1=0, int li2=0, int li3=0, int li4=0);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();
+
+	bool IsFinishState1() { return isFinishState1<=0;}
+	bool IsFinishState2() { return isFinishState2 <= 0; }
+	bool IsFinishState3() { return isFinishState3; }
+	bool IsFinishState4() { return isFinishState4;}
+
 };

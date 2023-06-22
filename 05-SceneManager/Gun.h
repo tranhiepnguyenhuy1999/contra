@@ -45,6 +45,8 @@ protected:
 	void OnCollisionWithGunShip(LPCOLLISIONEVENT e);
 	void OnCollisionWithBossStage1(LPCOLLISIONEVENT e);
 	void OnCollisionWithBossStage1Gun(LPCOLLISIONEVENT e);
+	void OnCollisionWithBossStage3_HandPiece(LPCOLLISIONEVENT e);
+
 
 
 public:

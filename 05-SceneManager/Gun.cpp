@@ -6,6 +6,7 @@
 #include "GunMachine1.h"
 #include "BossStage1.h"
 #include "BossStage1Gun.h"
+#include "BossStage3_HandPiece.h"
 #include "debug.h"
 
 CGun::CGun(float x, float y, float nx, float ny, float vx, float vy, int type ) :CGameObject(x, y)
@@ -86,6 +87,8 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithBossStage1(e);
 	else if (dynamic_cast<CBossStage1Gun*>(e->obj))
 		OnCollisionWithBossStage1Gun(e);
+	else if (dynamic_cast<CBossStage3_HandPiece*>(e->obj))
+		OnCollisionWithBossStage3_HandPiece(e);
 }
 void CGun::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 {
@@ -121,9 +124,14 @@ void CGun::OnCollisionWithGunShip(LPCOLLISIONEVENT e)
 }
 void CGun::OnCollisionWithBossStage1(LPCOLLISIONEVENT e)
 {
-	DebugOut(L"yeah");
 	CBossStage1* i = dynamic_cast<CBossStage1*>(e->obj);
 	i->SetState(BOSS_STAGE_1_STATE_DMG);
+	SetState(GUN_STATE_DIE);
+}
+void CGun::OnCollisionWithBossStage3_HandPiece(LPCOLLISIONEVENT e)
+{
+	CBossStage3_HandPiece* i = dynamic_cast<CBossStage3_HandPiece*>(e->obj);
+	//i->SetState(BOSS_STAGE_3_HANDPIECE_STATE_DMG);
 	SetState(GUN_STATE_DIE);
 }
 void CGun::OnCollisionWithBossStage1Gun(LPCOLLISIONEVENT e)

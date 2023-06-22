@@ -546,12 +546,6 @@ void CLance::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			right = left + LANCE_BIG_SITTING_BBOX_WIDTH;
 			bottom = top - LANCE_BIG_SITTING_BBOX_HEIGHT;
 		}
-		else if (!isOnPlatform) {
-			left = x - LANCE_BIG_BBOX_WIDTH / 2;
-			top = y + LANCE_BIG_BBOX_HEIGHT / 2;
-			right = left + LANCE_BIG_BBOX_WIDTH;
-			bottom = top - LANCE_BIG_BBOX_HEIGHT;
-		}
 		else if (isSitting && vx == 0)
 		{
 			left = x - LANCE_BIG_SITTING_BBOX_WIDTH / 2;
