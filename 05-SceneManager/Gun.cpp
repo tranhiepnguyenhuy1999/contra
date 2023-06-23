@@ -5,6 +5,7 @@
 #include "GunBox.h"
 #include "GunShip.h"
 #include "GunMachine1.h"
+#include "GunMachine2.h"
 #include "BossStage1.h"
 #include "BossStage1Gun.h"
 #include "BossStage3_HandPiece.h"
@@ -26,7 +27,7 @@ void CGun::Render()
 		for (int i = 0; i < 3; i++) {
 			if(nx!=0)
 			CAnimations::GetInstance()->Get(aniId)->Render(x + i * GUN_L_BBOX_WIDTH + GUN_L_BBOX_WIDTH / 2, y);
-			else 
+			else
 			CAnimations::GetInstance()->Get(aniId)->Render(x, y + i * GUN_L_BBOX_HEIGHT + GUN_L_BBOX_HEIGHT / 2);
 		}
 	else if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
@@ -84,6 +85,8 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 		OnCollisionWithGunBox(e);
 	else if (dynamic_cast<CGunMachine1*>(e->obj))
 		OnCollisionWithGunMachine1(e);
+	else if (dynamic_cast<CGunMachine2*>(e->obj))
+		OnCollisionWithGunMachine2(e);
 	else if (dynamic_cast<CGunShip*>(e->obj))
 		OnCollisionWithGunShip(e);
 	else if (dynamic_cast<CBossStage1*>(e->obj))
@@ -96,16 +99,13 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 void CGun::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 {
 	CSoldier* i = dynamic_cast<CSoldier*>(e->obj);
-	i->SetState(SOLDIER_STATE_DIE);
+	if(i->GetState() != SOLDIER_STATE_DIE) i->SetState(SOLDIER_STATE_DIE);
 	SetState(GUN_STATE_DIE);
 }
 void CGun::OnCollisionWithGunSoldier(LPCOLLISIONEVENT e)
 {
 	CGunSoldier* i = dynamic_cast<CGunSoldier*>(e->obj);
-	if (i->isCollie())
-	{
-		i->SetState(GUNSOLDIER_STATE_DIE);
-	}
+	if(i->GetState() != GUNSOLDIER_STATE_DIE)i->SetState(GUNSOLDIER_STATE_DIE);
 	SetState(GUN_STATE_DIE);
 }
 void CGun::OnCollisionWithHideSoldier(LPCOLLISIONEVENT e)
@@ -123,6 +123,12 @@ void CGun::OnCollisionWithGunMachine1(LPCOLLISIONEVENT e)
 	i->handleGetAttack(this->dmg);
 	SetState(GUN_STATE_DIE);
 }
+void CGun::OnCollisionWithGunMachine2(LPCOLLISIONEVENT e)
+{
+	CGunMachine2* i = dynamic_cast<CGunMachine2*>(e->obj);
+	i->handleGetAttack(this->dmg);
+	SetState(GUN_STATE_DIE);
+}
 void CGun::OnCollisionWithGunBox(LPCOLLISIONEVENT e)
 {
 	CGunBox* i = dynamic_cast<CGunBox*>(e->obj);
@@ -134,7 +140,10 @@ void CGun::OnCollisionWithGunBox(LPCOLLISIONEVENT e)
 void CGun::OnCollisionWithGunShip(LPCOLLISIONEVENT e)
 {
 	CGunShip* i = dynamic_cast<CGunShip*>(e->obj);
-	i->SetState(GUNSHIP_STATE_DIE);
+	if (i->IsWorking())
+	{
+		i->SetState(GUNSHIP_STATE_DIE);
+	}
 	SetState(GUN_STATE_DIE);
 }
 void CGun::OnCollisionWithBossStage1(LPCOLLISIONEVENT e)
@@ -152,12 +161,12 @@ void CGun::OnCollisionWithBossStage3_HandPiece(LPCOLLISIONEVENT e)
 void CGun::OnCollisionWithBossStage1Gun(LPCOLLISIONEVENT e)
 {
 	CBossStage1Gun* i = dynamic_cast<CBossStage1Gun*>(e->obj);
-	i->SetState(BOSS_STAGE_1_GUN_STATE_DMG);
+	i->isAttacked();
 	SetState(GUN_STATE_DIE);
 }
 void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (state != GUN_STATE_RELEASE && (GetTickCount64() - count_start > 3000))
+	if (state == GUN_STATE_RELEASE && (GetTickCount64() - count_start > 1000))
 	{
 		count_start = -1;
 		isDeleted = true;

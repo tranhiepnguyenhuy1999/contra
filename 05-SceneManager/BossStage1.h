@@ -34,7 +34,11 @@ public:
 
 	virtual void SetState(int state);
 
+
+	void isAttacked() { life--; }
+
 	void IsDeleteChildren();
+	
 	void addChild(CBossStage1Gun* e) {
 		children.push_back(e);
 	}

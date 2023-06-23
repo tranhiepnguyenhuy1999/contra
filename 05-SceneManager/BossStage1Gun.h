@@ -29,7 +29,9 @@ public:
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 
 	virtual void SetState(int state);
-
+	void isAttacked() {
+		life--;
+	}
 	bool isDie() { return (life <= 0); }
 };
 

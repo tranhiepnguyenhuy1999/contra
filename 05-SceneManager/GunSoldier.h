@@ -8,6 +8,9 @@
 #define GUNSOLDIER_BBOX_WIDTH 16
 #define GUNSOLDIER_BBOX_HEIGHT 32
 
+#define GUNSOLDIER_BBOX_UP_WIDTH 16
+#define GUNSOLDIER_BBOX_UP_HEIGHT 40
+
 #define GUNSOLDIER_GUN_SPEED 0.05f
 
 #define GUNSOLDIER_GRAVITY 0.002f
@@ -49,7 +52,7 @@ protected:
 	float ay;
 	float gunLeft;
 	float isHide;
-
+	int prev; // 0: up, 1: straight
 	BOOLEAN isShooting;
 
 	ULONGLONG loop_start;
@@ -61,6 +64,7 @@ protected:
 	int getAniId(int flag);
 	void handleShooting();
 	float translateToPercent(float data, boolean isXAxis);
+
 public:
 	CGunSoldier(float x, float y, bool isHide=false);
 	

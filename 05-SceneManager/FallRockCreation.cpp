@@ -1,11 +1,5 @@
 #include "FallRockCreation.h"
 #include "AssetIDs.h"
-#include "Camera.h"
-#include "PlayerData.h"
-#include "EnemyGun.h"
-#include "Explode.h"
-#include "debug.h"
-
 
 CFallRockCreation::CFallRockCreation(float x, float y) :CGameObject(x, y)
 {

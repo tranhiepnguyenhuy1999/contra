@@ -13,12 +13,12 @@ CGunSoldier::CGunSoldier(float x, float y, bool isHide) :CGameObject(x, y)
 	gun_loop_start = -1;
 	gunLeft = 3;
 	isShooting = false;
+	prev = 0;
 	SetState(GUNSOLDIER_STATE_UNACTIVE);
 }
 
 void CGunSoldier::GetBoundingBox(float& left, float& top, float& right, float& bottom)
 {
-	if (state == GUNSOLDIER_STATE_DIE) return;
 	left = x - GUNSOLDIER_BBOX_WIDTH / 2;
 	top = y + (GUNSOLDIER_BBOX_HEIGHT / 2);
 	right = left + GUNSOLDIER_BBOX_WIDTH;
@@ -61,10 +61,12 @@ void CGunSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			isShooting = true;
 			ready_shooting_start = GetTickCount64();
 		}
-
 		if (GetTickCount64() - ready_shooting_start > 1000)
 		{
 			if (isHide) {
+				int flag = getPlayerPosition();
+				if (flag < 4) nx = -1;
+				else nx = 1;
 				CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 0, nx * ENEMY_GUN_MAX_SPEED, 0);
 				loop_start = GetTickCount64();
 				isShooting = false;
@@ -155,7 +157,18 @@ void CGunSoldier::Render()
 {
 	int flag = getPlayerPosition();
 	int aniId = getAniId(flag);
-
+	switch (flag)
+	{
+	case 1:
+	case 4:
+		if (prev != 0) y += GUNSOLDIER_BBOX_UP_HEIGHT / 2 - GUNSOLDIER_BBOX_HEIGHT / 2;
+		prev = 0;
+		break;
+	default:
+		if (prev != 1) y -= GUNSOLDIER_BBOX_UP_HEIGHT / 2 - GUNSOLDIER_BBOX_HEIGHT / 2;
+		prev = 1;
+		break;
+	}
 	if (aniId != -1) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
 }
@@ -249,7 +262,6 @@ float CGunSoldier::translateToPercent(float data, boolean isXAxis) {
 }
 void CGunSoldier::SetState(int state)
 {
-	CGameObject::SetState(state);
 	switch (state)
 	{
 	case GUNSOLDIER_STATE_BOTTOM:
@@ -266,4 +278,5 @@ void CGunSoldier::SetState(int state)
 		ay = GUNSOLDIER_GRAVITY;
 		break;
 	}
+	CGameObject::SetState(state);
 }

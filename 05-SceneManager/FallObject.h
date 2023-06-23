@@ -27,7 +27,7 @@ protected:
 
 	virtual void OnCollisionWith(LPCOLLISIONEVENT e);
 public:
-	CFallObject(float x, float y, float nx);
+	CFallObject(float x, float y, float vx);
 	virtual void SetState(int state);
 	bool IsFallen() { return isFallen;}
 };

@@ -2,6 +2,7 @@
 #include "GunMachine1.h"
 #include "AssetIDs.h"
 #include "Camera.h"
+#include "Explode.h"
 #include "EnemyGun.h"
 
 CGunMachine1::CGunMachine1(float x, float y) :CGameObject(x, y)
@@ -35,7 +36,7 @@ void CGunMachine1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (state == GUNMACHINE1_STATE_DIE)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_INFRASTRUCTURE);
 		isDeleted = true;
 		return;
 	}

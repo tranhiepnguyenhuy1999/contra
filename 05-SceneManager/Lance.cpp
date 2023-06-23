@@ -126,9 +126,10 @@ void CLance::OnCollisionWith(LPCOLLISIONEVENT e)
 }
 void CLance::OnCollisionWithGunType(LPCOLLISIONEVENT e)
 {
-	DebugOut(L"Touched !!! \n");
 	CGunType* i = dynamic_cast<CGunType*>(e->obj);
-	gunType = i->id;
+	if (i->id < 5) {
+		gunType = i->id;
+	}
 	i->SetState(GUNTYPE_STATE_DIE);
 }
 void CLance::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
@@ -461,9 +462,9 @@ void CLance::SetState(int state)
 		}
 		break;
 	case LANCE_STATE_LOOKUP_RELEASE:
+			isLookingUp = false;
 		if (isLookingUp && !isSwimming)
 		{
-		isLookingUp = false;
 			// update y when not moving
 			if(vx==0 && !isRunning) y -= LANCE_BIG_LOOKUP_BBOX_HEIGHT / 2 - LANCE_BIG_BBOX_HEIGHT / 2;
 			state = LANCE_STATE_IDLE;

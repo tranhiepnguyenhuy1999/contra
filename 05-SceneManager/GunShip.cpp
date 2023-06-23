@@ -77,7 +77,7 @@ void CGunShip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CGunShip::Render()
 {
 	int aniId = ID_ANI_GUNSHIP_STATIC;
-	CAnimations::GetInstance()->Get(aniId)->Render(x, y);
+	if(isWorking) CAnimations::GetInstance()->Get(aniId)->Render(x, y);
 	RenderBoundingBox();
 }
 

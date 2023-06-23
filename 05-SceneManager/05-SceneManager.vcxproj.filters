@@ -195,6 +195,9 @@
     <ClCompile Include="FallRockCreation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SoldierCreation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h">
@@ -387,6 +390,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FallRockCreation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoldierCreation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

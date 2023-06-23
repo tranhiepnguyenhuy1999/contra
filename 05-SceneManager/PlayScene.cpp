@@ -39,6 +39,7 @@
 #include "BossStage3_HandPiece.h"
 #include "BossStage3_ShootingHandPiece.h"
 #include "BossStage3_Hand.h"
+#include "SoldierCreation.h"
 
 #include "Camera.h"
 #include "PlayerData.h"
@@ -324,6 +325,7 @@ void CPlayScene::_ParseSection_OBJECTS(string line)
 		obj = new CMovingRock(x, y, movingRange);
 		break;
 	}
+	case OBJECT_TYPE_SOLDIER_CREATION: obj = new CSoldierCreation(x, y); break;
 	case OBJECT_TYPE_FALL_ROCK_CREATION: obj = new CFallRockCreation(x, y); break;
 	case OBJECT_TYPE_HIDESOLDIER: obj = new CHideSoldier(x, y); break;
 
@@ -423,7 +425,7 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float n
 	{
 	case OBJECT_TYPE_FALL_OBJECT:
 	{
-		obj = new CFallObject(x, y, nx);
+		obj = new CFallObject(x, y, vx);
 		if (dynamic_cast<CSoldier*>(srcObject))
 		{
 			CSoldier* i = dynamic_cast<CSoldier*>(srcObject);
@@ -431,6 +433,10 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float n
 		}
 		break;
 		
+	}
+	case OBJECT_TYPE_SOLDIER:
+	{
+		obj = new CSoldier(x, y, type, true); break;
 	}
 	case OBJECT_TYPE_FALL_ROCK: obj = new CFallRock(x, y); break;
 	case OBJECT_TYPE_BRICK: obj = new CBrick(x, y); break;

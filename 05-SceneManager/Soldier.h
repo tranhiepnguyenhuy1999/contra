@@ -2,9 +2,10 @@
 #include "GameObject.h"
 #include "FallObject.h"
 
-#define SOLDIER_GRAVITY 0.002f
+#define SOLDIER_GRAVITY 0.0002f
 #define SOLDIER_SPEED 0.05f
-#define SOLDIER_DIE_DEFLECT 0.25f
+#define SOLDIER_JUMP_DEFLECT 0.1f
+#define SOLDIER_MAX_GRAVITY 0.15f
 
 #define SOLDIER_BBOX_WIDTH 16
 #define SOLDIER_BBOX_HEIGHT 34
@@ -20,11 +21,11 @@
 #define ID_ANI_SOLDIER_WALKING_RIGHT 2001
 #define ID_ANI_SOLDIER_WALKING_LEFT	2002
 
-#define ID_ANI_SOLDIER_DIE_RIGHT	2003
-#define ID_ANI_SOLDIER_DIE_LEFT		2004
+#define ID_ANI_SOLDIER_DIE_RIGHT	2004
+#define ID_ANI_SOLDIER_DIE_LEFT		2003
 
-#define ID_ANI_SOLDIER_SHOOTING_RIGHT	2005
-#define ID_ANI_SOLDIER_SHOOTING_LEFT	2006
+#define ID_ANI_SOLDIER_SHOOTING_RIGHT	2006
+#define ID_ANI_SOLDIER_SHOOTING_LEFT	2005
 
 class CSoldier : public CGameObject
 {
@@ -33,9 +34,9 @@ protected:
 	bool isActive = false;
 	bool isOnPlatform;
 	
-	bool isShooting; // flag if soldier can shoot or not
-	bool isHaveFallObj; // flag if soldier can have fall obj or not
-
+	bool isShooting;
+	bool isHaveFallObj;
+	bool isJump;
 
 	ULONGLONG die_start;
 	ULONGLONG count_start;

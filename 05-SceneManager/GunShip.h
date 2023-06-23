@@ -2,7 +2,7 @@
 #include "GameObject.h"
 
 #define GUNSHIP_GRAVITY 0.0002f
-#define GUNSHIP_SPEED 0.085f
+#define GUNSHIP_SPEED 0.15f
 #define GUNSHIP_GRAVITY_MAX	0.125f 
 
 #define GUNSHIP_BBOX_WIDTH 16
@@ -30,6 +30,7 @@ protected:
 	virtual int IsBlocking() { return 0; }
 
 public:
+	bool IsWorking() { return isWorking; }
 	CGunShip(float x, float y, float type, float ny=-1);
 	virtual void SetState(int state);
 };

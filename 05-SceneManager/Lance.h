@@ -195,7 +195,7 @@ public:
 		//return (state != LANCE_STATE_DIE);
 		return 1;
 	}
-	int IsBlocking() { return (state != LANCE_STATE_DIE && untouchable == 0); }
+	int IsBlocking() { return 0; }
 
 	void OnNoCollision(DWORD dt);
 	void OnCollisionWith(LPCOLLISIONEVENT e);

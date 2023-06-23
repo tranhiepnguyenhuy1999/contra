@@ -1,5 +1,5 @@
 #include "Soldier.h"
-
+#include "Explode.h"
 #include "AssetIDs.h"
 #include "PlayerData.h"
 
@@ -13,6 +13,7 @@ CSoldier::CSoldier(float x, float y, float isShooting, float isHaveFallObj) :CGa
 	die_start = -1;
 	count_start = -1;
 	isOnPlatform = false;
+	isJump = false;
 	fallObject = NULL;
 	nx = -1;
 	SetState(SOLDIER_STATE_WALKING);
@@ -34,7 +35,7 @@ void CSoldier::OnNoCollision(DWORD dt)
 
 void CSoldier::OnCollisionWith(LPCOLLISIONEVENT e)
 {
-	if (!e->obj->IsBlocking()) { isOnPlatform = true; }
+	if (e->obj->IsBlocking()) isOnPlatform = true;
 	if (e->ny != 0)
 	{
 		vy = 0;
@@ -48,28 +49,44 @@ void CSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (fallObject !=NULL)
 	{
 		if (fallObject->IsFallen()) {
-			vx = -vx;
+			float r = (float)((double)rand() / (RAND_MAX));
+			if (r > 0.5f)
+			{
+				vx = -vx;
+				nx = -nx;
+			}
+			else {
+				isJump = true;
+				vy = SOLDIER_JUMP_DEFLECT;
+			}
 			removeFallObject();
 			return;
 		}
 	}
+	else {
+		if(!isJump)	CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_FALL_OBJECT, x + nx * SOLDIER_BBOX_WIDTH, y, 0, 0, (float)nx * SOLDIER_SPEED, 0, 0, this);
+	}
 
 	vy += ay * dt;
 
+	if (abs(vy) > SOLDIER_MAX_GRAVITY) vy = -SOLDIER_MAX_GRAVITY;
+
 	if (isShooting != 0 && state == SOLDIER_STATE_WALKING && (GetTickCount64() - count_start) > SOLDIER_WAITING_SHOOTING_TIMEOUT) {
+
 		SetState(SOLDIER_STATE_SHOOTING);
 	}
 	else if (state == SOLDIER_STATE_SHOOTING && (GetTickCount64() - count_start) > SOLDIER_SHOOTING_TIMEOUT) {
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, (float)nx);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_ENEMY_GUN, x, y, 0, 0, (float)nx);
 		SetState(SOLDIER_STATE_WALKING);
 	}
-	else if (state == SOLDIER_STATE_DIE && vy > SOLDIER_DIE_DEFLECT) {
+	else if (state == SOLDIER_STATE_DIE && vy > SOLDIER_JUMP_DEFLECT) {
 		ay = 0;
 		vy = 0;
 	}
 	else if (state == SOLDIER_STATE_DIE && (GetTickCount64() - die_start > SOLDIER_DIE_TIMEOUT))
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, 2);
+		if (fallObject != NULL) removeFallObject();
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_HUMAN);
 		CPlayerData::GetInstance()->updatePoint(100);
 		isDeleted = true;
 		return;
@@ -83,14 +100,14 @@ void CSoldier::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CSoldier::Render()
 {
 	int aniId = ID_ANI_SOLDIER_WALKING_LEFT;
-	if (state == SOLDIER_STATE_DIE)
-	{
-		if (nx > 0)
-			aniId = ID_ANI_SOLDIER_DIE_LEFT;
-		else
-			aniId = ID_ANI_SOLDIER_DIE_RIGHT;
-	}
-	else if (state == SOLDIER_STATE_SHOOTING) {
+	//if (state == SOLDIER_STATE_DIE)
+	//{
+	//	if (nx > 0)
+	//		aniId = ID_ANI_SOLDIER_DIE_LEFT;
+	//	else
+	//		aniId = ID_ANI_SOLDIER_DIE_RIGHT;
+	//}
+	if (state == SOLDIER_STATE_SHOOTING) {
 		if (nx > 0)
 			aniId = ID_ANI_SOLDIER_SHOOTING_LEFT;
 		else

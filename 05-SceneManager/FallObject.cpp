@@ -1,9 +1,9 @@
 #include "FallObject.h"
 
-CFallObject::CFallObject(float x, float y, float nx) :CGameObject(x, y)
+CFallObject::CFallObject(float x, float y, float vx) :CGameObject(x, y)
 {
 	this->ay = -FALL_OBJECT_GRAVITY;
-	vx = nx;
+	this->vx = vx;
 	isFallen = false;
 	fallenRange = y - 50;
 	SetState(FALL_OBJECT_STATE_ACTIVE);

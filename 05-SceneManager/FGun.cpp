@@ -3,17 +3,11 @@
 
 CFGun::CFGun(float x, float y, float nx, float ny, float vx, float vy, float type) :CGun(x, y, nx, ny, vx, vy, type)
 {	
-	vyMax = FGUN_MAX_SPEED_Y;
-	vxMax = FGUN_MAX_SPEED_X;
-
-	vy = vyMax;
-	ay = -FGUN_ACCEL_Y;
-
-	vx = 0;
-	ax = 2.0f*FGUN_ACCEL_X;
-
-	nextMovement = 1;
-	this->nx = 1;
+	accel = 15;
+	angle = 0;
+	centerX = x;
+	centerY = y;
+	r = 15.0f;
 }
 void CFGun::OnNoCollision(DWORD dt)
 {
@@ -22,47 +16,19 @@ void CFGun::OnNoCollision(DWORD dt)
 };
 void CFGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	vx += ax * 10;
-	vy += ay * 10;
 
-	
+	angle += accel;
 
-	if (vy < 0 && nextMovement ==1) {
-		vy = 0;
-		ay = -FGUN_ACCEL_Y;
-		
-		vx = 2.0f*vxMax;
-		ax = -2.0f*FGUN_ACCEL_X;
-		nextMovement = 2;
-	}
-	else if (vy < -vyMax && nextMovement==2) {
-		vy = -vyMax;
-		ay = FGUN_ACCEL_Y;
-		
-		vx = 0;
-		ax = -FGUN_ACCEL_X;
-		
-		nextMovement = 3;
-	}
-	else if (vy > 0 && nextMovement==3) {
-		vy = 0;
-		ay = FGUN_ACCEL_Y;
-
-		vx = -vxMax;
-		ax = FGUN_ACCEL_X;
-
-		nextMovement = 4;
-	}
-	else if (vy > vyMax && nextMovement==4)
+	if (angle > 360)
 	{
-		vy = vyMax;
-		ay = -FGUN_ACCEL_Y;
-
-		vx =0;
-		ax = 2.0f*FGUN_ACCEL_X;
-		
-		nextMovement = 1;
+		centerX += 2*r;
+		angle = accel;
 	}
+
+	float percent = (float)angle / 180.0f;
+
+	x = r * sin(percent * M_PI) + centerX;
+	y = r * cos(percent * M_PI) + centerY;
 
 	if (state == GUN_STATE_DIE)	
 	{

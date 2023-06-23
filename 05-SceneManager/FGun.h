@@ -15,10 +15,13 @@
 #define	FGUN_BBOX_WIDTH 8
 #define FGUN_BBOX_HEIGHT 8
 
+#define M_PI 3.14159f
+
 class CFGun : public CGun {
-	float ax, ay;
-	float vxMax, vyMax;
-	int nextMovement;
+	int angle;
+	float centerX, centerY;
+	int accel;
+	float r;
 public:
 	CFGun(float x, float y, float nx, float ny, float vx, float vy, float type);
 	virtual void GetBoundingBox(float& left, float& top, float& right, float& bottom);

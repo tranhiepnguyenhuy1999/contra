@@ -1,4 +1,5 @@
 #include "BossStage1Gun.h"
+#include "Explode.h"
 #include "AssetIDs.h"
 #include "EnemyGun.h"
 
@@ -30,7 +31,7 @@ void CBossStage1Gun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (state == BOSS_STAGE_1_GUN_STATE_DIE)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, 1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_INFRASTRUCTURE);
 		isDeleted = true;
 		return;
 	}

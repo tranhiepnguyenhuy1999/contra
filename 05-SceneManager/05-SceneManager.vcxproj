@@ -194,6 +194,7 @@
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="SampleKeyEventHandler.cpp" />
     <ClCompile Include="Soldier.cpp" />
+    <ClCompile Include="SoldierCreation.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Sprites.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="SampleKeyEventHandler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Soldier.h" />
+    <ClInclude Include="SoldierCreation.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Sprites.h" />

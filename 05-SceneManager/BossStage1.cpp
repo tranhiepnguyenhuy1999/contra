@@ -1,4 +1,5 @@
 #include "BossStage1.h"
+#include "Explode.h"
 #include "AssetIDs.h"
 #include "debug.h"
 
@@ -34,16 +35,16 @@ void CBossStage1::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (life <= 0)
 	{
-		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 1);
+		CGame::GetInstance()->GetCurrentScene()->createNewObject(OBJECT_TYPE_EXPLODE, x, y, 0, 0, 0, 0, EXPLODE_TYPE_INFRASTRUCTURE);
 		IsDeleteChildren();
 		isDeleted = true;
+		CGame::GetInstance()->InitiateSwitchScene(2);
 		return;
 	}
 	for (UINT i = 0; i < children.size(); i++) {
 		if (children[i] != NULL && children[i]->isDie()) {
 			children[i]->SetState(BOSS_STAGE_1_GUN_STATE_DIE);
 			children[i]=NULL;
-
 		}
 	}
 	CGameObject::Update(dt, coObjects);
