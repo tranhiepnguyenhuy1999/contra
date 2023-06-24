@@ -21,7 +21,7 @@ map3_map.csv
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # MARIO
-0	50	690
+0	50	100
 
 #fire
 40	128	824	1	55

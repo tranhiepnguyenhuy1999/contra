@@ -99,23 +99,29 @@ void CGun::OnCollisionWith(LPCOLLISIONEVENT e)
 void CGun::OnCollisionWithSoldier(LPCOLLISIONEVENT e)
 {
 	CSoldier* i = dynamic_cast<CSoldier*>(e->obj);
-	if(i->GetState() != SOLDIER_STATE_DIE) i->SetState(SOLDIER_STATE_DIE);
-	SetState(GUN_STATE_DIE);
+	if (i->GetState() != SOLDIER_STATE_DIE)
+	{
+		i->SetState(SOLDIER_STATE_DIE);
+		SetState(GUN_STATE_DIE);
+	}
 }
 void CGun::OnCollisionWithGunSoldier(LPCOLLISIONEVENT e)
 {
 	CGunSoldier* i = dynamic_cast<CGunSoldier*>(e->obj);
-	if(i->GetState() != GUNSOLDIER_STATE_DIE)i->SetState(GUNSOLDIER_STATE_DIE);
-	SetState(GUN_STATE_DIE);
+	if (i->GetState() != GUNSOLDIER_STATE_DIE)
+	{
+		i->SetState(GUNSOLDIER_STATE_DIE);
+		SetState(GUN_STATE_DIE);
+	}
 }
 void CGun::OnCollisionWithHideSoldier(LPCOLLISIONEVENT e)
 {
 	CHideSoldier* i = dynamic_cast<CHideSoldier*>(e->obj);
-	if (i->IsWorking())
+	if (i->IsWorking() && i->GetState() != HIDE_SOLDIER_STATE_DIE)
 	{
 		i->SetState(HIDE_SOLDIER_STATE_DIE);
+		SetState(GUN_STATE_DIE);
 	}
-	SetState(GUN_STATE_DIE);
 }
 void CGun::OnCollisionWithGunMachine1(LPCOLLISIONEVENT e)
 {
@@ -134,8 +140,8 @@ void CGun::OnCollisionWithGunBox(LPCOLLISIONEVENT e)
 	CGunBox* i = dynamic_cast<CGunBox*>(e->obj);
 	if (i->GetState() == GUNBOX_STATE_OPEN) {
 		i->SetState(GUNBOX_STATE_DIE);
-		}
-	SetState(GUN_STATE_DIE);
+		SetState(GUN_STATE_DIE);
+	}
 }
 void CGun::OnCollisionWithGunShip(LPCOLLISIONEVENT e)
 {
@@ -149,7 +155,7 @@ void CGun::OnCollisionWithGunShip(LPCOLLISIONEVENT e)
 void CGun::OnCollisionWithBossStage1(LPCOLLISIONEVENT e)
 {
 	CBossStage1* i = dynamic_cast<CBossStage1*>(e->obj);
-	i->SetState(BOSS_STAGE_1_STATE_DMG);
+	i->isAttacked();
 	SetState(GUN_STATE_DIE);
 }
 void CGun::OnCollisionWithBossStage3_HandPiece(LPCOLLISIONEVENT e)
@@ -166,7 +172,7 @@ void CGun::OnCollisionWithBossStage1Gun(LPCOLLISIONEVENT e)
 }
 void CGun::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (state == GUN_STATE_RELEASE && (GetTickCount64() - count_start > 1000))
+	if (state == GUN_STATE_RELEASE && (GetTickCount64() - count_start > 3000))
 	{
 		count_start = -1;
 		isDeleted = true;

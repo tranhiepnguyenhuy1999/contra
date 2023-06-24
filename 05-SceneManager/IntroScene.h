@@ -12,11 +12,6 @@
 class CIntroScene : public CGameObject
 {
 protected:
-	float ax;
-	float ay;
-	bool isActive = false;
-
-	ULONGLONG die_start;
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects);
 	virtual void Render();

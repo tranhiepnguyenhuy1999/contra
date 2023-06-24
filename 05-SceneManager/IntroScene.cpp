@@ -3,6 +3,8 @@
 #include "AssetIDs.h"
 CIntroScene::CIntroScene(float x, float y) :CGameObject(x, y)
 {
+	vx = 0.05f;
+	isActive = true;
 	SetState(INTRO_STATE_LOADING);
 }
 
@@ -15,21 +17,12 @@ void CIntroScene::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	float cx, cy;
 	CGame::GetInstance()->GetCamPos(cx, cy);
 
-	if (!isActive)
+	x += vx * dt;
+	
+	if (x < 128)
 	{
-		if (x < cx + 1.5 * CGame::GetInstance()->GetBackBufferWidth()) {
-			isActive = true;
-		}
-		return;
-	}
-
-	vy += ay * dt;
-	vx += ax * dt;
-
-	if (state == INTRO_STATE_CHOSE)
-	{
-
-		return;
+		x = 128.0f;
+		vx = 0;
 	}
 
 	CGameObject::Update(dt, coObjects);

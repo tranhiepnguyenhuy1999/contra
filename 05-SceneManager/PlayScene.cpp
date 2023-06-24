@@ -450,7 +450,7 @@ void CPlayScene::createNewObject(int id, float x, float y, float nx = 0, float n
 			
 			CLance* lance = (CLance*)player;
 			if (lance->getPreGun()) {
-				lance->getPreGun()->Delete();
+				if(lance->getPreGun() != NULL) lance->getPreGun()->Delete();
 				lance->setPreGun(obj);
 			}
 			else lance->setPreGun(obj);

@@ -6,7 +6,7 @@ height	256
 #id	type	file
 # type: 0: intro, 1: play scene 
 [SCENES]
-0	intro.txt
+0	scene0.txt
 1	scene0005.txt
 2	scene03.txt
 
@@ -18,12 +18,12 @@ height	256
 50	textures\ContraSheet8.gif
 60	textures\ContraSheet4.gif
 70	textures\ContraSheet6.gif
-100	textures\intro.png
 # tilemap
 200	textures\map1_bank.png
 210	textures\map3_bank.png
 
 # extra tile
+400	textures\intro.png
 500	textures\hole.png
 510	textures\fire-bridge.png
 520	textures\gun-soldier-hide.png

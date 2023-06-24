@@ -201,7 +201,7 @@ int WINAPI WinMain(
 
 	LPGAME game = CGame::GetInstance();
 
-	game->Init(hWnd, hInstance);
+	game->Init(hWnd, hInstance);	
 	game->InitKeyboard();
 	
 	Camera* cam = Camera::GetInstance();

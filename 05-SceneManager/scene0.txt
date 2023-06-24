@@ -24,7 +24,7 @@ map1_map.csv
 # See OBJECT_TYPE constants in AssetIDs.h
 
 # LANCE
-0	50	200
+0	3200	200
 
 #boss
 31	3235	56	3226	99	3248	101
